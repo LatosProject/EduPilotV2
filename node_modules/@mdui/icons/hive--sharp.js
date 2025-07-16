@@ -1,0 +1,15 @@
+import { __decorate } from "tslib";
+import { LitElement } from 'lit';
+import { customElement } from 'lit/decorators/custom-element.js';
+import { style } from '@mdui/shared/icons/shared/style.js';
+import { svgTag } from '@mdui/shared/icons/shared/svg-tag.js';
+let IconHive_Sharp = class IconHive_Sharp extends LitElement {
+    render() {
+        return svgTag('<path d="m13.79 8 1.8-3-1.8-3h-3.58l-1.8 3 1.8 3zm-3.58 1-1.8 3 1.8 3h3.58l1.8-3-1.8-3zm6.24 2.51h3.59l1.79-3-1.79-3h-3.59l-1.8 3zm3.59 1h-3.59l-1.8 3 1.8 3h3.59l1.79-3zm-12.49-1 1.8-3-1.8-3H3.96l-1.79 3 1.79 3zm0 1H3.96l-1.79 3 1.79 3h3.59l1.8-3zM10.21 16l-1.8 3 1.8 3h3.58l1.8-3-1.8-3z"/>');
+    }
+};
+IconHive_Sharp.styles = style;
+IconHive_Sharp = __decorate([
+    customElement('mdui-icon-hive--sharp')
+], IconHive_Sharp);
+export { IconHive_Sharp };

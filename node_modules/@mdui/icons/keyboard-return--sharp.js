@@ -1,0 +1,15 @@
+import { __decorate } from "tslib";
+import { LitElement } from 'lit';
+import { customElement } from 'lit/decorators/custom-element.js';
+import { style } from '@mdui/shared/icons/shared/style.js';
+import { svgTag } from '@mdui/shared/icons/shared/svg-tag.js';
+let IconKeyboardReturn_Sharp = class IconKeyboardReturn_Sharp extends LitElement {
+    render() {
+        return svgTag('<path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7h-2z"/>');
+    }
+};
+IconKeyboardReturn_Sharp.styles = style;
+IconKeyboardReturn_Sharp = __decorate([
+    customElement('mdui-icon-keyboard-return--sharp')
+], IconKeyboardReturn_Sharp);
+export { IconKeyboardReturn_Sharp };

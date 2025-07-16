@@ -1,0 +1,15 @@
+import { __decorate } from "tslib";
+import { LitElement } from 'lit';
+import { customElement } from 'lit/decorators/custom-element.js';
+import { style } from '@mdui/shared/icons/shared/style.js';
+import { svgTag } from '@mdui/shared/icons/shared/svg-tag.js';
+let IconAutoAwesomeMosaic_Outlined = class IconAutoAwesomeMosaic_Outlined extends LitElement {
+    render() {
+        return svgTag('<path d="M3 5v14a2 2 0 0 0 2 2h6V3H5a2 2 0 0 0-2 2zm6 14H5V5h4v14zM19 3h-6v8h8V5c0-1.1-.9-2-2-2zm0 6h-4V5h4v4zm-6 12h6c1.1 0 2-.9 2-2v-6h-8v8zm2-6h4v4h-4v-4z"/>');
+    }
+};
+IconAutoAwesomeMosaic_Outlined.styles = style;
+IconAutoAwesomeMosaic_Outlined = __decorate([
+    customElement('mdui-icon-auto-awesome-mosaic--outlined')
+], IconAutoAwesomeMosaic_Outlined);
+export { IconAutoAwesomeMosaic_Outlined };
