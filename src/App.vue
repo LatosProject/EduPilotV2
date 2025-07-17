@@ -138,7 +138,7 @@ mdui-navigation-rail-item::part(active-icon) {
     flex-direction: column; /* 使子元素垂直排列 */
     padding: 0;
     margin-top: 16px;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.05);
+box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.20);
     background-color: rgb(var(--mdui-color-surface));">
   
     <!-- 第一个子布局 -->
@@ -260,7 +260,7 @@ mdui-navigation-rail-item::part(active-icon) {
           margin-left: 16px;
           margin-right: 24px;
           background-color: rgb(var(--mdui-color-surface-container-lowest));
-          box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.05);
+box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.20);
           border-radius: var(--mdui-shape-corner-extra-large);
         ">
         <!-- 内容 -->
