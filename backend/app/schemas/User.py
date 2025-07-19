@@ -6,5 +6,8 @@ class User(BaseModel):
     email: StrictStr = Field(..., description="用户邮箱")
     role: StrictStr = Field(..., description="用户角色")
     status: StrictStr = Field(..., description="用户状态")
-    created_at: StrictStr = Field(..., alias="data-time", description="创建时间")
-    last_login: StrictStr = Field(..., alias="data-time", description="最后登录时间")
+    created_at: StrictStr = Field(..., alias="created_at", description="创建时间")
+    last_login: StrictStr = Field(..., alias="last_login", description="最后登录时间")
+    model_config = {
+        "populate_by_name": True
+    }

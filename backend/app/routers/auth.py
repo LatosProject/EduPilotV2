@@ -1,36 +1,50 @@
 # routers/auth.py
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
-from models.user import UserCreate, UserOut
-from schemas.token import TokenResponse
-from services.auth_service import authenticate_user, create_access_token, get_current_user
-
+from schemas.User import User
+from schemas.Response import LoginResponse,ErrorResponse,Error,Meta,LoginData,LoginRequest
+from services.auth import authenticate_user
+from utils.token_utils import create_access_token
+from sqlalchemy.orm import Session
+from typing import Union
+from db import get_db
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
-@router.post("/login", response_model=TokenResponse)
-def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(form_data.username, form_data.password)
+@router.post("/login", response_model=Union[LoginResponse,ErrorResponse])
+def login(form_data: LoginRequest,db: Session = Depends(get_db)):
+
+    user = authenticate_user(db,form_data.username, form_data.password)
     if not user:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    
-    access_token = create_access_token(user.id)
-    return {
-        "access_token": access_token,
-        "refresh_token": "TODO",
-        "expires_in": 3600,
-        "token_type": "bearer"
-    }
+        error_resp=ErrorResponse(
+            status=1,
+            message="Invalid username or password",
+            error=Error(code= 400, details="Authentication failed"),
+            meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
+        )
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=error_resp.model_dump(by_alias=True,exclude_none=True))
+    # 生成访问令牌
+    token, expires_in = create_access_token({"sub": str(user.uuid)})
 
-@router.post("/register", response_model=UserOut)
-def register(user_in: UserCreate):
-    # 注册逻辑（检查重复邮箱、哈希密码、写入数据库）
-    ...
+    success_resp = LoginResponse(
+    status=0,
+    message="Login successful",
+    data=LoginData(
+        token=token,
+        expires_in=expires_in,
+        user=User(
+            uuid=user.uuid,
+            username=user.username,
+            email=user.email,
+            role=user.role,
+            status=user.status,
+            created_at=user.created_at.isoformat(),
+            last_login=user.last_login.isoformat()
+        )
+    ),
+    meta=Meta(timestamp=datetime.now(timezone.utc).isoformat())
+)
 
-@router.get("/me", response_model=UserOut)
-def read_me(current_user = Depends(get_current_user)):
-    return current_user
+    return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))
 
-@router.post("/refresh-token", response_model=TokenResponse)
-def refresh_token():
-    # 刷新逻辑
-    ...
