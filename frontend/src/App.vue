@@ -270,8 +270,8 @@ box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.20);
 </template>
 
 <script setup>
-import 'mdui/components/button.js'
-import { snackbar } from 'mdui/functions/snackbar.js'
+import 'mdui/components/button'
+import { snackbar } from 'mdui/functions/snackbar'
 
 function showToast() {
   snackbar({ message: '你好，Latos！' })
