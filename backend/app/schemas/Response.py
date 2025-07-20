@@ -33,3 +33,4 @@ class ErrorResponse(ApiResponse):
 class LoginRequest(BaseModel):
     username: str
     password: str
+
