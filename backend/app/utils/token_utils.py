@@ -8,7 +8,7 @@ import jwt
 load_dotenv()  # 加载环境变量
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM")  # 推荐使用 HS256 或更安全的算法
+ALGORITHM = os.getenv("ALGORITHM") 
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))  # Token 过期时间（单位：分钟）
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
