@@ -45,6 +45,8 @@ def login(form_data: LoginRequest,db: Session = Depends(get_db)):
     ),
     meta=Meta(timestamp=datetime.now(timezone.utc).isoformat())
 )
-
     return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))
 
+# TO-DO
+def profile(db: Session = Depends(get_db)):
+    pass
