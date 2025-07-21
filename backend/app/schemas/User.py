@@ -1,3 +1,4 @@
+# schema/User.py
 from pydantic import BaseModel, StrictStr,StrictInt,Field
 
 class User(BaseModel):
