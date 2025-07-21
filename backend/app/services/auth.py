@@ -1,5 +1,4 @@
 # services/auth.py
-
 from datetime import datetime,timezone
 from sqlalchemy.orm import Session
 from models.user import User
