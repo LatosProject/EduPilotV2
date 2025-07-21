@@ -21,7 +21,7 @@ class ApiResponse(BaseModel):
 
 class LoginData(BaseModel):
     expires_in: int
-    token: str
+    access_token: str
     user: User
 
 class LoginResponse(ApiResponse):
