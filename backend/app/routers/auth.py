@@ -121,3 +121,21 @@ def refresh_token(refresh_token:str=Cookie(...), db: Session = Depends(get_db)):
     meta=Meta(timestamp=datetime.now(timezone.utc).isoformat())
 )
     return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))
+
+@router.get("/verify_token", response_model=Union[ApiResponse, ErrorResponse])
+def verify_token(current_user: User = Depends(get_current_user),db: Session = Depends(get_db)):
+    if current_user is None:
+        error_resp = ErrorResponse(
+            status=1,
+            message="Token verification failed",
+            error=Error(code=401, details="Token is invalid or expired"),
+            meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
+        )
+        return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content=error_resp.model_dump(by_alias=True, exclude_none=True))
+    success_resp = ApiResponse(
+        status=0,
+        message="Token is valid",
+        data={},
+        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat())
+    )
+    return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))
