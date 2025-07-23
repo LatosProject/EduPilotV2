@@ -2,6 +2,7 @@
 from datetime import datetime, timezone
 from fastapi import APIRouter, Cookie, Depends, status
 from fastapi.responses import JSONResponse
+from core.rate_limit import rate_limiter
 from schemas.User import User
 from schemas.Response import LoginResponse,ErrorResponse,Error,Meta,LoginData,LoginRequest,ApiResponse
 from services.auth import authenticate_user, get_user_by_username
@@ -13,7 +14,7 @@ from core.dependencies import  get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
-@router.post("/login", response_model=Union[LoginResponse,ErrorResponse])
+@router.post("/login", dependencies=[Depends(rate_limiter(limit=10, windows=60))], response_model=Union[LoginResponse,ErrorResponse])
 def login(form_data: LoginRequest,db: Session = Depends(get_db)):
 
     user = authenticate_user(db,form_data.username, form_data.password)
@@ -76,7 +77,7 @@ def profile(current_user:User=Depends(get_current_user)):
     return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True, exclude_none=True))
 
 # TO-DO
-@router.post("/refresh", response_model=Union[LoginResponse, ErrorResponse])
+@router.post("/refresh", dependencies=[Depends(rate_limiter(limit=10, windows=60))],response_model=Union[LoginResponse, ErrorResponse])
 def refresh_token(refresh_token:str=Cookie(...), db: Session = Depends(get_db)):
     payload = verify_refresh_token(refresh_token)
     if not payload:
