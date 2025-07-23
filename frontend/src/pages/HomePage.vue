@@ -12,7 +12,7 @@
         <!-- 搜索框下方按钮组 -->
          <TaskButtonGroup/>
         <!-- 作业卡片（示例1） -->
-        <mdui-card clickable style="
+        <!-- <mdui-card clickable style="
           border-radius: var(--mdui-shape-corner-medium);
           height: 200px;
           display: flex;
@@ -109,7 +109,7 @@
               <mdui-button variant="filled">查看</mdui-button>
             </div>
           </div>
-        </mdui-card>
+        </mdui-card> -->
       </div>
 
       <!-- 主体内容卡片容器 -->
