@@ -61,7 +61,6 @@
           </div>
         </mdui-card>
 
-        <!-- 作业卡片（示例2） -->
         <mdui-card clickable style="
           border-radius: var(--mdui-shape-corner-medium);
           height: 200px;
