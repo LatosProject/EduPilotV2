@@ -2,71 +2,15 @@
   <!-- 页面整体横向布局 -->
   <div style="display: flex; height: 100vh;">
     <!-- 左侧导航栏 -->
-    <mdui-navigation-rail style="padding-top: 8px" contained>
-      <mdui-button-icon icon="menu" slot="top"></mdui-button-icon>
-      <mdui-fab class="fab-purple" lowered icon="edit--rounded" slot="top"></mdui-fab>
-
-      <mdui-navigation-rail-item class="label-medium secondary" icon="inbox--rounded">主页</mdui-navigation-rail-item>
-      <mdui-navigation-rail-item class="label-medium secondary" icon="book--rounded">学习</mdui-navigation-rail-item>
-      <mdui-navigation-rail-item class="label-medium secondary" icon="settings--rounded">设置</mdui-navigation-rail-item>
-    </mdui-navigation-rail>
-
+    <NavigationRail/>
     <!-- 右侧内容区域 -->
     <div style="flex-grow: 1; display: flex; padding-left: 12px; padding-top: 24px;">
       <!-- 左侧固定宽度区域 -->
       <div style="width: 480px;">
         <!-- 顶部搜索卡片 -->
-        <mdui-card clickable style="
-          border-radius: var(--mdui-shape-corner-extra-large);
-          height: 56px;
-          display: flex;
-          align-items: center;
-          padding: 0;
-          gap: 0;
-          box-shadow: none;
-          background-color: rgb(var(--mdui-color-surface-container-high));
-        ">
-          <mdui-icon name="search" style="
-            font-size: 24px;
-            color: rgb(var(--mdui-color-on-surface-variant));
-            margin: 0 16px;
-            user-select: none;
-          "></mdui-icon>
-
-          <div style="
-            font-size: 16px;
-            line-height: 24px;
-            letter-spacing: 0.5px;
-            font-weight: 400;
-            font-family: 'Roboto';
-            user-select: none;
-            color: rgb(var(--mdui-color-on-surface-variant));
-          ">
-            搜索
-          </div>
-
-          <mdui-button-icon icon="account_circle" style="
-            margin-left: auto;
-            margin-right: 8px;
-          "></mdui-button-icon>
-        </mdui-card>
-
+         <search-card/>
         <!-- 搜索框下方按钮组 -->
-        <div style="
-          width: 480px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 2px;
-          margin-top: 16px;
-        ">
-          <mdui-button class="label-large" icon="star" variant="filled" style="flex: 1;">总作业</mdui-button>
-          <mdui-button class="on-secondary-container label-large" variant="tonal" style="flex: 1;">待完成</mdui-button>
-          <mdui-button class="on-secondary-container label-large" variant="tonal" style="flex: 1;">已完成</mdui-button>
-          <mdui-button class="on-secondary-container label-large" variant="tonal" style="flex: 1;">已过期</mdui-button>
-        </div>
-
+         <TaskButtonGroup/>
         <!-- 作业卡片（示例1） -->
         <mdui-card clickable style="
           border-radius: var(--mdui-shape-corner-medium);
@@ -184,4 +128,7 @@
 </template>
 
 <script setup>
+import NavigationRail from '../components/common/NavigationRail.vue';
+import SearchCard from '../components/common/SearchCard.vue';
+import TaskButtonGroup from '../components/common/TaskButtonGroup.vue';
 </script>
