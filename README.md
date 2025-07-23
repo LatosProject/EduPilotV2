@@ -7,7 +7,7 @@
 - Python >= 3.9
 - pip
 - Redis
-- NodeJs
+- Node.js
 
 ---
 
