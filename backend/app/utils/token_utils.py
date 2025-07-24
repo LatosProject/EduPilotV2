@@ -47,12 +47,4 @@ def verify_access_token(token: str) -> dict:
     except:
         pass
 
-def verify_refresh_token(token: str) -> dict:
-    """
-    验证 Refresh Token，有效则返回解码后的数据，否则抛出异常
-    """
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload
-    except:
-        return None
+

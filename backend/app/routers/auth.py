@@ -5,8 +5,8 @@ from fastapi.responses import JSONResponse
 from core.rate_limit import rate_limiter
 from schemas.User import User
 from schemas.Response import LoginResponse,ErrorResponse,Error,Meta,LoginData,LoginRequest,ApiResponse
-from services.auth import authenticate_user, get_user_by_username
-from utils.token_utils import create_access_token, verify_refresh_token
+from services.auth import authenticate_user, get_user_by_uuid
+from utils.token_utils import create_access_token, verify_access_token
 from sqlalchemy.orm import Session
 from typing import Union
 from db import get_db
@@ -27,7 +27,7 @@ def login(form_data: LoginRequest,db: Session = Depends(get_db)):
         )
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=error_resp.model_dump(by_alias=True,exclude_none=True))
     # 生成访问令牌
-    token, expires_in = create_access_token({"username": str(user.username)})
+    token, expires_in = create_access_token({"uuid": str(user.uuid)})
     success_resp = LoginResponse(
     status=0,
     message="Login successful",
@@ -79,7 +79,7 @@ def profile(current_user:User=Depends(get_current_user)):
 # TO-DO
 @router.post("/refresh", dependencies=[Depends(rate_limiter(limit=10, windows=60))],response_model=Union[LoginResponse, ErrorResponse])
 def refresh_token(refresh_token:str=Cookie(...), db: Session = Depends(get_db)):
-    payload = verify_refresh_token(refresh_token)
+    payload = verify_access_token(refresh_token)
     if not payload:
         error_resp = ErrorResponse(
             status=1,
@@ -89,7 +89,7 @@ def refresh_token(refresh_token:str=Cookie(...), db: Session = Depends(get_db)):
         )
         return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content=error_resp.model_dump(by_alias=True, exclude_none=True))
        
-    user = get_user_by_username(db, payload["username"])
+    user = get_user_by_uuid(db, payload["uuid"])
     print(f"User fetched from refresh token: {user}")
     if not user:
         error_resp = ErrorResponse(
@@ -101,7 +101,7 @@ def refresh_token(refresh_token:str=Cookie(...), db: Session = Depends(get_db)):
         return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content=error_resp.model_dump(by_alias=True, exclude_none=True))
     
         # 生成访问令牌
-    new_token, expires_in = create_access_token({"username": str(user.username)})
+    new_token, expires_in = create_access_token({"uuid": str(user.uuid)})
 
     success_resp = LoginResponse(
     status=0,
