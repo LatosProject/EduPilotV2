@@ -1,7 +1,7 @@
 # schemas/Response.py
 from pydantic import BaseModel, StrictInt, StrictStr, Field
 from typing import Optional, Dict, Any
-from schemas.User import User
+from schemas.User import User, UserProfile
 
 class Meta(BaseModel):
     timestamp: str = Field(..., alias="timestamp", description="响应时间戳")
@@ -35,3 +35,9 @@ class LoginRequest(BaseModel):
     username: str
     password: str
 
+class RegisterRequest(BaseModel):
+    username: str
+    email: str
+    password: str
+    role: str = Field(..., description="用户角色")
+    profile: UserProfile

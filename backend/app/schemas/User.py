@@ -2,7 +2,7 @@
 from pydantic import BaseModel, StrictStr,StrictInt,Field
 
 class User(BaseModel):
-    uuid: StrictInt= Field(..., description="用户唯一标识符")
+    uuid: StrictStr= Field(..., description="用户唯一标识符")
     username: StrictStr = Field(..., description="用户名")
     email: StrictStr = Field(..., description="用户邮箱")
     role: StrictStr = Field(..., description="用户角色")
@@ -12,3 +12,8 @@ class User(BaseModel):
     model_config = {
         "populate_by_name": True
     }
+
+class UserProfile(BaseModel):
+    profile_name: StrictStr = Field(..., description="用户个人资料名称")
+    avatar_url: StrictStr = Field(..., description="用户头像URL")
+
