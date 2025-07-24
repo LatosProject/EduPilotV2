@@ -38,6 +38,7 @@ LOGGING_CONFIG = {
             "maxBytes": 1024 * 1024 * 5,
             "backupCount": 5,
             "level": LOG_LEVEL,
+            "encoding": "utf-8"
         },
         "error_file": {
             "class": "logging.handlers.RotatingFileHandler",
@@ -46,6 +47,7 @@ LOGGING_CONFIG = {
             "maxBytes": 1024 * 1024 * 5,
             "backupCount": 3,
             "level": "ERROR",
+            "encoding": "utf-8"
         },
     },
     "root": {

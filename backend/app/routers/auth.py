@@ -24,7 +24,7 @@ def login(form_data: LoginRequest,db: Session = Depends(get_db)):
 
     user = authenticate_user(db,form_data.username, form_data.password)
     if not user:
-        logger.info(f"登录失败: 用户名或密码错误: {form_data.username}")
+        logger.warning(f"登录失败: 用户名或密码错误: {form_data.username}")
         error_resp=ErrorResponse(
             status=1,
             message="Invalid username or password",

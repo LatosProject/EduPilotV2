@@ -22,7 +22,7 @@ def get_current_user(token: str=Depends(oauth2_scheme),db:Session = Depends(get_
         user = get_user_by_uuid(db, token_data.get("uuid"))
         if not user:
             return None
-        loogger.info(f"访问令牌验证成功: uuid={user.uuid} 用户名={user.username}")
+        loogger.info(f"访问令牌验证成功: uuid={user.uuid} 用户名: {user.username}")
         return user
     except Exception:
         return None

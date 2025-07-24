@@ -13,19 +13,31 @@ def get_user_by_username(db: Session, username: str) -> User | None:
     通过用户名查询用户，若存在则返回 User 对象，否则返回 None。
     """
     logger.info(f"使用 用户名 查询用户: {username}")
-    return db.query(User).filter(User.username == username).first()
+    try:
+        return db.query(User).filter(User.username == username).first()
+    except Exception as e:
+        logger.error(f"数据库查询异常: 用户名: {username}, 错误: {e}")
+        return None
 
 def get_user_by_uuid(db: Session, uuid: str) -> User | None:
     """
     通过UUID查询用户，若存在则返回 User 对象，否则返回 None。
     """
     logger.info(f"使用 UUID 查询用户 {uuid}")
-    return db.query(User).filter(User.uuid == uuid).first()
+    try:
+        return db.query(User).filter(User.uuid == uuid).first()
+    except Exception as e:
+        logger.error(f"数据库查询异常: UUID: {uuid}, 错误: {e}")
+        return None
 
 def get_user_role_by_uuid(db: Session, uuid: str) -> str | None:
+    logger.info(f"使用 UUID 查询用户角色: UUID: {uuid}")
     user = db.query(User).filter(User.uuid == uuid).first()
-    return user.role if user else None
-
+    try:
+        return user.role if user else None
+    except Exception as e:
+        logger.error(f"数据库查询用户角色失败: UUID: {uuid}, 错误: {e}")
+        return None
 
 def create_user(db: Session,username: str, email: str, password: str, profile_name: str,avatar_url:str, role: str = "user",) -> User:
     logger.info(f"创建用户: 用户名: {username}, 角色: {role}")
@@ -49,6 +61,7 @@ def create_user(db: Session,username: str, email: str, password: str, profile_na
         db.refresh(user) 
         return user
     except Exception as e:
+        logger.error(f"添加用户到数据库失败: 用户名: {username}, 错误: {e}")
         return None
 
 def authenticate_user(db: Session, username: str, password: str) -> User | None:
@@ -59,7 +72,11 @@ def authenticate_user(db: Session, username: str, password: str) -> User | None:
     - 成功返回用户对象，失败返回 None
     """
     logger.info(f"尝试登录: 用户名: {username}")
-    user = get_user_by_username(db, username)
+    try:
+        user = get_user_by_username(db, username)
+    except Exception as e:
+        logger.error(f"数据库查询异常，登录失败: 用户名: {username} 错误: {e}")
+        return None
     if not user:
         return None
     if not verify_password(password, user.hashed_password):
