@@ -2,7 +2,10 @@
 from fastapi import FastAPI
 from routers import auth, user
 from fastapi.middleware.cors import CORSMiddleware
+from core.logger import setup_logging
 import uvicorn  
+
+setup_logging()
 
 app = FastAPI(
     title="EduPilot",
