@@ -1,20 +1,25 @@
 # services/auth.py
 from datetime import datetime,timezone
+import logging
 from sqlalchemy.orm import Session
 from models.user import User
 from utils.auth_utils import hash_password, verify_password
 from utils.uuid_utils import generate_uuid
 
+logger = logging.getLogger("services.auth")
+
 def get_user_by_username(db: Session, username: str) -> User | None:
     """
     通过用户名查询用户，若存在则返回 User 对象，否则返回 None。
     """
+    logger.info(f"使用 用户名 查询用户: {username}")
     return db.query(User).filter(User.username == username).first()
 
 def get_user_by_uuid(db: Session, uuid: str) -> User | None:
     """
     通过UUID查询用户，若存在则返回 User 对象，否则返回 None。
     """
+    logger.info(f"使用 UUID 查询用户 {uuid}")
     return db.query(User).filter(User.uuid == uuid).first()
 
 def get_user_role_by_uuid(db: Session, uuid: str) -> str | None:
@@ -23,6 +28,7 @@ def get_user_role_by_uuid(db: Session, uuid: str) -> str | None:
 
 
 def create_user(db: Session,username: str, email: str, password: str, profile_name: str,avatar_url:str, role: str = "user",) -> User:
+    logger.info(f"创建用户: 用户名: {username}, 角色: {role}")
     hashed_pw = hash_password(password)
     user = User(
         uuid=generate_uuid(), 
@@ -37,6 +43,7 @@ def create_user(db: Session,username: str, email: str, password: str, profile_na
         avatar_url=avatar_url if avatar_url else "https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png"  # 默认头像URL
     )
     try:
+        logger.info(f"尝试添加用户到数据库: 用户名: {username}")
         db.add(user)
         db.commit()
         db.refresh(user) 
@@ -51,6 +58,7 @@ def authenticate_user(db: Session, username: str, password: str) -> User | None:
     - 验证密码哈希是否正确
     - 成功返回用户对象，失败返回 None
     """
+    logger.info(f"尝试登录: 用户名: {username}")
     user = get_user_by_username(db, username)
     if not user:
         return None

@@ -1,6 +1,7 @@
 # TO-DO: Implement user registration endpoint
 
 from datetime import datetime, timezone
+import logging
 from fastapi import APIRouter, Depends, status
 from typing import Union
 
@@ -14,11 +15,13 @@ from schemas.User import User, UserProfile
 from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/user", tags=["User"])
+logger = logging.getLogger("routers.user")
 
 @router.post("/register", response_model=Union[ApiResponse,UserProfile])  
 def register(form_data: RegisterRequest,db: Session = Depends(get_db),is_admin_user: bool = Depends(is_admin)):
     # TO-DO :Need to check the redis
     if is_admin_user:
+        logger.info(f"用户注册请求: 用户名: {form_data.username}, 角色: {form_data.role}")
         user = create_user(
             db=db,
             username=form_data.username,
@@ -29,12 +32,14 @@ def register(form_data: RegisterRequest,db: Session = Depends(get_db),is_admin_u
             role=form_data.role
         )
         if user is None:
+            logger.warning(f"用户注册失败: 用户名已存在或数据无效: {form_data.username}")
             error_resp = ErrorResponse(
             status=1,
             message="User registration failed",
             error=Error(code=400, details="User already exists or invalid data"),
             meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),)
             return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=error_resp.model_dump(by_alias=True, exclude_none=True))
+        logger.info(f"用户注册成功: 用户名: {user.username}, UUID: {user.uuid}")
         success_resp = ApiResponse(
             status=0,
             message="User registered successfully",
@@ -43,6 +48,7 @@ def register(form_data: RegisterRequest,db: Session = Depends(get_db),is_admin_u
             )
         return JSONResponse(status_code=status.HTTP_201_CREATED, content=success_resp.model_dump(by_alias=True, exclude_none=True))
     else:
+            logger.warning(f"用户名:{form_data.username}注册失败，只有管理员可以注册用户")
             error_resp = ErrorResponse(
             status=1,
             message="User registration failed",
