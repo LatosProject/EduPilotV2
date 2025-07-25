@@ -1,12 +1,8 @@
 **/node_modules/
 .DS_Store
-<<<<<<< HEAD
-**/.env
-=======
 **/.env
 
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
->>>>>>> 5023c6d21132481385915b508e031ac87d497f19
