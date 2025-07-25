@@ -1,7 +1,8 @@
 # app.py
 from fastapi import FastAPI
+from routers import users
 from core.middleware import AccessLogMiddleware
-from routers import auth, user
+from routers import auth, users
 from fastapi.middleware.cors import CORSMiddleware
 from core.logger import setup_logging
 import uvicorn  
@@ -14,7 +15,7 @@ app = FastAPI(
 )
 #注册路由
 app.include_router(auth.router,prefix="/api/v1",tags=["Auth"])
-app.include_router(user.router,prefix="/api/v1",tags=["User"])
+app.include_router(users.router,prefix="/api/v1",tags=["Users"])
 app.add_middleware(AccessLogMiddleware)
 
 app.add_middleware(

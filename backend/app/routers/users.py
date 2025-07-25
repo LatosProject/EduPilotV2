@@ -11,13 +11,13 @@ from core.dependencies import get_current_user
 from services.auth import create_user
 from db import get_db
 from schemas.Response import ApiResponse, Error, ErrorResponse, Meta, RegisterRequest
-from schemas.User import User, UserProfile
+from schemas.User import UserProfile
 from sqlalchemy.orm import Session
 
-router = APIRouter(prefix="/user", tags=["User"])
-logger = logging.getLogger("routers.user")
+router = APIRouter(prefix="/users", tags=["Users"])
+logger = logging.getLogger("routers.users")
 
-@router.post("/register", response_model=Union[ApiResponse,UserProfile])  
+@router.post("/", response_model=Union[ApiResponse,UserProfile])  
 def register(form_data: RegisterRequest,db: Session = Depends(get_db),is_admin_user: bool = Depends(is_admin)):
     # TO-DO :Need to check the redis
     if is_admin_user:
