@@ -28,7 +28,11 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
+<<<<<<< HEAD
     return {"message": "Welcome to EduPilot API 👋"}
+=======
+    return {"message": "Hello, EduPilot 👋"}
+>>>>>>> 5023c6d21132481385915b508e031ac87d497f19
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)

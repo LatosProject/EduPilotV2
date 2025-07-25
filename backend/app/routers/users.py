@@ -18,11 +18,19 @@ router = APIRouter(prefix="/users", tags=["Users"])
 logger = logging.getLogger("routers.users")
 
 @router.post("/", response_model=Union[ApiResponse,UserProfile])  
+<<<<<<< HEAD
 def register(form_data: RegisterRequest,db: Session = Depends(get_db),is_admin_user: bool = Depends(is_admin)):
     # TO-DO :Need to check the redis
     if is_admin_user:
         logger.info(f"用户注册请求: 用户名: {form_data.username}, 角色: {form_data.role}")
         user = create_user(
+=======
+async def register(form_data: RegisterRequest,db: Session = Depends(get_db),is_admin_user: bool = Depends(is_admin)):
+    # TO-DO :Need to check the redis
+    if is_admin_user:
+        logger.info(f"用户注册请求: 用户名: {form_data.username}, 角色: {form_data.role}")
+        user = await create_user(
+>>>>>>> 5023c6d21132481385915b508e031ac87d497f19
             db=db,
             username=form_data.username,
             email=form_data.email,
