@@ -6,9 +6,8 @@ from fastapi import APIRouter, Depends, status
 from typing import Union
 
 from fastapi.responses import JSONResponse
-from routers.common import ErrorCode
+from core.status_codes import ErrorCode
 from core.security import is_admin
-from core.dependencies import get_current_user
 from services.auth import create_user
 from db import get_db
 from schemas.Response import ApiResponse, Error, ErrorResponse, Meta, RegisterRequest

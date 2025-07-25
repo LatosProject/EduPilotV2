@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 import logging
 from fastapi import APIRouter, Cookie, Depends, status
 from fastapi.responses import JSONResponse
-from routers.common import ErrorCode
+from core.status_codes import ErrorCode
 from core.rate_limit import rate_limiter
 from schemas.User import User
 from schemas.Response import LoginResponse,ErrorResponse,Error,Meta,LoginData,LoginRequest,ApiResponse
