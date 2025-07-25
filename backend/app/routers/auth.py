@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 import logging
 from fastapi import APIRouter, Cookie, Depends, status
 from fastapi.responses import JSONResponse
+from routers.common import ErrorCode
 from core.rate_limit import rate_limiter
 from schemas.User import User
 from schemas.Response import LoginResponse,ErrorResponse,Error,Meta,LoginData,LoginRequest,ApiResponse
@@ -26,7 +27,7 @@ def login(form_data: LoginRequest,db: Session = Depends(get_db)):
     if not user:
         logger.warning(f"登录失败: 用户名或密码错误: {form_data.username}")
         error_resp=ErrorResponse(
-            status=1,
+            status=ErrorCode.AUTHENTICATION_FAILED,
             message="Invalid username or password",
             error=Error(code= 400, details="Authentication failed"),
             meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
@@ -36,7 +37,7 @@ def login(form_data: LoginRequest,db: Session = Depends(get_db)):
     logger.info(f"登录成功: 用户名: {user.username}, UUID: {user.uuid}")
     token, expires_in = create_access_token({"uuid": str(user.uuid)})
     success_resp = LoginResponse(
-    status=0,
+    status=ErrorCode.SUCCESS,
     message="Login successful",
     data=LoginData(
         access_token=token,
@@ -61,7 +62,7 @@ def profile(current_user:User=Depends(get_current_user)):
     if current_user is None:
         logger.warning("获取用户信息失败，用户未登录或令牌无效")
         error_resp=ErrorResponse(
-            status=1,
+            status=ErrorCode.AUTHENTICATION_FAILED,
             message="User not found",
             error=Error(code=401,details="The requested user does not exist"),
             meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
@@ -69,7 +70,7 @@ def profile(current_user:User=Depends(get_current_user)):
         return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content=error_resp.model_dump(by_alias=True, exclude_none=True))
     logger.info(f"获取用户信息成功: 用户名: {current_user.username}, UUID: {current_user.uuid}")
     success_resp = ApiResponse(
-        status=0,
+        status=ErrorCode.SUCCESS,
         message="User profile retrieved successfully",
         data=User(
             uuid=current_user.uuid,
@@ -91,7 +92,7 @@ def refresh_token(refresh_token:str=Cookie(...), db: Session = Depends(get_db)):
     if not payload:
         logger.warning("刷新令牌失败，令牌无效或已过期")
         error_resp = ErrorResponse(
-            status=1,
+            status=ErrorCode.AUTHENTICATION_FAILED,
             message="Authentication failed",
             error=Error(code=401, details="Invalid refresh token"),
             meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
@@ -102,7 +103,7 @@ def refresh_token(refresh_token:str=Cookie(...), db: Session = Depends(get_db)):
     if not user:
         logger.warning(f"刷新令牌失败，用户不存在: UUID: {payload['uuid']}")
         error_resp = ErrorResponse(
-            status=1,
+            status=ErrorCode.RESOURCE_NOT_FOUND,
             message="User not found",
             error=Error(code=404, details="User does not exist"),
             meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
@@ -113,7 +114,7 @@ def refresh_token(refresh_token:str=Cookie(...), db: Session = Depends(get_db)):
     new_token, expires_in = create_access_token({"uuid": str(user.uuid)})
     logger.info(f"刷新令牌成功: 用户名: {user.username}, UUID: {user.uuid}, 新令牌: {new_token}")
     success_resp = LoginResponse(
-    status=0,
+    status=ErrorCode.SUCCESS,
     message="Token refreshed successfully",
     data=LoginData(
         access_token=new_token,
@@ -137,7 +138,7 @@ def verify_token(current_user: User = Depends(get_current_user),db: Session = De
     if current_user is None:
         logger.warning("令牌验证失败，用户未登录或令牌无效")
         error_resp = ErrorResponse(
-            status=1,
+            status=ErrorCode.AUTHENTICATION_FAILED,
             message="Token verification failed",
             error=Error(code=401, details="Token is invalid or expired"),
             meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
@@ -145,7 +146,7 @@ def verify_token(current_user: User = Depends(get_current_user),db: Session = De
         return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content=error_resp.model_dump(by_alias=True, exclude_none=True))
     logger.info(f"令牌验证成功: 用户名: {current_user.username}, UUID: {current_user.uuid}")
     success_resp = ApiResponse(
-        status=0,
+        status=ErrorCode.SUCCESS,
         message="Token is valid",
         data={},
         meta=Meta(timestamp=datetime.now(timezone.utc).isoformat())

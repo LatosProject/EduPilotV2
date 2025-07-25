@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, status
 from typing import Union
 
 from fastapi.responses import JSONResponse
+from routers.common import ErrorCode
 from core.security import is_admin
 from core.dependencies import get_current_user
 from services.auth import create_user
@@ -34,14 +35,14 @@ def register(form_data: RegisterRequest,db: Session = Depends(get_db),is_admin_u
         if user is None:
             logger.warning(f"用户注册失败: 用户名已存在或数据无效: {form_data.username}")
             error_resp = ErrorResponse(
-            status=1,
+            status=ErrorCode.PARAMETER_ERROR,
             message="User registration failed",
             error=Error(code=400, details="User already exists or invalid data"),
             meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),)
             return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=error_resp.model_dump(by_alias=True, exclude_none=True))
         logger.info(f"用户注册成功: 用户名: {user.username}, UUID: {user.uuid}")
         success_resp = ApiResponse(
-            status=0,
+            status=ErrorCode.SUCCESS,
             message="User registered successfully",
             data={},
             meta=Meta(timestamp=datetime.now(timezone.utc).isoformat())
@@ -50,7 +51,7 @@ def register(form_data: RegisterRequest,db: Session = Depends(get_db),is_admin_u
     else:
             logger.warning(f"用户名:{form_data.username}注册失败，只有管理员可以注册用户")
             error_resp = ErrorResponse(
-            status=1,
+            status=ErrorCode.PERMISSION_DENIED,
             message="User registration failed",
             error=Error(code=403, details="Only admin can register users"),
             meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
