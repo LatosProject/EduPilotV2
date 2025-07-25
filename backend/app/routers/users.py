@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 router = APIRouter(prefix="/users", tags=["Users"])
 logger = logging.getLogger("routers.users")
 
-@router.post("/", response_model=Union[ApiResponse,UserProfile])  
+@router.post("", response_model=Union[ApiResponse,UserProfile])  
 def register(form_data: RegisterRequest,db: Session = Depends(get_db),is_admin_user: bool = Depends(is_admin)):
     # TO-DO :Need to check the redis
     if is_admin_user:

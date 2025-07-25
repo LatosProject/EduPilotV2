@@ -33972,3 +33972,618 @@ AttributeError: module 'bcrypt' has no attribute '__about__'
 [2025-07-25 15:04:14] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.05ms
 [2025-07-25 15:04:14] [INFO] [routers.users] [register()] - 用户注册成功: 用户名: 与查什, UUID: 58e8ba0d-49b3-4d9d-bbda-a04b254c31be
 [2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/users/ 状态码: 201 耗时: 275.63ms
+[2025-07-25 15:12:42] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 15:12:42] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 15:12:42] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:12:42] [INFO] [routers.auth] [login()] - 登录请求: 用户名:test
+[2025-07-25 15:12:42] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: test
+[2025-07-25 15:12:42] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: test
+[2025-07-25 15:12:42] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.59ms
+[2025-07-25 15:12:42] [INFO] [routers.auth] [login()] - 登录成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:12:42] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 200 耗时: 147.20ms
+[2025-07-25 15:12:42] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 15:12:42] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 15:12:42] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:12:42] [INFO] [routers.auth] [login()] - 登录请求: 用户名:123
+[2025-07-25 15:12:42] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: 123
+[2025-07-25 15:12:42] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: 123
+[2025-07-25 15:12:42] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.18ms
+[2025-07-25 15:12:42] [WARNING] [routers.auth] [login()] - 登录失败: 用户名或密码错误: 123
+[2025-07-25 15:12:42] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 400 耗时: 6.00ms
+[2025-07-25 15:12:42] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 15:12:42] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:12:42] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:12:42] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:12:42] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.13ms
+[2025-07-25 15:12:42] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 15:12:42] [INFO] [routers.auth] [profile()] - 获取用户信息成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:12:42] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 200 耗时: 3.79ms
+[2025-07-25 15:12:42] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 15:12:42] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:12:42] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:12:42] [WARNING] [routers.auth] [profile()] - 获取用户信息失败，用户未登录或令牌无效
+[2025-07-25 15:12:42] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 401 耗时: 2.01ms
+[2025-07-25 15:12:43] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 15:12:43] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:12:43] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:12:43] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:12:43] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.09ms
+[2025-07-25 15:12:43] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 15:12:43] [INFO] [routers.auth] [verify_token()] - 令牌验证成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:12:43] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 200 耗时: 2.22ms
+[2025-07-25 15:12:43] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 15:12:43] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:12:43] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:12:43] [WARNING] [routers.auth] [verify_token()] - 令牌验证失败，用户未登录或令牌无效
+[2025-07-25 15:12:43] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 401 耗时: 1.12ms
+[2025-07-25 15:12:43] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 15:12:43] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 15:12:43] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:12:43] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:12:43] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.10ms
+[2025-07-25 15:12:43] [INFO] [routers.auth] [refresh_token()] - 刷新令牌成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d, 新令牌: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYTU1ODdmNTAtYjIzZi00YzkxLTg3OGUtODE4MjlmYjhiYzRkIiwiZXhwIjoxNzUzNDI5MzYzfQ.HySlg39CcNtEh0HX8RQsALJKPkaC06x2fmAuRUoihDo
+[2025-07-25 15:12:43] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 200 耗时: 5.93ms
+[2025-07-25 15:12:43] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 15:12:43] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 15:12:43] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:12:43] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 15:12:43] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 3.19ms
+[2025-07-25 15:12:43] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/users
+[2025-07-25 15:12:43] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:12:43] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:12:43] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:12:43] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.14ms
+[2025-07-25 15:12:43] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 15:12:43] [INFO] [core.security] [is_admin()] - 检查用户是否为管理员: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:12:43] [INFO] [core.security] [is_admin()] - 用户角色: admin
+[2025-07-25 15:12:43] [INFO] [routers.users] [register()] - 用户注册请求: 用户名: 需传带, 角色: 样料可
+[2025-07-25 15:12:43] [INFO] [services.auth] [create_user()] - 创建用户: 用户名: 需传带, 角色: 样料可
+[2025-07-25 15:12:43] [INFO] [services.auth] [create_user()] - 尝试添加用户到数据库: 用户名: 需传带
+[2025-07-25 15:12:43] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.32ms
+[2025-07-25 15:12:43] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.17ms
+[2025-07-25 15:12:43] [INFO] [routers.users] [register()] - 用户注册成功: 用户名: 需传带, UUID: ecbaf810-b429-48ac-9c4d-930beaa75185
+[2025-07-25 15:12:43] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/users 状态码: 201 耗时: 281.23ms
+[2025-07-25 15:25:48] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:25:48] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 5.17ms
+[2025-07-25 15:25:48] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /sitemap.xml
+[2025-07-25 15:25:48] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /sitemap.xml 状态码: 404 耗时: 0.57ms
+[2025-07-25 15:25:48] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /robots.txt
+[2025-07-25 15:25:48] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:25:48] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /robots.txt 状态码: 404 耗时: 0.90ms
+[2025-07-25 15:25:48] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 1.39ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /5513181695317338227
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /5513181695317338227 状态码: 404 耗时: 1.54ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.76ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.90ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /computeMetadata/v1/
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /computeMetadata/v1/ 状态码: 404 耗时: 1.14ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /computeMetadata/v1/
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /computeMetadata/v1/ 状态码: 404 耗时: 0.82ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /opc/v1/instance/
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /opc/v1/instance/ 状态码: 404 耗时: 0.87ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /opc/v1/instance/
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /opc/v1/instance/ 状态码: 404 耗时: 0.87ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.68ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.79ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /metadata/instance
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /metadata/instance 状态码: 404 耗时: 0.68ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /robots.txt/
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /sitemap.xml/
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 4.66ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /robots.txt/ 状态码: 404 耗时: 0.99ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /sitemap.xml/ 状态码: 404 耗时: 1.11ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /actuator/health
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /actuator/health 状态码: 404 耗时: 0.91ms
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /actuator/health
+[2025-07-25 15:25:55] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /actuator/health 状态码: 404 耗时: 0.39ms
+[2025-07-25 15:32:25] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:32:25] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 9.87ms
+[2025-07-25 15:32:25] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:32:25] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 1.76ms
+[2025-07-25 15:32:25] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /sitemap.xml
+[2025-07-25 15:32:25] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /robots.txt
+[2025-07-25 15:32:25] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /sitemap.xml 状态码: 404 耗时: 4.07ms
+[2025-07-25 15:32:25] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /robots.txt 状态码: 404 耗时: 1.49ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /7738975631937962066
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /7738975631937962066 状态码: 404 耗时: 1.23ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 2.14ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.74ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /computeMetadata/v1/
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /computeMetadata/v1/ 状态码: 404 耗时: 0.84ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /computeMetadata/v1/
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /computeMetadata/v1/ 状态码: 404 耗时: 0.40ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /opc/v1/instance/
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /opc/v1/instance/ 状态码: 404 耗时: 1.14ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /opc/v1/instance/
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /opc/v1/instance/ 状态码: 404 耗时: 3.92ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 2.23ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 3.05ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /metadata/instance
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /metadata/instance 状态码: 404 耗时: 0.78ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 1.37ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /robots.txt/
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /sitemap.xml/
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /robots.txt/ 状态码: 404 耗时: 1.37ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /sitemap.xml/ 状态码: 404 耗时: 1.05ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /actuator/health
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /actuator/health 状态码: 404 耗时: 1.74ms
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /actuator/health
+[2025-07-25 15:32:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /actuator/health 状态码: 404 耗时: 1.05ms
+[2025-07-25 15:36:03] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:36:03] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 1.25ms
+[2025-07-25 15:36:03] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:36:03] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 1.99ms
+[2025-07-25 15:36:03] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /robots.txt
+[2025-07-25 15:36:03] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /sitemap.xml
+[2025-07-25 15:36:03] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /robots.txt 状态码: 404 耗时: 1.26ms
+[2025-07-25 15:36:03] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /sitemap.xml 状态码: 404 耗时: 0.97ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /3436141363382105912
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /3436141363382105912 状态码: 404 耗时: 5.81ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 1.15ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.47ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /computeMetadata/v1/
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /computeMetadata/v1/ 状态码: 404 耗时: 1.09ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /computeMetadata/v1/
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /computeMetadata/v1/ 状态码: 404 耗时: 0.44ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /opc/v1/instance/
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /opc/v1/instance/ 状态码: 404 耗时: 1.60ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /opc/v1/instance/
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /opc/v1/instance/ 状态码: 404 耗时: 0.34ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.99ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.75ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /metadata/instance
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /metadata/instance 状态码: 404 耗时: 0.94ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 2.89ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /sitemap.xml/
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /robots.txt/
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /sitemap.xml/ 状态码: 404 耗时: 1.67ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /robots.txt/ 状态码: 404 耗时: 1.34ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /actuator/health
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /actuator/health 状态码: 404 耗时: 1.26ms
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /actuator/health
+[2025-07-25 15:36:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /actuator/health 状态码: 404 耗时: 1.13ms
+[2025-07-25 15:37:13] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:37:13] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 4.57ms
+[2025-07-25 15:37:13] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:37:13] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 2.83ms
+[2025-07-25 15:37:13] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /robots.txt
+[2025-07-25 15:37:13] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /robots.txt 状态码: 404 耗时: 1.67ms
+[2025-07-25 15:37:13] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /sitemap.xml
+[2025-07-25 15:37:13] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /sitemap.xml 状态码: 404 耗时: 3.14ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /2850033171605015097
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /2850033171605015097 状态码: 404 耗时: 3.13ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 1.57ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.70ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /computeMetadata/v1/
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /computeMetadata/v1/ 状态码: 404 耗时: 0.97ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /computeMetadata/v1/
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /computeMetadata/v1/ 状态码: 404 耗时: 0.65ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /opc/v1/instance/
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /opc/v1/instance/ 状态码: 404 耗时: 0.69ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /opc/v1/instance/
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /opc/v1/instance/ 状态码: 404 耗时: 0.54ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.74ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.54ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /metadata/instance
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /metadata/instance 状态码: 404 耗时: 0.55ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 1.94ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /robots.txt/
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /robots.txt/ 状态码: 404 耗时: 0.93ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /sitemap.xml/
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /sitemap.xml/ 状态码: 404 耗时: 0.97ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /actuator/health
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /actuator/health 状态码: 404 耗时: 0.82ms
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /actuator/health
+[2025-07-25 15:37:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /actuator/health 状态码: 404 耗时: 0.30ms
+[2025-07-25 15:42:10] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 HEAD /api/v1/some_endpoint
+[2025-07-25 15:42:10] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 HEAD /api/v1/some_endpoint 状态码: 404 耗时: 8.30ms
+[2025-07-25 15:42:10] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 HEAD /nonexistent_page
+[2025-07-25 15:42:10] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 HEAD /nonexistent_page 状态码: 404 耗时: 0.64ms
+[2025-07-25 15:45:13] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:45:13] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 11.97ms
+[2025-07-25 15:45:13] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /robots.txt
+[2025-07-25 15:45:13] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /robots.txt 状态码: 404 耗时: 1.10ms
+[2025-07-25 15:45:13] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /sitemap.xml
+[2025-07-25 15:45:13] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:45:13] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /sitemap.xml 状态码: 404 耗时: 1.47ms
+[2025-07-25 15:45:13] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 3.62ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /8780366360711554216
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /8780366360711554216 状态码: 404 耗时: 1.40ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 1.38ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.52ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /computeMetadata/v1/
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /computeMetadata/v1/ 状态码: 404 耗时: 0.39ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /computeMetadata/v1/
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /computeMetadata/v1/ 状态码: 404 耗时: 0.48ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /opc/v1/instance/
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /opc/v1/instance/ 状态码: 404 耗时: 0.28ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /opc/v1/instance/
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /opc/v1/instance/ 状态码: 404 耗时: 0.51ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 1.06ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.63ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /metadata/instance
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /metadata/instance 状态码: 404 耗时: 0.29ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /robots.txt/
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /sitemap.xml/
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 2.39ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /robots.txt/ 状态码: 404 耗时: 0.81ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /sitemap.xml/ 状态码: 404 耗时: 0.73ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /actuator/health
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /actuator/health 状态码: 404 耗时: 1.02ms
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /actuator/health
+[2025-07-25 15:45:20] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /actuator/health 状态码: 404 耗时: 0.34ms
+[2025-07-25 15:47:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 HEAD /
+[2025-07-25 15:47:11] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 HEAD / 状态码: 405 耗时: 5.88ms
+[2025-07-25 15:49:06] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 HEAD /
+[2025-07-25 15:49:06] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 HEAD / 状态码: 405 耗时: 0.80ms
+[2025-07-25 15:51:38] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 HEAD /
+[2025-07-25 15:51:38] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 HEAD / 状态码: 405 耗时: 1.32ms
+[2025-07-25 15:52:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 HEAD /
+[2025-07-25 15:52:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 HEAD / 状态码: 405 耗时: 1.68ms
+[2025-07-25 15:53:31] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 HEAD /
+[2025-07-25 15:53:31] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 HEAD / 状态码: 405 耗时: 0.49ms
+[2025-07-25 15:53:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 HEAD /
+[2025-07-25 15:53:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 HEAD / 状态码: 405 耗时: 0.92ms
+[2025-07-25 15:53:33] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 HEAD /
+[2025-07-25 15:53:33] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 HEAD / 状态码: 405 耗时: 0.87ms
+[2025-07-25 15:54:50] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 HEAD /
+[2025-07-25 15:54:50] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 HEAD / 状态码: 405 耗时: 1.52ms
+[2025-07-25 15:57:08] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 HEAD /
+[2025-07-25 15:57:08] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 HEAD / 状态码: 405 耗时: 6.71ms
+[2025-07-25 15:57:10] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 HEAD /
+[2025-07-25 15:57:10] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 HEAD / 状态码: 405 耗时: 0.80ms
+[2025-07-25 15:57:40] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 HEAD /
+[2025-07-25 15:57:40] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 HEAD / 状态码: 405 耗时: 3.28ms
+[2025-07-25 15:58:20] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 HEAD /
+[2025-07-25 15:58:20] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 HEAD / 状态码: 405 耗时: 1.45ms
+[2025-07-25 15:58:23] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 HEAD /
+[2025-07-25 15:58:23] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 HEAD / 状态码: 405 耗时: 0.78ms
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 16:02:00] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 16:02:00] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:02:00] [INFO] [routers.auth] [login()] - 登录请求: 用户名:test
+[2025-07-25 16:02:00] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: test
+[2025-07-25 16:02:00] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: test
+[2025-07-25 16:02:00] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 7.63ms
+[2025-07-25 16:02:00] [INFO] [routers.auth] [login()] - 登录成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 200 耗时: 287.24ms
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 16:02:00] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 16:02:00] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:02:00] [INFO] [routers.auth] [login()] - 登录请求: 用户名:123
+[2025-07-25 16:02:00] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: 123
+[2025-07-25 16:02:00] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: 123
+[2025-07-25 16:02:00] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.22ms
+[2025-07-25 16:02:00] [WARNING] [routers.auth] [login()] - 登录失败: 用户名或密码错误: 123
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 400 耗时: 7.84ms
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 16:02:00] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:02:00] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:02:00] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:02:00] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.14ms
+[2025-07-25 16:02:00] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 16:02:00] [INFO] [routers.auth] [profile()] - 获取用户信息成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 200 耗时: 7.15ms
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 16:02:00] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:02:00] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:02:00] [WARNING] [routers.auth] [profile()] - 获取用户信息失败，用户未登录或令牌无效
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 401 耗时: 1.37ms
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 16:02:00] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:02:00] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:02:00] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:02:00] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.16ms
+[2025-07-25 16:02:00] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 16:02:00] [INFO] [routers.auth] [verify_token()] - 令牌验证成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 200 耗时: 2.91ms
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 16:02:00] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:02:00] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:02:00] [WARNING] [routers.auth] [verify_token()] - 令牌验证失败，用户未登录或令牌无效
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 401 耗时: 1.32ms
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 16:02:00] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 16:02:00] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:02:00] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:02:00] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.12ms
+[2025-07-25 16:02:00] [INFO] [routers.auth] [refresh_token()] - 刷新令牌成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d, 新令牌: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYTU1ODdmNTAtYjIzZi00YzkxLTg3OGUtODE4MjlmYjhiYzRkIiwiZXhwIjoxNzUzNDMyMzIwfQ.pt0lUe7Rortu41wSliI_0zF2s0hHONPYgTq2UIoBh6k
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 200 耗时: 3.35ms
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 16:02:00] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 16:02:00] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:02:00] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 1.84ms
+[2025-07-25 16:02:00] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/users
+[2025-07-25 16:02:00] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:02:00] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:02:00] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:02:00] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.17ms
+[2025-07-25 16:02:00] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 16:02:00] [INFO] [core.security] [is_admin()] - 检查用户是否为管理员: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:02:00] [INFO] [services.auth] [get_user_role_by_uuid()] - 使用 UUID 查询用户角色: UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:02:00] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.12ms
+[2025-07-25 16:02:00] [INFO] [core.security] [is_admin()] - 用户角色: admin
+[2025-07-25 16:02:00] [INFO] [routers.users] [register()] - 用户注册请求: 用户名: 化多科, 角色: 再期候
+[2025-07-25 16:02:00] [INFO] [services.auth] [create_user()] - 创建用户: 用户名: 化多科, 角色: 再期候
+[2025-07-25 16:02:01] [INFO] [services.auth] [create_user()] - 尝试添加用户到数据库: 用户名: 化多科
+[2025-07-25 16:02:01] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.64ms
+[2025-07-25 16:02:01] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.11ms
+[2025-07-25 16:02:01] [INFO] [routers.users] [register()] - 用户注册成功: 用户名: 化多科, UUID: 2080b9da-3031-4658-a026-c8f49153f02d
+[2025-07-25 16:02:01] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/users 状态码: 201 耗时: 313.54ms
+[2025-07-25 16:08:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 16:08:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 4.24ms
+[2025-07-25 16:08:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 16:08:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 0.96ms
+[2025-07-25 16:08:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /robots.txt
+[2025-07-25 16:08:32] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /sitemap.xml
+[2025-07-25 16:08:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /robots.txt 状态码: 404 耗时: 1.03ms
+[2025-07-25 16:08:32] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /sitemap.xml 状态码: 404 耗时: 1.24ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /1472710150888715839
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /1472710150888715839 状态码: 404 耗时: 2.78ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.93ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.71ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /computeMetadata/v1/
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /computeMetadata/v1/ 状态码: 404 耗时: 0.40ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /computeMetadata/v1/
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /computeMetadata/v1/ 状态码: 404 耗时: 0.85ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /opc/v1/instance/
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /opc/v1/instance/ 状态码: 404 耗时: 0.85ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /opc/v1/instance/
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /opc/v1/instance/ 状态码: 404 耗时: 1.98ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.68ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /latest/meta-data/
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /latest/meta-data/ 状态码: 404 耗时: 0.69ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /metadata/instance
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /metadata/instance 状态码: 404 耗时: 0.56ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET / 状态码: 200 耗时: 5.91ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /sitemap.xml/
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /robots.txt/
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /sitemap.xml/ 状态码: 404 耗时: 1.86ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /robots.txt/ 状态码: 404 耗时: 1.91ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /actuator/health
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /actuator/health 状态码: 404 耗时: 0.96ms
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求开始 - 192.168.1.3 GET /actuator/health
+[2025-07-25 16:08:39] [INFO] [middleware] [dispatch()] - 请求结束 - 192.168.1.3 GET /actuator/health 状态码: 404 耗时: 0.38ms
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 16:12:49] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 16:12:49] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:12:49] [INFO] [routers.auth] [login()] - 登录请求: 用户名:test
+[2025-07-25 16:12:49] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: test
+[2025-07-25 16:12:49] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: test
+[2025-07-25 16:12:49] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.41ms
+[2025-07-25 16:12:49] [INFO] [routers.auth] [login()] - 登录成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 200 耗时: 318.95ms
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 16:12:49] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 16:12:49] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:12:49] [INFO] [routers.auth] [login()] - 登录请求: 用户名:123
+[2025-07-25 16:12:49] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: 123
+[2025-07-25 16:12:49] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: 123
+[2025-07-25 16:12:49] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.19ms
+[2025-07-25 16:12:49] [WARNING] [routers.auth] [login()] - 登录失败: 用户名或密码错误: 123
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 400 耗时: 6.45ms
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 16:12:49] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:12:49] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:12:49] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:12:49] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.26ms
+[2025-07-25 16:12:49] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 16:12:49] [INFO] [routers.auth] [profile()] - 获取用户信息成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 200 耗时: 7.51ms
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 16:12:49] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:12:49] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:12:49] [WARNING] [routers.auth] [profile()] - 获取用户信息失败，用户未登录或令牌无效
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 401 耗时: 3.18ms
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 16:12:49] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:12:49] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:12:49] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:12:49] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.11ms
+[2025-07-25 16:12:49] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 16:12:49] [INFO] [routers.auth] [verify_token()] - 令牌验证成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 200 耗时: 3.58ms
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 16:12:49] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:12:49] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:12:49] [WARNING] [routers.auth] [verify_token()] - 令牌验证失败，用户未登录或令牌无效
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 401 耗时: 5.14ms
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 16:12:49] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 16:12:49] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:12:49] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:12:49] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.23ms
+[2025-07-25 16:12:49] [INFO] [routers.auth] [refresh_token()] - 刷新令牌成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d, 新令牌: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYTU1ODdmNTAtYjIzZi00YzkxLTg3OGUtODE4MjlmYjhiYzRkIiwiZXhwIjoxNzUzNDMyOTY5fQ.kBK4jl3gfhZnCF3z8eXO9JctCTdfI88KtTRremlW4oo
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 200 耗时: 4.33ms
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 16:12:49] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 16:12:49] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:12:49] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 3.21ms
+[2025-07-25 16:12:49] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/users
+[2025-07-25 16:12:49] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:12:49] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:12:49] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:12:49] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.45ms
+[2025-07-25 16:12:49] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 16:12:49] [INFO] [core.security] [is_admin()] - 检查用户是否为管理员: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:12:49] [INFO] [core.security] [is_admin()] - 用户角色: admin
+[2025-07-25 16:12:49] [INFO] [routers.users] [register()] - 用户注册请求: 用户名: 期过线, 角色: 各层方
+[2025-07-25 16:12:49] [INFO] [services.auth] [create_user()] - 创建用户: 用户名: 期过线, 角色: 各层方
+[2025-07-25 16:12:50] [INFO] [services.auth] [create_user()] - 尝试添加用户到数据库: 用户名: 期过线
+[2025-07-25 16:12:50] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.53ms
+[2025-07-25 16:12:50] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.42ms
+[2025-07-25 16:12:50] [INFO] [routers.users] [register()] - 用户注册成功: 用户名: 期过线, UUID: 9852e265-b837-4806-b70f-b7032f052166
+[2025-07-25 16:12:50] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/users 状态码: 201 耗时: 354.55ms
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 16:15:28] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 16:15:28] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:28] [INFO] [routers.auth] [login()] - 登录请求: 用户名:test
+[2025-07-25 16:15:28] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: test
+[2025-07-25 16:15:28] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: test
+[2025-07-25 16:15:28] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 9.21ms
+[2025-07-25 16:15:28] [INFO] [routers.auth] [login()] - 登录成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 200 耗时: 233.10ms
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 16:15:28] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 16:15:28] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:28] [INFO] [routers.auth] [login()] - 登录请求: 用户名:123
+[2025-07-25 16:15:28] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: 123
+[2025-07-25 16:15:28] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: 123
+[2025-07-25 16:15:28] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.44ms
+[2025-07-25 16:15:28] [WARNING] [routers.auth] [login()] - 登录失败: 用户名或密码错误: 123
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 400 耗时: 13.23ms
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 16:15:28] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:28] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:15:28] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:28] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.91ms
+[2025-07-25 16:15:28] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 16:15:28] [INFO] [routers.auth] [profile()] - 获取用户信息成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 200 耗时: 23.53ms
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 16:15:28] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:28] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:15:28] [WARNING] [routers.auth] [profile()] - 获取用户信息失败，用户未登录或令牌无效
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 401 耗时: 2.46ms
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 16:15:28] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:28] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:15:28] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:28] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.28ms
+[2025-07-25 16:15:28] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 16:15:28] [INFO] [routers.auth] [verify_token()] - 令牌验证成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 200 耗时: 3.32ms
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 16:15:28] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:28] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:15:28] [WARNING] [routers.auth] [verify_token()] - 令牌验证失败，用户未登录或令牌无效
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 401 耗时: 3.70ms
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 16:15:28] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 16:15:28] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:28] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:28] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.38ms
+[2025-07-25 16:15:28] [INFO] [routers.auth] [refresh_token()] - 刷新令牌成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d, 新令牌: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYTU1ODdmNTAtYjIzZi00YzkxLTg3OGUtODE4MjlmYjhiYzRkIiwiZXhwIjoxNzUzNDMzMTI4fQ.4zISBKBc_UWq_LfrvxzgGa__pGLP-UyT_3EGBUmApvs
+[2025-07-25 16:15:28] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 200 耗时: 29.28ms
+[2025-07-25 16:15:29] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 16:15:29] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 16:15:29] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:29] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 16:15:29] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 6.29ms
+[2025-07-25 16:15:29] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/users
+[2025-07-25 16:15:29] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:29] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:15:29] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:29] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.47ms
+[2025-07-25 16:15:29] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 16:15:29] [INFO] [core.security] [is_admin()] - 检查用户是否为管理员: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:29] [INFO] [core.security] [is_admin()] - 用户角色: admin
+[2025-07-25 16:15:29] [INFO] [routers.users] [register()] - 用户注册请求: 用户名: 把头进, 角色: 要效南
+[2025-07-25 16:15:29] [INFO] [services.auth] [create_user()] - 创建用户: 用户名: 把头进, 角色: 要效南
+[2025-07-25 16:15:29] [INFO] [services.auth] [create_user()] - 尝试添加用户到数据库: 用户名: 把头进
+[2025-07-25 16:15:29] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 1.83ms
+[2025-07-25 16:15:29] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.11ms
+[2025-07-25 16:15:29] [INFO] [routers.users] [register()] - 用户注册成功: 用户名: 把头进, UUID: b6482a3d-3b3a-461c-af04-9d805fcee07c
+[2025-07-25 16:15:29] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/users 状态码: 201 耗时: 439.63ms
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 16:15:57] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 16:15:57] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:57] [INFO] [routers.auth] [login()] - 登录请求: 用户名:test
+[2025-07-25 16:15:57] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: test
+[2025-07-25 16:15:57] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: test
+[2025-07-25 16:15:57] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 1.21ms
+[2025-07-25 16:15:57] [INFO] [routers.auth] [login()] - 登录成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 200 耗时: 183.09ms
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 16:15:57] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 16:15:57] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:57] [INFO] [routers.auth] [login()] - 登录请求: 用户名:123
+[2025-07-25 16:15:57] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: 123
+[2025-07-25 16:15:57] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: 123
+[2025-07-25 16:15:57] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.27ms
+[2025-07-25 16:15:57] [WARNING] [routers.auth] [login()] - 登录失败: 用户名或密码错误: 123
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 400 耗时: 8.07ms
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 16:15:57] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:57] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:15:57] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:57] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.40ms
+[2025-07-25 16:15:57] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 16:15:57] [INFO] [routers.auth] [profile()] - 获取用户信息成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 200 耗时: 5.85ms
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 16:15:57] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:57] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:15:57] [WARNING] [routers.auth] [profile()] - 获取用户信息失败，用户未登录或令牌无效
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 401 耗时: 2.59ms
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 16:15:57] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:57] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:15:57] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:57] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.14ms
+[2025-07-25 16:15:57] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 16:15:57] [INFO] [routers.auth] [verify_token()] - 令牌验证成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 200 耗时: 4.55ms
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 16:15:57] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:57] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:15:57] [WARNING] [routers.auth] [verify_token()] - 令牌验证失败，用户未登录或令牌无效
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 401 耗时: 1.26ms
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 16:15:57] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 16:15:57] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:57] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:57] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.13ms
+[2025-07-25 16:15:57] [INFO] [routers.auth] [refresh_token()] - 刷新令牌成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d, 新令牌: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYTU1ODdmNTAtYjIzZi00YzkxLTg3OGUtODE4MjlmYjhiYzRkIiwiZXhwIjoxNzUzNDMzMTU3fQ.3G9vqMzO4yS4YYqGby5ujQu9zCeagtgXYm-_tVIkq9o
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 200 耗时: 4.61ms
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 16:15:57] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 16:15:57] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:57] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 2.35ms
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/users
+[2025-07-25 16:15:57] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 16:15:57] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 16:15:57] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:57] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.14ms
+[2025-07-25 16:15:57] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 16:15:57] [INFO] [core.security] [is_admin()] - 检查用户是否为管理员: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 16:15:57] [INFO] [core.security] [is_admin()] - 用户角色: admin
+[2025-07-25 16:15:57] [INFO] [routers.users] [register()] - 用户注册请求: 用户名: 通会离, 角色: 放立离
+[2025-07-25 16:15:57] [INFO] [services.auth] [create_user()] - 创建用户: 用户名: 通会离, 角色: 放立离
+[2025-07-25 16:15:57] [INFO] [services.auth] [create_user()] - 尝试添加用户到数据库: 用户名: 通会离
+[2025-07-25 16:15:57] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.44ms
+[2025-07-25 16:15:57] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.20ms
+[2025-07-25 16:15:57] [INFO] [routers.users] [register()] - 用户注册成功: 用户名: 通会离, UUID: 927e338b-6ece-4a6e-9bfd-b6907aaa4f93
+[2025-07-25 16:15:57] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/users 状态码: 201 耗时: 338.99ms

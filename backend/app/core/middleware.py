@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 import logging
 import time
@@ -38,6 +38,3 @@ class AccessLogMiddleware(BaseHTTPMiddleware):
         return response
 
 
-# FastAPI 应用中注册中间件示例：
-app = FastAPI()
-app.add_middleware(AccessLogMiddleware)
