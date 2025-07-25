@@ -1,45 +1,49 @@
 # services/auth.py
 from datetime import datetime,timezone
 import logging
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from models.user import User
 from utils.auth_utils import hash_password, verify_password
 from utils.uuid_utils import generate_uuid
 
 logger = logging.getLogger("services.auth")
 
-def get_user_by_username(db: Session, username: str) -> User | None:
+async def get_user_by_username(db: AsyncSession, username: str) -> User | None:
     """
     通过用户名查询用户，若存在则返回 User 对象，否则返回 None。
     """
     logger.info(f"使用 用户名 查询用户: {username}")
     try:
-        return db.query(User).filter(User.username == username).first()
+        result = await db.execute(select(User).where(User.username == username))
+        return result.scalar_one_or_none()
     except Exception as e:
         logger.error(f"数据库查询异常: 用户名: {username}, 错误: {e}")
         return None
 
-def get_user_by_uuid(db: Session, uuid: str) -> User | None:
+async def get_user_by_uuid(db: AsyncSession, uuid: str) -> User | None:
     """
     通过UUID查询用户，若存在则返回 User 对象，否则返回 None。
     """
     logger.info(f"使用 UUID 查询用户 {uuid}")
     try:
-        return db.query(User).filter(User.uuid == uuid).first()
+        result = await db.execute(select(User).where(User.uuid == uuid))
+        return result.scalar_one_or_none()
     except Exception as e:
         logger.error(f"数据库查询异常: UUID: {uuid}, 错误: {e}")
         return None
 
-def get_user_role_by_uuid(db: Session, uuid: str) -> str | None:
+async def get_user_role_by_uuid(db: AsyncSession, uuid: str) -> str | None:
     logger.info(f"使用 UUID 查询用户角色: UUID: {uuid}")
-    user = db.query(User).filter(User.uuid == uuid).first()
     try:
-        return user.role if user else None
+        result = await db.execute(select(User).where(User.uuid == uuid))
+        user = result.scalar_one_or_none()
+        return getattr(user, "role", None) if user else None
     except Exception as e:
         logger.error(f"数据库查询用户角色失败: UUID: {uuid}, 错误: {e}")
         return None
 
-def create_user(db: Session,username: str, email: str, password: str, profile_name: str,avatar_url:str, role: str = "user",) -> User:
+async def create_user(db: AsyncSession,username: str, email: str, password: str, profile_name: str,avatar_url:str, role: str = "user",) -> User | None:
     logger.info(f"创建用户: 用户名: {username}, 角色: {role}")
     hashed_pw = hash_password(password)
     user = User(
@@ -57,14 +61,15 @@ def create_user(db: Session,username: str, email: str, password: str, profile_na
     try:
         logger.info(f"尝试添加用户到数据库: 用户名: {username}")
         db.add(user)
-        db.commit()
-        db.refresh(user) 
+        await db.commit()
+        await db.refresh(user)
         return user
     except Exception as e:
+        await db.rollback()
         logger.error(f"添加用户到数据库失败: 用户名: {username}, 错误: {e}")
         return None
 
-def authenticate_user(db: Session, username: str, password: str) -> User | None:
+async def authenticate_user(db: AsyncSession, username: str, password: str) -> User | None:
     """
     验证用户名和密码是否匹配：
     - 查询用户
@@ -73,12 +78,12 @@ def authenticate_user(db: Session, username: str, password: str) -> User | None:
     """
     logger.info(f"尝试登录: 用户名: {username}")
     try:
-        user = get_user_by_username(db, username)
+        user = await get_user_by_username(db, username)
     except Exception as e:
         logger.error(f"数据库查询异常，登录失败: 用户名: {username} 错误: {e}")
         return None
     if not user:
         return None
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, getattr(user, "hashed_password", "")):
         return None
     return user
