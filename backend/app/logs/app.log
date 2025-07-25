@@ -33520,3 +33520,455 @@ WHERE users.uuid = ?
 [2025-07-25 01:02:42] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/user/register
 [2025-07-25 01:02:42] [INFO] [db] [get_db()] - 创建数据库会话
 [2025-07-25 01:02:42] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/user/register 状态码: 401 耗时: 2.00ms
+[2025-07-25 01:18:11] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 01:18:11] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 01:18:11] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 01:18:11] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 01:18:11] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 16.76ms
+[2025-07-25 01:18:19] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 01:18:19] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 01:18:19] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 01:18:19] [INFO] [routers.auth] [login()] - 登录请求: 用户名:test
+[2025-07-25 01:18:19] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: test
+[2025-07-25 01:18:19] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: test
+[2025-07-25 01:18:19] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.71ms
+[2025-07-25 01:18:19] [WARNING] [passlib.handlers.bcrypt] [_load_backend_mixin()] - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/Users/latos/Desktop/Projects/EduPilotv2/.venv/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+[2025-07-25 01:18:19] [INFO] [routers.auth] [login()] - 登录成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 01:18:19] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 200 耗时: 132.38ms
+[2025-07-25 01:19:36] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 01:19:36] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 01:19:36] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 01:19:36] [INFO] [routers.auth] [login()] - 登录请求: 用户名:test
+[2025-07-25 01:19:36] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: test
+[2025-07-25 01:19:36] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: test
+[2025-07-25 01:19:36] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 4.50ms
+[2025-07-25 01:19:36] [INFO] [routers.auth] [login()] - 登录成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 01:19:36] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 200 耗时: 124.68ms
+[2025-07-25 01:21:52] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 01:21:52] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 01:21:52] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 01:21:52] [INFO] [routers.auth] [login()] - 登录请求: 用户名:test
+[2025-07-25 01:21:52] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: test
+[2025-07-25 01:21:52] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: test
+[2025-07-25 01:21:52] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.68ms
+[2025-07-25 01:21:52] [INFO] [routers.auth] [login()] - 登录成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 01:21:52] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 200 耗时: 131.23ms
+[2025-07-25 03:16:38] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 03:16:38] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 03:16:38] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:16:38] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 03:16:38] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 56.58ms
+[2025-07-25 03:17:46] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 03:17:46] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 03:17:46] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:17:46] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 03:17:46] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 13.56ms
+[2025-07-25 03:24:32] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 03:24:32] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 03:24:32] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:24:32] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 03:24:32] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 123.36ms
+[2025-07-25 03:26:23] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 03:26:23] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 03:26:23] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:26:23] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 03:26:23] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 29.04ms
+[2025-07-25 03:29:42] [INFO] [middleware] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 03:29:42] [INFO] [core.rate_limit] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 03:29:42] [INFO] [db] - 创建数据库会话
+[2025-07-25 03:29:42] [WARNING] [routers.auth] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 03:29:42] [INFO] [middleware] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 30.76ms
+2025-07-25 03:30:35: [INFO] [middleware] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+2025-07-25 03:30:35: [INFO] [core.rate_limit] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+2025-07-25 03:30:35: [INFO] [db] - 创建数据库会话
+2025-07-25 03:30:35: [WARNING] [routers.auth] - 刷新令牌失败，令牌无效或已过期
+2025-07-25 03:30:35: [INFO] [middleware] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 7.87ms
+[2025-07-25 03:31:19] [INFO] [middleware] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 03:31:19] [INFO] [core.rate_limit] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 03:31:19] [INFO] [db] - 创建数据库会话
+[2025-07-25 03:31:19] [WARNING] [routers.auth] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 03:31:19] [INFO] [middleware] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 10.52ms
+[2025-07-25 03:32:13] [INFO] [middleware] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 03:32:13] [INFO] [core.rate_limit] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 03:32:13] [INFO] [db] - 创建数据库会话
+[2025-07-25 03:32:13] [WARNING] [routers.auth] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 03:32:13] [INFO] [middleware] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 8.91ms
+[2025-07-25 03:33:53] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 03:33:53] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 03:33:53] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:33:53] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 03:33:53] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 20.95ms
+[2025-07-25 03:34:21] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/user/register
+[2025-07-25 03:34:21] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:34:21] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/user/register 状态码: 401 耗时: 6.01ms
+[2025-07-25 03:34:53] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 03:34:53] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 03:34:53] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:34:53] [INFO] [routers.auth] [login()] - 登录请求: 用户名:test
+[2025-07-25 03:34:53] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: test
+[2025-07-25 03:34:53] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: test
+[2025-07-25 03:34:53] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 1.97ms
+[2025-07-25 03:34:54] [INFO] [routers.auth] [login()] - 登录成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 200 耗时: 182.37ms
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 03:34:54] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 03:34:54] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:34:54] [INFO] [routers.auth] [login()] - 登录请求: 用户名:123
+[2025-07-25 03:34:54] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: 123
+[2025-07-25 03:34:54] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: 123
+[2025-07-25 03:34:54] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.47ms
+[2025-07-25 03:34:54] [WARNING] [routers.auth] [login()] - 登录失败: 用户名或密码错误: 123
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 400 耗时: 4.85ms
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 03:34:54] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:34:54] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 03:34:54] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 03:34:54] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.23ms
+[2025-07-25 03:34:54] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 03:34:54] [INFO] [routers.auth] [profile()] - 获取用户信息成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 200 耗时: 6.25ms
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 03:34:54] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:34:54] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 03:34:54] [WARNING] [routers.auth] [profile()] - 获取用户信息失败，用户未登录或令牌无效
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 401 耗时: 1.95ms
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 03:34:54] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:34:54] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 03:34:54] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 03:34:54] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.11ms
+[2025-07-25 03:34:54] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 03:34:54] [INFO] [routers.auth] [verify_token()] - 令牌验证成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 200 耗时: 3.57ms
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 03:34:54] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:34:54] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 03:34:54] [WARNING] [routers.auth] [verify_token()] - 令牌验证失败，用户未登录或令牌无效
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 401 耗时: 1.19ms
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 03:34:54] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 03:34:54] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:34:54] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 03:34:54] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.09ms
+[2025-07-25 03:34:54] [INFO] [routers.auth] [refresh_token()] - 刷新令牌成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d, 新令牌: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYTU1ODdmNTAtYjIzZi00YzkxLTg3OGUtODE4MjlmYjhiYzRkIiwiZXhwIjoxNzUzMzg3NDk0fQ.eKnbsKcXvLmhDz5jcO6L3a7GKwVF-RtiCMZaGOgWLpM
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 200 耗时: 2.17ms
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 03:34:54] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 03:34:54] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:34:54] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 1.47ms
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/user/register
+[2025-07-25 03:34:54] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 03:34:54] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 03:34:54] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 03:34:54] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.10ms
+[2025-07-25 03:34:54] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 03:34:54] [INFO] [core.security] [is_admin()] - 检查用户是否为管理员: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 03:34:54] [INFO] [services.auth] [get_user_role_by_uuid()] - 使用 UUID 查询用户角色: UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 03:34:54] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.10ms
+[2025-07-25 03:34:54] [INFO] [core.security] [is_admin()] - 用户角色: admin
+[2025-07-25 03:34:54] [INFO] [routers.user] [register()] - 用户注册请求: 用户名: 中信全, 角色: 难记度
+[2025-07-25 03:34:54] [INFO] [services.auth] [create_user()] - 创建用户: 用户名: 中信全, 角色: 难记度
+[2025-07-25 03:34:54] [INFO] [services.auth] [create_user()] - 尝试添加用户到数据库: 用户名: 中信全
+[2025-07-25 03:34:54] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.51ms
+[2025-07-25 03:34:54] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.04ms
+[2025-07-25 03:34:54] [INFO] [routers.user] [register()] - 用户注册成功: 用户名: 中信全, UUID: 139383d4-115e-42b1-a21b-6fd10a84479c
+[2025-07-25 03:34:54] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/user/register 状态码: 201 耗时: 283.19ms
+[2025-07-25 14:49:45] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 14:49:45] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 14:49:45] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 14:49:45] [INFO] [routers.auth] [login()] - 登录请求: 用户名:test
+[2025-07-25 14:49:45] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: test
+[2025-07-25 14:49:45] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: test
+[2025-07-25 14:49:45] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 2.33ms
+[2025-07-25 14:49:46] [INFO] [routers.auth] [login()] - 登录成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 200 耗时: 158.44ms
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 14:49:46] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 14:49:46] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 14:49:46] [INFO] [routers.auth] [login()] - 登录请求: 用户名:123
+[2025-07-25 14:49:46] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: 123
+[2025-07-25 14:49:46] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: 123
+[2025-07-25 14:49:46] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.15ms
+[2025-07-25 14:49:46] [WARNING] [routers.auth] [login()] - 登录失败: 用户名或密码错误: 123
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 400 耗时: 5.12ms
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 14:49:46] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 14:49:46] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 14:49:46] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 14:49:46] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.30ms
+[2025-07-25 14:49:46] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 14:49:46] [INFO] [routers.auth] [profile()] - 获取用户信息成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 200 耗时: 5.92ms
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 14:49:46] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 14:49:46] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 14:49:46] [WARNING] [routers.auth] [profile()] - 获取用户信息失败，用户未登录或令牌无效
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 401 耗时: 1.86ms
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 14:49:46] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 14:49:46] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 14:49:46] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 14:49:46] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.11ms
+[2025-07-25 14:49:46] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 14:49:46] [INFO] [routers.auth] [verify_token()] - 令牌验证成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 200 耗时: 3.96ms
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 14:49:46] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 14:49:46] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 14:49:46] [WARNING] [routers.auth] [verify_token()] - 令牌验证失败，用户未登录或令牌无效
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 401 耗时: 1.75ms
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 14:49:46] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 14:49:46] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 14:49:46] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 14:49:46] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.11ms
+[2025-07-25 14:49:46] [INFO] [routers.auth] [refresh_token()] - 刷新令牌成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d, 新令牌: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYTU1ODdmNTAtYjIzZi00YzkxLTg3OGUtODE4MjlmYjhiYzRkIiwiZXhwIjoxNzUzNDI3OTg2fQ.N4aa5PSjFFhjA9NZOnPeW5nYhKnHVbgSenZoCPXSjHI
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 200 耗时: 2.29ms
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 14:49:46] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 14:49:46] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 14:49:46] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 2.92ms
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/user/register
+[2025-07-25 14:49:46] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 14:49:46] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 14:49:46] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 14:49:46] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.28ms
+[2025-07-25 14:49:46] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 14:49:46] [INFO] [core.security] [is_admin()] - 检查用户是否为管理员: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 14:49:46] [INFO] [services.auth] [get_user_role_by_uuid()] - 使用 UUID 查询用户角色: UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 14:49:46] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.29ms
+[2025-07-25 14:49:46] [INFO] [core.security] [is_admin()] - 用户角色: admin
+[2025-07-25 14:49:46] [INFO] [routers.user] [register()] - 用户注册请求: 用户名: 标七收, 角色: 圆们件
+[2025-07-25 14:49:46] [INFO] [services.auth] [create_user()] - 创建用户: 用户名: 标七收, 角色: 圆们件
+[2025-07-25 14:49:46] [INFO] [services.auth] [create_user()] - 尝试添加用户到数据库: 用户名: 标七收
+[2025-07-25 14:49:46] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.36ms
+[2025-07-25 14:49:46] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.08ms
+[2025-07-25 14:49:46] [INFO] [routers.user] [register()] - 用户注册成功: 用户名: 标七收, UUID: 02ae0f3e-c430-4a4b-b1ca-d65d2b3a42b4
+[2025-07-25 14:49:46] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/user/register 状态码: 201 耗时: 283.34ms
+[2025-07-25 15:00:16] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/user
+[2025-07-25 15:00:16] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/user 状态码: 307 耗时: 4.48ms
+[2025-07-25 15:00:16] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/user/
+[2025-07-25 15:00:16] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:00:16] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:00:16] [WARNING] [routers.user] [register()] - 用户名:1运伟注册失败，只有管理员可以注册用户
+[2025-07-25 15:00:16] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/user/ 状态码: 403 耗时: 10.87ms
+[2025-07-25 15:03:17] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/user
+[2025-07-25 15:03:17] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/user 状态码: 404 耗时: 1.36ms
+[2025-07-25 15:03:38] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/users
+[2025-07-25 15:03:38] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/users 状态码: 307 耗时: 2.81ms
+[2025-07-25 15:03:38] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/users/
+[2025-07-25 15:03:38] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:03:38] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:03:38] [WARNING] [routers.users] [register()] - 用户名:1运伟注册失败，只有管理员可以注册用户
+[2025-07-25 15:03:38] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/users/ 状态码: 403 耗时: 18.35ms
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 15:03:50] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 15:03:50] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:03:50] [INFO] [routers.auth] [login()] - 登录请求: 用户名:test
+[2025-07-25 15:03:50] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: test
+[2025-07-25 15:03:50] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: test
+[2025-07-25 15:03:50] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.85ms
+[2025-07-25 15:03:50] [INFO] [routers.auth] [login()] - 登录成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 200 耗时: 134.41ms
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 15:03:50] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 15:03:50] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:03:50] [INFO] [routers.auth] [login()] - 登录请求: 用户名:123
+[2025-07-25 15:03:50] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: 123
+[2025-07-25 15:03:50] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: 123
+[2025-07-25 15:03:50] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.10ms
+[2025-07-25 15:03:50] [WARNING] [routers.auth] [login()] - 登录失败: 用户名或密码错误: 123
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 400 耗时: 2.24ms
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 15:03:50] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:03:50] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:03:50] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:03:50] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.11ms
+[2025-07-25 15:03:50] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 15:03:50] [INFO] [routers.auth] [profile()] - 获取用户信息成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 200 耗时: 2.46ms
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 15:03:50] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:03:50] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:03:50] [WARNING] [routers.auth] [profile()] - 获取用户信息失败，用户未登录或令牌无效
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 401 耗时: 1.35ms
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 15:03:50] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:03:50] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:03:50] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:03:50] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.12ms
+[2025-07-25 15:03:50] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 15:03:50] [INFO] [routers.auth] [verify_token()] - 令牌验证成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 200 耗时: 2.67ms
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 15:03:50] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:03:50] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:03:50] [WARNING] [routers.auth] [verify_token()] - 令牌验证失败，用户未登录或令牌无效
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 401 耗时: 1.42ms
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 15:03:50] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 15:03:50] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:03:50] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:03:50] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.10ms
+[2025-07-25 15:03:50] [INFO] [routers.auth] [refresh_token()] - 刷新令牌成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d, 新令牌: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYTU1ODdmNTAtYjIzZi00YzkxLTg3OGUtODE4MjlmYjhiYzRkIiwiZXhwIjoxNzUzNDI4ODMwfQ.gI30gE9MwdwSqKsUDyFvuIGlzYjJ_AqSlv-ieuO6CXc
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 200 耗时: 2.15ms
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 15:03:50] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 15:03:50] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:03:50] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 1.21ms
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/user/register
+[2025-07-25 15:03:50] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/user/register 状态码: 404 耗时: 0.49ms
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 15:04:07] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 15:04:07] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:07] [INFO] [routers.auth] [login()] - 登录请求: 用户名:test
+[2025-07-25 15:04:07] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: test
+[2025-07-25 15:04:07] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: test
+[2025-07-25 15:04:07] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.37ms
+[2025-07-25 15:04:07] [INFO] [routers.auth] [login()] - 登录成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 200 耗时: 93.61ms
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 15:04:07] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 15:04:07] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:07] [INFO] [routers.auth] [login()] - 登录请求: 用户名:123
+[2025-07-25 15:04:07] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: 123
+[2025-07-25 15:04:07] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: 123
+[2025-07-25 15:04:07] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.19ms
+[2025-07-25 15:04:07] [WARNING] [routers.auth] [login()] - 登录失败: 用户名或密码错误: 123
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 400 耗时: 4.46ms
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 15:04:07] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:07] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:04:07] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:07] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.20ms
+[2025-07-25 15:04:07] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 15:04:07] [INFO] [routers.auth] [profile()] - 获取用户信息成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 200 耗时: 3.96ms
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 15:04:07] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:07] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:04:07] [WARNING] [routers.auth] [profile()] - 获取用户信息失败，用户未登录或令牌无效
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 401 耗时: 2.22ms
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 15:04:07] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:07] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:04:07] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:07] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.09ms
+[2025-07-25 15:04:07] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 15:04:07] [INFO] [routers.auth] [verify_token()] - 令牌验证成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 200 耗时: 2.01ms
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 15:04:07] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:07] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:04:07] [WARNING] [routers.auth] [verify_token()] - 令牌验证失败，用户未登录或令牌无效
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 401 耗时: 1.12ms
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 15:04:07] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 15:04:07] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:07] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:07] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.10ms
+[2025-07-25 15:04:07] [INFO] [routers.auth] [refresh_token()] - 刷新令牌成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d, 新令牌: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYTU1ODdmNTAtYjIzZi00YzkxLTg3OGUtODE4MjlmYjhiYzRkIiwiZXhwIjoxNzUzNDI4ODQ3fQ.oTnX9dvqJiYz7ytt37MPm0JkDbG7lEO2VgbWYU2jLBo
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 200 耗时: 2.12ms
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 15:04:07] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 15:04:07] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:07] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 2.84ms
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/users
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/users 状态码: 307 耗时: 0.46ms
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/users/
+[2025-07-25 15:04:07] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:07] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:04:07] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:07] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.20ms
+[2025-07-25 15:04:07] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 15:04:07] [INFO] [core.security] [is_admin()] - 检查用户是否为管理员: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:07] [INFO] [core.security] [is_admin()] - 用户角色: admin
+[2025-07-25 15:04:07] [INFO] [routers.users] [register()] - 用户注册请求: 用户名: 质通二, 角色: 那干过
+[2025-07-25 15:04:07] [INFO] [services.auth] [create_user()] - 创建用户: 用户名: 质通二, 角色: 那干过
+[2025-07-25 15:04:07] [INFO] [services.auth] [create_user()] - 尝试添加用户到数据库: 用户名: 质通二
+[2025-07-25 15:04:07] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 1.32ms
+[2025-07-25 15:04:07] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.06ms
+[2025-07-25 15:04:07] [INFO] [routers.users] [register()] - 用户注册成功: 用户名: 质通二, UUID: 86e3c55f-38fc-48d2-b29d-4d10b3b4345d
+[2025-07-25 15:04:07] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/users/ 状态码: 201 耗时: 347.74ms
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 15:04:14] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 15:04:14] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:14] [INFO] [routers.auth] [login()] - 登录请求: 用户名:test
+[2025-07-25 15:04:14] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: test
+[2025-07-25 15:04:14] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: test
+[2025-07-25 15:04:14] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.32ms
+[2025-07-25 15:04:14] [INFO] [routers.auth] [login()] - 登录成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 200 耗时: 116.35ms
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/login
+[2025-07-25 15:04:14] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/login, 限制: 10次/60秒
+[2025-07-25 15:04:14] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:14] [INFO] [routers.auth] [login()] - 登录请求: 用户名:123
+[2025-07-25 15:04:14] [INFO] [services.auth] [authenticate_user()] - 尝试登录: 用户名: 123
+[2025-07-25 15:04:14] [INFO] [services.auth] [get_user_by_username()] - 使用 用户名 查询用户: 123
+[2025-07-25 15:04:14] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.10ms
+[2025-07-25 15:04:14] [WARNING] [routers.auth] [login()] - 登录失败: 用户名或密码错误: 123
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/login 状态码: 400 耗时: 2.47ms
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 15:04:14] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:14] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:04:14] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:14] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.13ms
+[2025-07-25 15:04:14] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 15:04:14] [INFO] [routers.auth] [profile()] - 获取用户信息成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 200 耗时: 3.38ms
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/profile
+[2025-07-25 15:04:14] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:14] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:04:14] [WARNING] [routers.auth] [profile()] - 获取用户信息失败，用户未登录或令牌无效
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/profile 状态码: 401 耗时: 1.28ms
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 15:04:14] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:14] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:04:14] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:14] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.13ms
+[2025-07-25 15:04:14] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 15:04:14] [INFO] [routers.auth] [verify_token()] - 令牌验证成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 200 耗时: 2.92ms
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /api/v1/auth/verify_token
+[2025-07-25 15:04:14] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:14] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:04:14] [WARNING] [routers.auth] [verify_token()] - 令牌验证失败，用户未登录或令牌无效
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /api/v1/auth/verify_token 状态码: 401 耗时: 2.24ms
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 15:04:14] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 15:04:14] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:14] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:14] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.24ms
+[2025-07-25 15:04:14] [INFO] [routers.auth] [refresh_token()] - 刷新令牌成功: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d, 新令牌: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYTU1ODdmNTAtYjIzZi00YzkxLTg3OGUtODE4MjlmYjhiYzRkIiwiZXhwIjoxNzUzNDI4ODU0fQ.u02bkwVidJLKmUrnn6bv74elchhVlr4zCsDQ9NwIy1Y
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 200 耗时: 5.79ms
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/auth/refresh
+[2025-07-25 15:04:14] [INFO] [core.rate_limit] [_limiter()] - 频率限制检查: IP: 127.0.0.1, 路径: /api/v1/auth/refresh, 限制: 10次/60秒
+[2025-07-25 15:04:14] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:14] [WARNING] [routers.auth] [refresh_token()] - 刷新令牌失败，令牌无效或已过期
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/auth/refresh 状态码: 401 耗时: 4.41ms
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/users
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/users 状态码: 307 耗时: 0.62ms
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 POST /api/v1/users/
+[2025-07-25 15:04:14] [INFO] [db] [get_db()] - 创建数据库会话
+[2025-07-25 15:04:14] [INFO] [core.dependencies] [get_current_user()] - 验证访问令牌
+[2025-07-25 15:04:14] [INFO] [services.auth] [get_user_by_uuid()] - 使用 UUID 查询用户 a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:14] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.12ms
+[2025-07-25 15:04:14] [INFO] [core.dependencies] [get_current_user()] - 访问令牌验证成功: uuid: a5587f50-b23f-4c91-878e-81829fb8bc4d 用户名: test
+[2025-07-25 15:04:14] [INFO] [core.security] [is_admin()] - 检查用户是否为管理员: 用户名: test, UUID: a5587f50-b23f-4c91-878e-81829fb8bc4d
+[2025-07-25 15:04:14] [INFO] [core.security] [is_admin()] - 用户角色: admin
+[2025-07-25 15:04:14] [INFO] [routers.users] [register()] - 用户注册请求: 用户名: 与查什, 角色: 白大气
+[2025-07-25 15:04:14] [INFO] [services.auth] [create_user()] - 创建用户: 用户名: 与查什, 角色: 白大气
+[2025-07-25 15:04:14] [INFO] [services.auth] [create_user()] - 尝试添加用户到数据库: 用户名: 与查什
+[2025-07-25 15:04:14] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.26ms
+[2025-07-25 15:04:14] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.05ms
+[2025-07-25 15:04:14] [INFO] [routers.users] [register()] - 用户注册成功: 用户名: 与查什, UUID: 58e8ba0d-49b3-4d9d-bbda-a04b254c31be
+[2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/users/ 状态码: 201 耗时: 275.63ms
