@@ -33972,3 +33972,7 @@ AttributeError: module 'bcrypt' has no attribute '__about__'
 [2025-07-25 15:04:14] [INFO] [db] [after_cursor_execute()] - SQL 执行时间: 0.05ms
 [2025-07-25 15:04:14] [INFO] [routers.users] [register()] - 用户注册成功: 用户名: 与查什, UUID: 58e8ba0d-49b3-4d9d-bbda-a04b254c31be
 [2025-07-25 15:04:14] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 POST /api/v1/users/ 状态码: 201 耗时: 275.63ms
+[2025-07-25 17:29:48] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /
+[2025-07-25 17:29:48] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET / 状态码: 200 耗时: 1.50ms
+[2025-07-25 17:29:48] [INFO] [middleware] [dispatch()] - 请求开始 - 127.0.0.1 GET /favicon.ico
+[2025-07-25 17:29:48] [INFO] [middleware] [dispatch()] - 请求结束 - 127.0.0.1 GET /favicon.ico 状态码: 404 耗时: 1.00ms
