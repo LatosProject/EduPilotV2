@@ -38,7 +38,7 @@ class UserNotExists(BaseAppException):
     message = "User not found"
     detail = "User does not exist"
 
-    def __init__(self, uuid: str = None, username: str = None):
+    def __init__(self, *, uuid: str = None, username: str = None):
         self.uuid = uuid
         self.username = username
         super().__init__()

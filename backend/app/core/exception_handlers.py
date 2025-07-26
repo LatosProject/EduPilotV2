@@ -36,7 +36,9 @@ def invalid_verify_token_handler(request: Request, exc: InvalidVerifyToken):
 
 
 def user_not_exists_handler(request: Request, exc: UserNotExists):
-    logger.warning(f"用户不存在: UUID: {exc.uuid}: {exc.detail}")
+    logger.warning(
+        f"用户不存在: {f'UUID: {exc.uuid}' if getattr(exc, 'uuid', None) else f'user: {exc.username}'}: {exc.detail}"
+    )
     error_resp = ErrorResponse(
         status=exc.error_status,
         message=exc.message,

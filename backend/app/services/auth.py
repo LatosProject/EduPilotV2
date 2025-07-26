@@ -21,7 +21,7 @@ def get_user_by_username(db: Session, username: str) -> User:
         logger.error(f"数据库查询异常: 用户名: {username}, 错误: {e}")
         raise exceptions.DatabaseQueryError() from e
     if user is None:
-        raise exceptions.UserNotExists(username)
+        raise exceptions.UserNotExists(username=username)
     return user
 
 
@@ -50,7 +50,7 @@ def get_user_by_uuid(db: Session, uuid: str) -> User | None:
         logger.error(f"数据库查询异常: UUID: {uuid}, 错误: {e}")
         raise exceptions.DatabaseQueryError() from e
     if user is None:
-        raise exceptions.UserNotExists(uuid)
+        raise exceptions.UserNotExists(uuid=uuid)
     return user
 
 
