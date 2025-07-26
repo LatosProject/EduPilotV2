@@ -2,6 +2,7 @@
 from datetime import datetime,timezone
 import logging
 from sqlalchemy.orm import Session
+from core import exceptions
 from models.user import User
 from utils.auth_utils import hash_password, verify_password
 from utils.uuid_utils import generate_uuid
@@ -21,14 +22,31 @@ def get_user_by_username(db: Session, username: str) -> User | None:
 
 def get_user_by_uuid(db: Session, uuid: str) -> User | None:
     """
-    通过UUID查询用户，若存在则返回 User 对象，否则返回 None。
+    根据用户 UUID 查询用户信息
+
+    参数:
+        db (Session): 数据库会话对象
+        uuid (str): 用户唯一标识符
+
+    返回:
+        User: 查询到的用户实例
+
+    异常:
+        UserNotExists: 用户不存在时抛出
+        DatabaseQueryError: 查询数据库时发生异常
+
+    备注:
+        查询异常时会抛出封装的数据库异常，方便上层处理。
     """
     logger.info(f"使用 UUID 查询用户 {uuid}")
     try:
-        return db.query(User).filter(User.uuid == uuid).first()
+        user = db.query(User).filter(User.uuid == uuid).first()
     except Exception as e:
         logger.error(f"数据库查询异常: UUID: {uuid}, 错误: {e}")
-        return None
+        raise exceptions.DatabaseQueryError() from e
+    if user is None:
+        raise exceptions.UserNotExists()
+    return user
 
 def get_user_role_by_uuid(db: Session, uuid: str) -> str | None:
     logger.info(f"使用 UUID 查询用户角色: UUID: {uuid}")

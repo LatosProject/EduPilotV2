@@ -2,6 +2,7 @@
 import logging
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
+from core import exceptions
 from utils.token_utils import verify_access_token
 from models.user import User 
 from schemas.User import User
@@ -9,20 +10,25 @@ from services.auth import get_user_by_uuid
 from db import get_db
 from sqlalchemy.orm import Session
 
-loogger = logging.getLogger("core.dependencies")
+logger = logging.getLogger("core.dependencies")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 
-def get_current_user(token: str=Depends(oauth2_scheme),db:Session = Depends(get_db)) -> User:
+def get_current_user(token: str=Depends(oauth2_scheme),db:Session = Depends(get_db)) -> User | None:
     try:
-        loogger.info("验证访问令牌")
+        logger.info("验证访问令牌")
         token_data = verify_access_token(token)
         if not token_data or not token_data.get("uuid"):
-            return None
+            raise exceptions.InvalidVerifyToken("令牌无效或缺少uuid")
         user = get_user_by_uuid(db, token_data.get("uuid"))
-        if not user:
-            return None
-        loogger.info(f"访问令牌验证成功: uuid: {user.uuid} 用户名: {user.username}")
+        logger.info(f"访问令牌验证成功: uuid: {user.uuid} 用户名: {user.username}")
         return user
-    except Exception:
+    except exceptions.InvalidVerifyToken:
+        logger.warning("获取用户信息失败，用户未登录或令牌无效")
         return None
+    except exceptions.UserNotExists:
+        logger.info("用户不存在")
+        raise
+    except Exception as e:
+        logger.error(f"未知错误: {e}", exc_info=True)
+        raise exceptions.DatabaseQueryError("数据库访问失败") from e

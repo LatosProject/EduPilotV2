@@ -25,10 +25,9 @@ class AccessLogMiddleware(BaseHTTPMiddleware):
         try:
             response = await call_next(request)
         except Exception as exc:
-            # 捕获异常，记录 ERROR 级别日志和完整堆栈
             tb = traceback.format_exc()
             logger.error(f"请求异常 - {client_ip} {method} {path} 错误: {exc}\n堆栈信息:\n{tb}")
-            raise  # 继续抛出异常，FastAPI 默认异常处理
+            raise  
 
         process_time_ms = (time.time() - start_time) * 1000
         status_code = response.status_code

@@ -28,12 +28,12 @@ LOGGING_CONFIG = {
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-            "formatter": "detailed",  # 这里改成 detailed
+            "formatter": "detailed", 
             "level": LOG_LEVEL,
         },
         "file": {
             "class": "logging.handlers.RotatingFileHandler",
-            "formatter": "detailed",  # 这里改成 detailed
+            "formatter": "detailed", 
             "filename": "logs/app.log",
             "maxBytes": 1024 * 1024 * 5,
             "backupCount": 5,
@@ -62,7 +62,6 @@ def setup_logging():
     os.makedirs("logs", exist_ok=True)
     dictConfig(LOGGING_CONFIG)
 
-    # 手动替换 console handler 的 formatter
     formatter = colorlog.ColoredFormatter(
         fmt="%(log_color)s[%(asctime)s] [%(levelname)s] [%(name)s] - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
@@ -75,5 +74,5 @@ def setup_logging():
         },
     )
 
-    console_handler = logging.getLogger().handlers[0]  # 默认第一个就是 console
+    console_handler = logging.getLogger().handlers[0]  
     console_handler.setFormatter(formatter)

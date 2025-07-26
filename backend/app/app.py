@@ -5,6 +5,9 @@ from core.middleware import AccessLogMiddleware
 from routers import auth, users
 from fastapi.middleware.cors import CORSMiddleware
 from core.logger import setup_logging
+from core.exception_handlers import invalid_verify_token_handler
+from core.exceptions import InvalidVerifyToken
+
 import uvicorn  
 
 setup_logging()
@@ -17,6 +20,8 @@ app = FastAPI(
 app.include_router(auth.router,prefix="/api/v1",tags=["Auth"])
 app.include_router(users.router,prefix="/api/v1",tags=["Users"])
 app.add_middleware(AccessLogMiddleware)
+app.add_exception_handler(InvalidVerifyToken, invalid_verify_token_handler)
+# app.add_exception_handler(BaseAppException, global_exception_handler)
 
 app.add_middleware(
     CORSMiddleware,
