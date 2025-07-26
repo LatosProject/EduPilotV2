@@ -32,9 +32,9 @@ class UserAlreadyExists(BaseAppException):
 class UserNotExists(BaseAppException):
     """用户不存在"""
 
-    code = 404
+    code = 400
     error_status = ErrorCode.RESOURCE_NOT_FOUND
-    http_status = status.HTTP_404_NOT_FOUND
+    http_status = status.HTTP_400_BAD_REQUEST
     message = "User not found"
     detail = "User does not exist"
 
