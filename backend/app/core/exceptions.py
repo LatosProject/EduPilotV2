@@ -22,9 +22,7 @@ class InvalidID(BaseAppException):
 
 class UserAlreadyExists(BaseAppException):
     """用户已存在"""
-    def __init__(self,uuid:str):
-        self.uuid=uuid
-        super().__init__()
+
 
 
 class UserNotExists(BaseAppException):
@@ -34,7 +32,9 @@ class UserNotExists(BaseAppException):
     http_status =status.HTTP_404_NOT_FOUND
     message="User not found"
     detail="User does not exist"
-    pass
+    def __init__(self,uuid:str):
+        self.uuid=uuid
+        super().__init__()
 
 
 class InvalidVerifyToken(BaseAppException):

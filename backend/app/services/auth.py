@@ -45,7 +45,7 @@ def get_user_by_uuid(db: Session, uuid: str) -> User | None:
         logger.error(f"数据库查询异常: UUID: {uuid}, 错误: {e}")
         raise exceptions.DatabaseQueryError() from e
     if user is None:
-        raise exceptions.UserNotExists()
+        raise exceptions.UserNotExists(uuid)
     return user
 
 def get_user_role_by_uuid(db: Session, uuid: str) -> str | None:
