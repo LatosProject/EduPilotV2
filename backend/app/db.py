@@ -1,6 +1,6 @@
 import logging
 import time
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine, event,text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import Engine
@@ -12,6 +12,9 @@ engine = create_engine(
     DATABASE_URL,
     connect_args={"check_same_thread": False}  # SQLite
 )
+# 设置 WAL 模式
+with engine.connect() as conn:
+    conn.execute(text("PRAGMA journal_mode=WAL"))
 
 # SQL 执行前事件
 @event.listens_for(Engine, "before_cursor_execute")
