@@ -3,17 +3,19 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from redis.asyncio import Redis
 from core.dependencies import get_current_user
-from db import get_db
+from db import DatabaseConnector
 from services.auth import get_user_role_by_uuid
 from core.redis import redis_client
 from schemas.User import User
 import logging
+
 logger = logging.getLogger("core.security")
 
+
 async def is_admin(
-    user: User = Depends(get_current_user),             
-    db: Session = Depends(get_db),   
-    redis: Redis = Depends(lambda: redis_client)
+    user: User = Depends(get_current_user),
+    db: Session = Depends(DatabaseConnector.get_db),
+    redis: Redis = Depends(lambda: redis_client),
 ) -> None:
     try:
         logger.info(f"检查用户是否为管理员: 用户名: {user.username}, UUID: {user.uuid}")

@@ -1,40 +1,88 @@
 import logging
 import time
-from sqlalchemy import create_engine, event,text
+from typing import AsyncGenerator
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import event, text
 from sqlalchemy.engine import Engine
 
-DATABASE_URL = "sqlite:///./app.db"
 logger = logging.getLogger("db")
+Base = declarative_base()
 
-engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False}  # SQLite
-)
-# 设置 WAL 模式
-with engine.connect() as conn:
-    conn.execute(text("PRAGMA journal_mode=WAL"))
 
 # SQL 执行前事件
 @event.listens_for(Engine, "before_cursor_execute")
 def before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
     conn.info.setdefault("query_start_time", []).append(time.time())
 
+
 # SQL 执行后事件
 @event.listens_for(Engine, "after_cursor_execute")
 def after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
     start_time = conn.info["query_start_time"].pop(-1)
     total = (time.time() - start_time) * 1000
-    logger.info(f"SQL 执行时间: {total:.2f}ms")
+    logger.info("SQL 执行时间: %.2fms", total)
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
 
-def get_db():
-    logger.info("创建数据库会话")
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+class DatabaseConnector:
+    """
+    数据库连接器类
+    用于创建异步数据库引擎和会话工厂，并提供数据库连接和会话管理功能。
+    """
+
+    DATABASE_URL = "sqlite+aiosqlite:///./app.db"  # 使用 aiosqlite 作为异步 SQLite 驱动
+
+    @classmethod
+    async def initialize(cls):
+        """初始化数据库引擎和会话工厂"""
+        cls.engine = create_async_engine(
+            cls.DATABASE_URL, connect_args={"check_same_thread": False}  # SQLite 特性
+        )
+        cls.async_session = async_sessionmaker(
+            autocommit=False, autoflush=False, bind=cls.engine
+        )
+        # 设置 WAL 模式
+        await cls.set_wal_mode()
+
+    @classmethod
+    async def set_wal_mode(cls):
+        """设置 SQLite 数据库为 WAL 模式
+        这可以提高并发性能，特别是在高并发读写场景下。
+        """
+        async with cls.engine.begin() as conn:
+            await conn.execute(text("PRAGMA journal_mode=WAL"))
+
+    @classmethod
+    async def get_db(cls) -> AsyncGenerator[AsyncSession, None]:
+        """
+        数据库会话获取函数
+        """
+        async with cls.async_session() as session:
+            yield session
+
+
+# DATABASE_URL = "sqlite+aiosqlite:///./app.db"
+# logger = logging.getLogger("db")
+
+# engine = create_async_engine(
+#     DATABASE_URL,
+#     connect_args={"check_same_thread": False}  # SQLite
+# )
+# # 设置 WAL 模式
+# async def set_wal_mode():
+#     """设置 SQLite 数据库为 WAL 模式
+#     这可以提高并发性能，特别是在高并发读写场景下。
+#     """
+#     async with engine.begin() as conn:
+#         await conn.execute(text("PRAGMA journal_mode=WAL"))
+
+# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Base = declarative_base()
+
+# def get_db():
+#     logger.info("创建数据库会话")
+#     db = SessionLocal()
+#     try:
+#         yield db
+#     finally:
+#         db.close()

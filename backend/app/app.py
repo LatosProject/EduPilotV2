@@ -1,8 +1,10 @@
 # app.py
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from routers import users
 from core.middleware import AccessLogMiddleware
 from routers import auth, users
+from db import DatabaseConnector
 from fastapi.middleware.cors import CORSMiddleware
 from core.logger import setup_logging
 from core.exception_handlers import (
@@ -20,9 +22,19 @@ from core.exceptions import (
 
 import uvicorn
 
-setup_logging()
 
-app = FastAPI(title="EduPilot", version="0.1a")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    FastAPI 生命周期事件，用于初始化数据库连接等
+    """
+    setup_logging()
+    await DatabaseConnector.initialize()
+    yield
+    await DatabaseConnector.engine.dispose()  # 清理资源
+
+
+app = FastAPI(title="EduPilot", version="0.1a", lifespan=lifespan)
 # 注册路由
 app.include_router(auth.router, prefix="/api/v1", tags=["Auth"])
 app.include_router(users.router, prefix="/api/v1", tags=["Users"])

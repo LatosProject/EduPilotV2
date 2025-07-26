@@ -4,6 +4,7 @@ from passlib.context import CryptContext
 # 定义加密上下文，使用 bcrypt 算法
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
 def hash_password(password: str) -> str:
     """
     对明文密码进行哈希加密
@@ -20,6 +21,7 @@ def hash_password(password: str) -> str:
         - 不建议明文密码存储或传输，必须先调用此函数加密。
     """
     return pwd_context.hash(password)
+
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """

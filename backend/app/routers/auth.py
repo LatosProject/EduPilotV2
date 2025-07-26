@@ -20,8 +20,9 @@ from schemas.Response import (
 from services.auth import authenticate_user, get_user_by_uuid
 from utils.token_utils import create_access_token, verify_access_token
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Union
-from db import get_db
+from db import DatabaseConnector
 from core.dependencies import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -35,11 +36,13 @@ logger = logging.getLogger("routers.auth")
     dependencies=[Depends(rate_limiter(limit=10, windows=60))],
     response_model=Union[LoginResponse, ErrorResponse],
 )
-def login(form_data: LoginRequest, db: Session = Depends(get_db)):
+async def login(
+    form_data: LoginRequest, db: AsyncSession = Depends(DatabaseConnector.get_db)
+):
     try:
-        logger.info(f"登录请求: 用户名:{form_data.username}")
-        user = authenticate_user(db, form_data.username, form_data.password)
-        logger.info(f"登录成功: 用户名: {user.username}, UUID: {user.uuid}")
+        logger.info("登录请求: 用户名:%s", form_data.username)
+        user = await authenticate_user(db, form_data.username, form_data.password)
+        logger.info("登录成功: 用户名: %s, UUID: %s", user.username, user.uuid)
         token, expires_in = create_access_token({"uuid": str(user.uuid)})
         success_resp = LoginResponse(
             status=ErrorCode.SUCCESS,
@@ -80,7 +83,9 @@ def profile(current_user: User = Depends(get_current_user)):
             content=error_resp.model_dump(by_alias=True, exclude_none=True),
         )
     logger.info(
-        f"获取用户信息成功: 用户名: {current_user.username}, UUID: {current_user.uuid}"
+        "获取用户信息成功: 用户名: %s, UUID: %s",
+        current_user.username,
+        current_user.uuid,
     )
     success_resp = ApiResponse(
         status=ErrorCode.SUCCESS,
@@ -107,13 +112,19 @@ def profile(current_user: User = Depends(get_current_user)):
     dependencies=[Depends(rate_limiter(limit=10, windows=60))],
     response_model=Union[LoginResponse, ErrorResponse],
 )
-def refresh_token(refresh_token: str = Cookie(...), db: Session = Depends(get_db)):
+async def refresh_token(
+    refresh_token: str = Cookie(...),
+    db: AsyncSession = Depends(DatabaseConnector.get_db),
+):
     try:
         payload = verify_access_token(refresh_token)
-        user = get_user_by_uuid(db, payload["uuid"])
+        user = await get_user_by_uuid(db, payload["uuid"])
         new_token, expires_in = create_access_token({"uuid": str(user.uuid)})
         logger.info(
-            f"刷新令牌成功: 用户名: {user.username}, UUID: {user.uuid}, 新令牌: {new_token}"
+            "刷新令牌成功: 用户名: %s, UUID: %s, 新令牌: %s",
+            user.username,
+            user.uuid,
+            new_token,
         )
         success_resp = LoginResponse(
             status=ErrorCode.SUCCESS,
@@ -139,14 +150,12 @@ def refresh_token(refresh_token: str = Cookie(...), db: Session = Depends(get_db
     except exceptions.BaseAppException as e:
         raise e
     except Exception as e:
-        logger.error(f"刷新令牌未知错误: {e}", exc_info=True)
+        logger.error("刷新令牌未知错误: %s", e, exc_info=True)
         raise exceptions.BaseAppException(detail=str(e))
 
 
 @router.get("/verify_token", response_model=Union[ApiResponse, ErrorResponse])
-def verify_token(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
-):
+async def verify_token(current_user: User = Depends(get_current_user)):
     if current_user is None:
         error_resp = ErrorResponse(
             status=ErrorCode.AUTHENTICATION_FAILED,
@@ -159,7 +168,7 @@ def verify_token(
             content=error_resp.model_dump(by_alias=True, exclude_none=True),
         )
     logger.info(
-        f"令牌验证成功: 用户名: {current_user.username}, UUID: {current_user.uuid}"
+        "令牌验证成功: 用户名: %s, UUID: %s", current_user.username, current_user.uuid
     )
     success_resp = ApiResponse(
         status=ErrorCode.SUCCESS,

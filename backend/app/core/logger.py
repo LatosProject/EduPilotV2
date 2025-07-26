@@ -28,17 +28,17 @@ LOGGING_CONFIG = {
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-            "formatter": "detailed", 
+            "formatter": "detailed",
             "level": LOG_LEVEL,
         },
         "file": {
             "class": "logging.handlers.RotatingFileHandler",
-            "formatter": "detailed", 
+            "formatter": "detailed",
             "filename": "logs/app.log",
             "maxBytes": 1024 * 1024 * 5,
             "backupCount": 5,
             "level": LOG_LEVEL,
-            "encoding": "utf-8"
+            "encoding": "utf-8",
         },
         "error_file": {
             "class": "logging.handlers.RotatingFileHandler",
@@ -47,7 +47,7 @@ LOGGING_CONFIG = {
             "maxBytes": 1024 * 1024 * 5,
             "backupCount": 3,
             "level": "ERROR",
-            "encoding": "utf-8"
+            "encoding": "utf-8",
         },
     },
     "root": {
@@ -55,6 +55,7 @@ LOGGING_CONFIG = {
         "level": LOG_LEVEL,
     },
 }
+
 
 def setup_logging():
     import colorlog
@@ -74,5 +75,5 @@ def setup_logging():
         },
     )
 
-    console_handler = logging.getLogger().handlers[0]  
+    console_handler = logging.getLogger().handlers[0]
     console_handler.setFormatter(formatter)

@@ -6,6 +6,7 @@ import traceback
 
 logger = logging.getLogger("middleware")
 
+
 class AccessLogMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         start_time = time.time()
@@ -26,14 +27,16 @@ class AccessLogMiddleware(BaseHTTPMiddleware):
             response = await call_next(request)
         except Exception as exc:
             tb = traceback.format_exc()
-            logger.error(f"请求异常 - {client_ip} {method} {path} 错误: {exc}\n堆栈信息:\n{tb}")
-            raise  
+            logger.error(
+                f"请求异常 - {client_ip} {method} {path} 错误: {exc}\n堆栈信息:\n{tb}"
+            )
+            raise
 
         process_time_ms = (time.time() - start_time) * 1000
         status_code = response.status_code
 
-        logger.info(f"请求结束 - {client_ip} {method} {path} 状态码: {status_code} 耗时: {process_time_ms:.2f}ms")
+        logger.info(
+            f"请求结束 - {client_ip} {method} {path} 状态码: {status_code} 耗时: {process_time_ms:.2f}ms"
+        )
 
         return response
-
-
