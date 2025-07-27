@@ -1,12 +1,13 @@
 # services/auth.py
 from datetime import datetime, timezone
 import logging
+from sqlite3 import IntegrityError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from core import exceptions
 from models.user import User
 from utils.auth_utils import hash_password, verify_password
-from utils.uuid_utils import generate_uuid
+from utils.uuid import generate_uuid
 
 logger = logging.getLogger("services.auth")
 
@@ -104,9 +105,13 @@ async def create_user(
         await db.commit()
         await db.refresh(user)
         return user
+    except IntegrityError as e:
+        raise exceptions.UserAlreadyExists()
     except Exception as e:
         logger.error("添加用户到数据库失败: 用户名: %s, 错误: %s", username, e)
         return None
+    
+
 
 
 async def authenticate_user(
@@ -127,5 +132,5 @@ async def authenticate_user(
         logger.error(f"数据库查询异常，登录失败: 用户名: {username} 错误: {e}")
         raise exceptions.DatabaseQueryError() from e
     if not verify_password(password, user.hashed_password):
-        raise exceptions.InvalidPasswordException(username)
+        raise exceptions.AuthenticationFailed(username)
     return user

@@ -27,6 +27,11 @@ class InvalidID(BaseAppException):
 
 class UserAlreadyExists(BaseAppException):
     """用户已存在"""
+    code = 400
+    error_status=ErrorCode.PARAMETER_ERROR
+    http_status=status.HTTP_400_BAD_REQUEST
+    message="User registration failed"
+    detail="User already exists or invalid data"
 
 
 class UserNotExists(BaseAppException):
@@ -51,16 +56,20 @@ class InvalidVerifyToken(BaseAppException):
     error_status = ErrorCode.AUTHENTICATION_FAILED
     http_status = status.HTTP_401_UNAUTHORIZED
     message = "Authentication failed"
-    detail = "Invalid refresh token"
+    detail = "Invalid token"
 
 
 class InvalidPasswordException(BaseAppException):
-    """密码校验失败，含详细原因"""
+    """密码校验失败(修改密码)，含详细原因"""
 
+
+
+class AuthenticationFailed(BaseAppException):
+    """认证失败，用户名或密码错误"""
     code = 400
     error_status = ErrorCode.AUTHENTICATION_FAILED
     http_status = status.HTTP_400_BAD_REQUEST
-    message = ("Invalid username or password",)
+    message = "Invalid username or password"
     detail = "Authentication failed"
 
     def __init__(self, *, username: str = None):
@@ -68,16 +77,15 @@ class InvalidPasswordException(BaseAppException):
         super().__init__()
 
 
-class AuthenticationFailed(BaseAppException):
-    """认证失败，用户名或密码错误"""
-
-    pass
-
-
 class PermissionDenied(BaseAppException):
     """权限不足，操作被拒绝"""
 
-    pass
+    code = 403
+    error_status=ErrorCode.PERMISSION_DENIED
+    http_status=status.HTTP_403_FORBIDDEN
+    message="User registration failed"
+    detail = "Only admin can register users"
+
 
 
 class RateLimitExceeded(BaseAppException):
@@ -88,3 +96,11 @@ class RateLimitExceeded(BaseAppException):
 
 class DatabaseQueryError(BaseAppException):
     pass
+
+
+class InvalidParameter(Exception):
+    code = 400
+    error_status = ErrorCode.PARAMETER_ERROR
+    http_status = 400
+    message = "Invalid parameter"
+    detail = "One or more parameters are invalid or missing"

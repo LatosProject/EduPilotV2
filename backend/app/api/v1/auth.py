@@ -11,18 +11,17 @@ from schemas.User import User
 from schemas.Response import (
     LoginResponse,
     ErrorResponse,
-    Error,
     Meta,
     LoginData,
     LoginRequest,
     ApiResponse,
 )
 from services.auth import authenticate_user, get_user_by_uuid
-from utils.token_utils import create_access_token, verify_access_token
+from utils.token import create_access_token, verify_access_token
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Union
-from db import DatabaseConnector
+from db.db import DatabaseConnector
 from core.dependencies import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -70,41 +69,33 @@ async def login(
 
 
 @router.get("/profile", response_model=Union[ApiResponse, ErrorResponse])
-def profile(current_user: User = Depends(get_current_user)):
-    if current_user is None:
-        error_resp = ErrorResponse(
-            status=ErrorCode.AUTHENTICATION_FAILED,
-            message="User not found",
-            error=Error(code=401, details="The requested user does not exist"),
+async def profile(current_user: User = Depends(get_current_user)):
+    try:
+        logger.info(
+            "获取用户信息成功: 用户名: %s, UUID: %s",
+            current_user.username,
+            current_user.uuid,
+        )
+        success_resp = ApiResponse(
+            status=ErrorCode.SUCCESS,
+            message="User profile retrieved successfully",
+            data=User(
+                uuid=current_user.uuid,
+                username=current_user.username,
+                email=current_user.email,
+                role=current_user.role,
+                status=current_user.status,
+                created_at=current_user.created_at.isoformat(),
+                last_login=current_user.last_login.isoformat(),
+            ).model_dump(),
             meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
         )
         return JSONResponse(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            content=error_resp.model_dump(by_alias=True, exclude_none=True),
+            status_code=200,
+            content=success_resp.model_dump(by_alias=True, exclude_none=True),
         )
-    logger.info(
-        "获取用户信息成功: 用户名: %s, UUID: %s",
-        current_user.username,
-        current_user.uuid,
-    )
-    success_resp = ApiResponse(
-        status=ErrorCode.SUCCESS,
-        message="User profile retrieved successfully",
-        data=User(
-            uuid=current_user.uuid,
-            username=current_user.username,
-            email=current_user.email,
-            role=current_user.role,
-            status=current_user.status,
-            created_at=current_user.created_at.isoformat(),
-            last_login=current_user.last_login.isoformat(),
-        ).model_dump(),
-        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
-    )
-    return JSONResponse(
-        status_code=200,
-        content=success_resp.model_dump(by_alias=True, exclude_none=True),
-    )
+    except exceptions.BaseAppException as e:
+        raise e
 
 
 @router.post(
@@ -149,31 +140,20 @@ async def refresh_token(
         )
     except exceptions.BaseAppException as e:
         raise e
-    except Exception as e:
-        logger.error("刷新令牌未知错误: %s", e, exc_info=True)
-        raise exceptions.BaseAppException(detail=str(e))
 
 
 @router.get("/verify_token", response_model=Union[ApiResponse, ErrorResponse])
 async def verify_token(current_user: User = Depends(get_current_user)):
-    if current_user is None:
-        error_resp = ErrorResponse(
-            status=ErrorCode.AUTHENTICATION_FAILED,
-            message="Token verification failed",
-            error=Error(code=401, details="Token is invalid or expired"),
+    try:
+        logger.info(
+            "令牌验证成功: 用户名: %s, UUID: %s", current_user.username, current_user.uuid
+        )
+        success_resp = ApiResponse(
+            status=ErrorCode.SUCCESS,
+            message="Token is valid",
+            data={},
             meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
         )
-        return JSONResponse(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            content=error_resp.model_dump(by_alias=True, exclude_none=True),
-        )
-    logger.info(
-        "令牌验证成功: 用户名: %s, UUID: %s", current_user.username, current_user.uuid
-    )
-    success_resp = ApiResponse(
-        status=ErrorCode.SUCCESS,
-        message="Token is valid",
-        data={},
-        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
-    )
-    return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))
+        return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))
+    except exceptions.BaseAppException as e:
+        raise e

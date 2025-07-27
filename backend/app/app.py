@@ -1,23 +1,30 @@
 # app.py
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from routers import users
+from api.v1 import users
+from api.v1 import auth
 from core.middleware import AccessLogMiddleware
-from routers import auth, users
-from db import DatabaseConnector
+from api.v1 import users
+from db.db import DatabaseConnector
 from fastapi.middleware.cors import CORSMiddleware
 from core.logger import setup_logging
 from core.exception_handlers import (
     invalid_verify_token_handler,
     user_not_exists_handler,
     global_exception_handler,
-    invalid_password_handler,
+    authentication_failed_handler,
+    user_already_exists_handler,
+    permission_denied_handler,
+    invalid_parameter_handler
 )
 from core.exceptions import (
     InvalidVerifyToken,
     UserNotExists,
     BaseAppException,
-    InvalidPasswordException,
+    AuthenticationFailed,
+    UserAlreadyExists,
+    PermissionDenied,
+    InvalidParameter
 )
 
 import uvicorn
@@ -42,7 +49,11 @@ app.add_middleware(AccessLogMiddleware)
 app.add_exception_handler(InvalidVerifyToken, invalid_verify_token_handler)
 app.add_exception_handler(UserNotExists, user_not_exists_handler)
 app.add_exception_handler(BaseAppException, global_exception_handler)
-app.add_exception_handler(InvalidPasswordException, invalid_password_handler)
+app.add_exception_handler(AuthenticationFailed, authentication_failed_handler)
+app.add_exception_handler(UserAlreadyExists,user_already_exists_handler)
+app.add_exception_handler(PermissionDenied,permission_denied_handler)
+app.add_exception_handler(InvalidParameter,invalid_parameter_handler)
+
 
 app.add_middleware(
     CORSMiddleware,

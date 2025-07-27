@@ -3,11 +3,11 @@ import logging
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from core import exceptions
-from utils.token_utils import verify_access_token
+from utils.token import verify_access_token
 from models.user import User
 from schemas.User import User
 from services.auth import get_user_by_uuid
-from db import DatabaseConnector
+from db.db import DatabaseConnector
 from sqlalchemy.orm import Session
 
 logger = logging.getLogger("core.dependencies")
@@ -31,8 +31,8 @@ async def get_current_user(
         )
         return user
     except exceptions.InvalidVerifyToken:
-        logger.warning("获取用户信息失败，用户未登录或令牌无效")
-        return None
+        raise
+        # return None
     except exceptions.UserNotExists:
         logger.info("用户不存在")
         raise

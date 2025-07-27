@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from redis.asyncio import Redis
 from core.dependencies import get_current_user
-from db import DatabaseConnector
+from db.db import DatabaseConnector
 from services.auth import get_user_role_by_uuid
 from core.redis import redis_client
 from schemas.User import User
@@ -28,7 +28,7 @@ async def is_admin(
         cached_role = await redis.get(cache_key)
         if not cached_role:
             logger.debug(f"Redis 缓存未命中，查询数据库: UUID: {uuid}")
-            role = get_user_role_by_uuid(db, uuid)
+            role = await get_user_role_by_uuid(db, uuid)
             if not role:
                 logger.warning(f"用户角色查询失败: UUID: {uuid}")
                 return None
