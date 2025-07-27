@@ -2,6 +2,7 @@ import logging
 from typing import Callable
 from fastapi import HTTPException, Request
 from core.redis import redis_client  # 引入 Redis 异步客户端
+from core import exceptions
 
 # 设置日志记录器，用于记录限流相关事件
 logger = logging.getLogger("core.rate_limit")
@@ -42,9 +43,6 @@ def rate_limiter(limit: int = 5, windows: int = 60) -> Callable:
             logger.warning(
                 f"请求超出频率限制: IP: {ip}, 路径: {path}, 当前计数: {count}, 限制: {limit}"
             )
-            raise HTTPException(
-                status_code=429,  # Too Many Requests
-                detail="Too many requests, please try again later.",
-            )
+            raise exceptions.RateLimitExceeded()
 
     return _limiter

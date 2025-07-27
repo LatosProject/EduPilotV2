@@ -2,6 +2,7 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from redis.asyncio import Redis
+from core import exceptions
 from core.dependencies import get_current_user
 from db.connector import DatabaseConnector
 from services.auth import get_user_role_by_uuid
@@ -37,7 +38,7 @@ async def is_admin(
         uuid = user.uuid
         if not uuid:
             logger.warning("用户UUID无效，无法检查管理员权限")
-            return None  # 无法继续判断
+            exceptions.InvalidVerifyToken()
 
         # 构造 Redis 缓存键
         cache_key = f"auth:role:{uuid}"
@@ -64,6 +65,7 @@ async def is_admin(
         # 判断角色是否为管理员
         return cached_role == "admin"
 
-    except Exception:
+    except Exception as e:
         # 静默失败，不抛出异常（可调整为 raise HTTPException 如有需要）
+        logger.debug(f"Redis 缓存错误 {e}")
         return None

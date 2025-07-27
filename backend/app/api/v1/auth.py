@@ -46,7 +46,7 @@ async def login(
     fresh_token, fresh_expires_in = create_fresh_token({"uuid": str(user.uuid)})
 
     success_resp = LoginResponse(
-        status=ErrorCode.SUCCESS,
+        status=0,
         message="Login successful",
         data=LoginData(
             access_token=token,
@@ -87,7 +87,7 @@ async def profile(current_user: User = Depends(get_current_user)):
         current_user.uuid,
     )
     success_resp = ApiResponse(
-        status=ErrorCode.SUCCESS,
+        status=0,
         message="User profile retrieved successfully",
         data=User(
             uuid=current_user.uuid,
@@ -126,7 +126,7 @@ async def refresh_token(
         new_token,
     )
     success_resp = LoginResponse(
-        status=ErrorCode.SUCCESS,
+        status=0,
         message="Token refreshed successfully",
         data=LoginData(
             access_token=new_token,
@@ -152,7 +152,7 @@ async def verify_token(current_user: User = Depends(get_current_user)):
         "令牌验证成功: 用户名: %s, UUID: %s", current_user.username, current_user.uuid
     )
     success_resp = ApiResponse(
-        status=ErrorCode.SUCCESS,
+        status=0,
         message="Token is valid",
         data={},
         meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),

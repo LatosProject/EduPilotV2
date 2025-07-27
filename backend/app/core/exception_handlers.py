@@ -14,6 +14,7 @@ from core.exceptions import (
     PermissionDenied,
     UserAlreadyExists,
     InvalidParameter,
+    RateLimitExceeded,
 )
 
 logger = logging.getLogger("core.exception_handlers")
@@ -114,6 +115,16 @@ async def invalid_parameter_handler(
     )
 
 
+async def rate_limit_exceeded_handler(
+    request: Request, exc: InvalidParameter
+) -> JSONResponse:
+    return build_response(
+        exc,
+        logger.warning,
+        "请求次数过多",
+    )
+
+
 exception_handler_map = {
     InvalidVerifyToken: invalid_verify_token_handler,
     UserNotExists: user_not_exists_handler,
@@ -122,6 +133,7 @@ exception_handler_map = {
     UserAlreadyExists: user_already_exists_handler,
     PermissionDenied: permission_denied_handler,
     InvalidParameter: invalid_parameter_handler,
+    RateLimitExceeded: rate_limit_exceeded_handler,
 }
 
 

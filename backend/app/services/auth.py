@@ -83,7 +83,7 @@ async def get_user_role_by_uuid(db: AsyncSession, uuid: str) -> str | None:
         str | None: 用户角色，若用户不存在返回 None
 
     异常说明:
-        - 无显式抛出，查询失败时返回 None（避免中断流程）
+    -  数据库错误时抛出 DatabaseQueryError，调用者需捕获
     """
     logger.info("使用 UUID 查询用户角色: UUID: %s", uuid)
     try:
@@ -93,7 +93,7 @@ async def get_user_role_by_uuid(db: AsyncSession, uuid: str) -> str | None:
         return user.role if user else None
     except Exception as e:
         logger.error("数据库查询用户角色失败: UUID: %s, 错误: %s", uuid, e)
-        return None
+        raise exceptions.DatabaseQueryError() from e
 
 
 async def create_user(

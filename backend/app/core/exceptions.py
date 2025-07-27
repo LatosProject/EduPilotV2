@@ -115,7 +115,11 @@ class PermissionDenied(BaseAppException):
 class RateLimitExceeded(BaseAppException):
     """请求频率过快，被限流"""
 
-    pass
+    code = 429
+    detail = "请求频率过快，请稍后重试"
+    http_status = 429
+    error_status = ErrorCode.TOO_MANY_REQUESTS
+    message = "Too many requests. Please try again later"
 
 
 class DatabaseQueryError(BaseAppException):

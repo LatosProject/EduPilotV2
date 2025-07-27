@@ -7,11 +7,10 @@ from typing import Union
 
 from fastapi.responses import JSONResponse
 from core import exceptions
-from core.status_codes import ErrorCode
 from core.security import is_admin
 from services.auth import create_user
 from db.connector import DatabaseConnector
-from schemas.Response import ApiResponse, Error, ErrorResponse, Meta, RegisterRequest
+from schemas.Response import ApiResponse, Meta, RegisterRequest
 from schemas.User import UserProfile
 from sqlalchemy.orm import Session
 
@@ -43,7 +42,7 @@ async def register(
             raise exceptions.InvalidParameter()
         logger.info(f"用户注册成功: 用户名: {user.username}, UUID: {user.uuid}")
         success_resp = ApiResponse(
-            status=ErrorCode.SUCCESS,
+            status=0,
             message="User registered successfully",
             data={},
             meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
