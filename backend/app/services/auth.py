@@ -14,7 +14,21 @@ logger = logging.getLogger("services.auth")
 
 async def get_user_by_username(db: AsyncSession, username: str) -> User:
     """
-    通过用户名查询用户，若存在则返回 User 对象，否则返回 None。
+    根据用户名查询用户信息。
+
+    参数说明:
+        db (AsyncSession): 异步数据库会话
+        username (str): 用户名
+
+    返回值:
+        User: 查询到的用户对象
+
+    异常说明:
+        - UserNotExists: 用户不存在
+        - DatabaseQueryError: 数据库执行失败
+
+    其他说明:
+        查询失败将统一抛出封装异常，供上层逻辑处理。
     """
     logger.info("使用 用户名 查询用户: %s", username)
     try:
@@ -31,21 +45,18 @@ async def get_user_by_username(db: AsyncSession, username: str) -> User:
 
 async def get_user_by_uuid(db: AsyncSession, uuid: str) -> User | None:
     """
-    根据用户 UUID 查询用户信息
+    根据 UUID 查询用户信息。
 
-    参数:
-        db (AsyncSession): 数据库会话对象
+    参数说明:
+        db (AsyncSession): 异步数据库会话
         uuid (str): 用户唯一标识符
 
-    返回:
-        User: 查询到的用户实例
+    返回值:
+        User: 查询到的用户对象
 
-    异常:
-        UserNotExists: 用户不存在时抛出
-        DatabaseQueryError: 查询数据库时发生异常
-
-    备注:
-        查询异常时会抛出封装的数据库异常，方便上层处理。
+    异常说明:
+        - UserNotExists: 用户不存在
+        - DatabaseQueryError: 数据库执行失败
     """
     logger.info("使用 UUID 查询用户 %s", uuid)
     try:
@@ -61,6 +72,19 @@ async def get_user_by_uuid(db: AsyncSession, uuid: str) -> User | None:
 
 
 async def get_user_role_by_uuid(db: AsyncSession, uuid: str) -> str | None:
+    """
+    获取指定 UUID 对应用户的角色。
+
+    参数说明:
+        db (AsyncSession): 异步数据库会话
+        uuid (str): 用户唯一标识符
+
+    返回值:
+        str | None: 用户角色，若用户不存在返回 None
+
+    异常说明:
+        - 无显式抛出，查询失败时返回 None（避免中断流程）
+    """
     logger.info("使用 UUID 查询用户角色: UUID: %s", uuid)
     try:
         stmt = select(User).filter(User.uuid == uuid)
@@ -81,6 +105,28 @@ async def create_user(
     avatar_url: str,
     role: str = "user",
 ) -> User | None:
+    """
+    创建新用户记录。
+
+    参数说明:
+        db (AsyncSession): 异步数据库会话
+        username (str): 用户名
+        email (str): 邮箱地址
+        password (str): 原始密码（将被加密存储）
+        profile_name (str): 用户个人资料名称
+        avatar_url (str): 用户头像地址（可为空）
+        role (str): 角色类型（默认 "user"）
+
+    返回值:
+        User | None: 成功创建则返回用户对象，失败返回 None
+
+    异常说明:
+        - UserAlreadyExists: 用户名或邮箱已存在（唯一性约束冲突）
+
+    其他说明:
+        - 密码将使用哈希函数加密存储
+        - 若未提供头像或昵称，将使用默认值
+    """
     logger.info("创建用户: 用户名: %s, 角色: %s", username, role)
     hashed_pw = hash_password(password)
     user = User(
@@ -112,18 +158,26 @@ async def create_user(
     except Exception as e:
         logger.error("添加用户到数据库失败: 用户名: %s, 错误: %s", username, e)
         return None
-    
-
 
 
 async def authenticate_user(
     db: AsyncSession, username: str, password: str
 ) -> User | None:
     """
-    验证用户名和密码是否匹配：
-    - 查询用户
-    - 验证密码哈希是否正确
-    - 成功返回用户对象，失败返回 None
+    验证用户名和密码是否匹配。
+
+    参数说明:
+        db (AsyncSession): 异步数据库会话
+        username (str): 登录用户名
+        password (str): 登录密码
+
+    返回值:
+        User: 验证成功的用户对象
+
+    异常说明:
+        - UserNotExists: 用户不存在
+        - AuthenticationFailed: 密码验证失败
+        - DatabaseQueryError: 查询过程中发生数据库错误
     """
     logger.info(f"尝试登录: 用户名: {username}")
     try:

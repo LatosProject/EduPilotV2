@@ -7,7 +7,7 @@ from utils.token import verify_access_token
 from models.user import User
 from schemas.User import User
 from services.auth import get_user_by_uuid
-from db.db import DatabaseConnector
+from db.connector import DatabaseConnector
 from sqlalchemy.orm import Session
 
 logger = logging.getLogger("core.dependencies")
@@ -18,6 +18,30 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 async def get_current_user(
     token: str = Depends(oauth2_scheme), db: Session = Depends(DatabaseConnector.get_db)
 ) -> User | None:
+    """
+    从请求中提取访问令牌，验证其有效性，并返回对应的用户对象。
+
+    参数说明:
+        token (str): 从请求头中自动注入的 Bearer Token（由 OAuth2PasswordBearer 提供）
+        db (Session): 注入的数据库会话对象（通过依赖注入提供）
+
+    返回值:
+        User | None: 成功验证令牌并查找到用户时返回 User 对象；验证失败则抛出异常。
+
+    异常说明:
+        - InvalidVerifyToken: 令牌无效、缺失或格式错误
+        - UserNotExists: 数据库中不存在与令牌中 UUID 匹配的用户
+        - DatabaseQueryError: 查询过程中发生数据库访问异常
+
+    使用场景:
+        - 作为路由依赖项（Depends），用于确保当前请求用户已登录并且令牌有效。
+        - 常用于需要身份认证的接口，如获取个人资料、修改密码等。
+
+    日志行为:
+        - 成功验证令牌并查询用户时记录 info 级别日志。
+        - 用户不存在记录 warning。
+        - 未知异常记录 error，包含完整堆栈。
+    """
     try:
         logger.info("验证访问令牌")
         token_data = verify_access_token(token)
@@ -32,7 +56,6 @@ async def get_current_user(
         return user
     except exceptions.InvalidVerifyToken:
         raise
-        # return None
     except exceptions.UserNotExists:
         logger.info("用户不存在")
         raise

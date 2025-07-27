@@ -17,16 +17,20 @@ from schemas.Response import (
     ApiResponse,
 )
 from services.auth import authenticate_user, get_user_by_uuid
-from utils.token import create_access_token, create_fresh_token, verify_access_token, verify_fresh_token
+from utils.token import (
+    create_access_token,
+    create_fresh_token,
+    verify_access_token,
+    verify_fresh_token,
+)
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Union
-from db.db import DatabaseConnector
+from db.connector import DatabaseConnector
 from core.dependencies import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
-# 获取本模块 logger
 logger = logging.getLogger("api.v1.auth")
 
 

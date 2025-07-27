@@ -10,7 +10,7 @@ from core import exceptions
 from core.status_codes import ErrorCode
 from core.security import is_admin
 from services.auth import create_user
-from db.db import DatabaseConnector
+from db.connector import DatabaseConnector
 from schemas.Response import ApiResponse, Error, ErrorResponse, Meta, RegisterRequest
 from schemas.User import UserProfile
 from sqlalchemy.orm import Session

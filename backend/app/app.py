@@ -5,7 +5,7 @@ from api.v1 import users
 from api.v1 import auth
 from core.middleware import AccessLogMiddleware
 from api.v1 import users
-from db.db import DatabaseConnector
+from db.connector import DatabaseConnector
 from fastapi.middleware.cors import CORSMiddleware
 from core.logger import setup_logging
 from core.exception_handlers import (

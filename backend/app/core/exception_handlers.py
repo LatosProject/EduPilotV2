@@ -17,6 +17,13 @@ from core.exceptions import (
 
 )
 
+"""
+core.exception_handlers 模块
+
+定义所有应用层级的自定义异常处理器，统一异常日志、响应结构和 HTTP 状态码。
+用于注册到 FastAPI 应用实例中，确保 API 响应一致性、安全性和可观察性。
+"""
+
 logger = logging.getLogger("core.exception_handlers")
 
 
