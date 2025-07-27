@@ -17,7 +17,7 @@ from core.exceptions import (
 
 )
 
-logger = logging.getLogger("exception_handlers")
+logger = logging.getLogger("core.exception_handlers")
 
 
 # TO-DO

@@ -1,8 +1,8 @@
 # services/auth.py
 from datetime import datetime, timezone
 import logging
-from sqlite3 import IntegrityError
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from core import exceptions
 from models.user import User
@@ -106,7 +106,9 @@ async def create_user(
         await db.refresh(user)
         return user
     except IntegrityError as e:
-        raise exceptions.UserAlreadyExists()
+        await db.rollback()
+        if "UNIQUE constraint failed" in str(e.orig):
+            raise exceptions.UserAlreadyExists()
     except Exception as e:
         logger.error("添加用户到数据库失败: 用户名: %s, 错误: %s", username, e)
         return None

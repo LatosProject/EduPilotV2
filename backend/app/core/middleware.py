@@ -4,7 +4,7 @@ import logging
 import time
 import traceback
 
-logger = logging.getLogger("middleware")
+logger = logging.getLogger("core.middleware")
 
 
 class AccessLogMiddleware(BaseHTTPMiddleware):

@@ -27,7 +27,7 @@ from core.dependencies import get_current_user
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 # 获取本模块 logger
-logger = logging.getLogger("routers.auth")
+logger = logging.getLogger("api.v1.auth")
 
 
 @router.post(

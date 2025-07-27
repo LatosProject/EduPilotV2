@@ -16,7 +16,7 @@ from schemas.User import UserProfile
 from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/users", tags=["Users"])
-logger = logging.getLogger("routers.users")
+logger = logging.getLogger("api.v1.users")
 
 
 @router.post("", response_model=Union[ApiResponse, UserProfile])
