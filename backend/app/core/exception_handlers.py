@@ -118,10 +118,7 @@ exception_type_map: dict[Type[BaseAppException], str] = {
     InvalidParameter: "invalid_parameter_handler",
 }
 
-exception_handler_map = {}
-
-# 遍历异常类型和其对应处理器方法名的映射
-for exc_type, handler_name in exception_type_map.items():
-    handler_func = getattr(ExceptionHandlers, handler_name)
-    exception_handler_map[exc_type] = handler_func
-    globals()[handler_name] = handler_func
+exception_handler_map = {
+    exc_type: getattr(ExceptionHandlers, handler_name)
+    for exc_type, handler_name in exception_type_map.items()
+}
