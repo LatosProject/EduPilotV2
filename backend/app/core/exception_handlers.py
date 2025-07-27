@@ -1,10 +1,10 @@
 from datetime import datetime, timezone
 import logging
+from typing import Type
 
-from fastapi import Request, status
+from fastapi import Request
 from fastapi.responses import JSONResponse
 
-from core.status_codes import ErrorCode
 from schemas.Response import Error, ErrorResponse, Meta
 from core.exceptions import (
     BaseAppException,
@@ -13,8 +13,7 @@ from core.exceptions import (
     AuthenticationFailed,
     PermissionDenied,
     UserAlreadyExists,
-    InvalidParameter
-
+    InvalidParameter,
 )
 
 """
@@ -27,104 +26,102 @@ core.exception_handlers 模块
 logger = logging.getLogger("core.exception_handlers")
 
 
-# TO-DO
-def _now():
-    return datetime.now(timezone.utc).isoformat()
+class ExceptionHandlers:
+    @staticmethod
+    def _now():
+        return datetime.now(timezone.utc).isoformat()
+
+    @classmethod
+    def _build_response(
+        cls, exc: BaseAppException, log_level: str, log_msg: str | None = None
+    ) -> JSONResponse:
+        log_func = getattr(logger, log_level, logger.warning)
+        message = log_msg or f"{exc.__class__.__name__}: {exc.detail or exc.message}"
+        # error级别时打印堆栈
+        log_func(message, exc_info=(log_level == "error"))
+
+        error_resp = ErrorResponse(
+            status=exc.error_status,
+            message=exc.message,
+            error=Error(code=exc.code, details=exc.detail),
+            meta=Meta(timestamp=cls._now()),
+        )
+        return JSONResponse(
+            status_code=exc.http_status,
+            content=error_resp.model_dump(by_alias=True, exclude_none=True),
+        )
+
+    @classmethod
+    def invalid_verify_token_handler(
+        cls, request: Request, exc: InvalidVerifyToken
+    ) -> JSONResponse:
+        return cls._build_response(
+            exc, "warning", f"令牌验证失败，令牌过期或失效: {exc.detail}"
+        )
+
+    @classmethod
+    def user_not_exists_handler(
+        cls, request: Request, exc: UserNotExists
+    ) -> JSONResponse:
+        user_info = (
+            f"UUID: {exc.uuid}"
+            if getattr(exc, "uuid", None)
+            else f"user: {exc.username}"
+        )
+        return cls._build_response(
+            exc, "warning", f"用户不存在: {user_info}: {exc.detail}"
+        )
+
+    @classmethod
+    def global_exception_handler(
+        cls, request: Request, exc: BaseAppException
+    ) -> JSONResponse:
+        return cls._build_response(
+            exc, "error", f"全局异常: {exc.detail or exc.message}"
+        )
+
+    @classmethod
+    def authentication_failed_handler(
+        cls, request: Request, exc: AuthenticationFailed
+    ) -> JSONResponse:
+        return cls._build_response(
+            exc, "warning", f"登录失败: 用户名或密码错误: {exc.username}"
+        )
+
+    @classmethod
+    def user_already_exists_handler(
+        cls, request: Request, exc: UserAlreadyExists
+    ) -> JSONResponse:
+        return cls._build_response(exc, "warning", f"用户已存在: {exc.detail}")
+
+    @classmethod
+    def permission_denied_handler(
+        cls, request: Request, exc: PermissionDenied
+    ) -> JSONResponse:
+        return cls._build_response(exc, "warning", "操作失败，权限不足")
+
+    @classmethod
+    def invalid_parameter_handler(
+        cls, request: Request, exc: InvalidParameter
+    ) -> JSONResponse:
+        return cls._build_response(exc, "warning", "非法提交参数")
 
 
-def invalid_verify_token_handler(request: Request, exc: InvalidVerifyToken):
-    logger.warning(f"令牌验证失败，令牌过期或失效: {exc.detail}")
-    error_resp = ErrorResponse(
-        status=exc.error_status,
-        message=exc.message,
-        error=Error(code=exc.code, details=exc.detail),
-        meta=Meta(timestamp=_now()),
-    )
-    return JSONResponse(
-        status_code=exc.http_status,
-        content=error_resp.model_dump(by_alias=True, exclude_none=True),
-    )
+# 定义一个异常类与其对应处理函数名称的映射表
+exception_type_map: dict[Type[BaseAppException], str] = {
+    InvalidVerifyToken: "invalid_verify_token_handler",
+    UserNotExists: "user_not_exists_handler",
+    BaseAppException: "global_exception_handler",
+    AuthenticationFailed: "authentication_failed_handler",
+    UserAlreadyExists: "user_already_exists_handler",
+    PermissionDenied: "permission_denied_handler",
+    InvalidParameter: "invalid_parameter_handler",
+}
 
+exception_handler_map = {}
 
-def user_not_exists_handler(request: Request, exc: UserNotExists):
-    logger.warning(
-        f"用户不存在: {f'UUID: {exc.uuid}' if getattr(exc, 'uuid', None) else f'user: {exc.username}'}: {exc.detail}"
-    )
-    error_resp = ErrorResponse(
-        status=exc.error_status,
-        message=exc.message,
-        error=Error(code=exc.code, details=exc.detail),
-        meta=Meta(timestamp=_now()),
-    )
-    return JSONResponse(
-        status_code=exc.http_status,
-        content=error_resp.model_dump(by_alias=True, exclude_none=True),
-    )
-
-
-def global_exception_handler(request: Request, exc: BaseAppException):
-    logger.error(f"全局异常: {exc.detail or exc.message}", exc_info=True)
-    error_resp = ErrorResponse(
-        status=exc.error_status,
-        message=exc.message,
-        error=Error(code=exc.code, details=exc.detail),
-        meta=Meta(timestamp=_now()),
-    )
-    return JSONResponse(
-        status_code=exc.http_status,
-        content=error_resp.model_dump(by_alias=True, exclude_none=True),
-    )
-
-
-def authentication_failed_handler(request: Request, exc: AuthenticationFailed):
-    logger.warning(f"登录失败: 用户名或密码错误: {exc.username}")
-    error_resp = ErrorResponse(
-        status=exc.error_status,
-        message=exc.message,
-        error=Error(code=exc.code, details=exc.detail),
-        meta=Meta(timestamp=_now()),
-    )
-    return JSONResponse(
-        status_code=exc.http_status,
-        content=error_resp.model_dump(by_alias=True, exclude_none=True),
-    )
-
-def user_already_exists_handler(request: Request, exc: UserAlreadyExists):
-    logger.warning(f"用户已存在")
-    error_resp = ErrorResponse(
-        status=exc.error_status,
-        message=exc.message,
-        error=Error(code=exc.code, details=exc.detail),
-        meta=Meta(timestamp=_now()),
-    )
-    return JSONResponse(
-        status_code=exc.http_status,
-        content=error_resp.model_dump(by_alias=True, exclude_none=True),
-    )
-
-
-def permission_denied_handler(request: Request, exc: PermissionDenied):
-    logger.warning(f"操作失败，只有管理员可以执行")
-    error_resp = ErrorResponse(
-        status=exc.error_status,
-        message=exc.message,
-        error=Error(code=exc.code, details=exc.detail),
-        meta=Meta(timestamp=_now()),
-    )
-    return JSONResponse(
-        status_code=exc.http_status,
-        content=error_resp.model_dump(by_alias=True, exclude_none=True),
-    )
-
-def invalid_parameter_handler(request: Request, exc:InvalidParameter):
-    logger.warning(f"非法提交参数")    
-    error_resp = ErrorResponse(
-        status=exc.error_status,
-        message=exc.message,
-        error=Error(code=exc.code, details=exc.detail),
-        meta=Meta(timestamp=_now()),
-    )
-    return JSONResponse(
-        status_code=exc.http_status,
-        content=error_resp.model_dump(by_alias=True, exclude_none=True),
-    )
+# 遍历异常类型和其对应处理器方法名的映射
+for exc_type, handler_name in exception_type_map.items():
+    handler_func = getattr(ExceptionHandlers, handler_name)
+    exception_handler_map[exc_type] = handler_func
+    globals()[handler_name] = handler_func

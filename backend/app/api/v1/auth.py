@@ -1,10 +1,8 @@
 # routers/auth.py
 from datetime import datetime, timezone
 import logging
-from fastapi import APIRouter, Cookie, Depends, status
+from fastapi import APIRouter, Cookie, Depends
 from fastapi.responses import JSONResponse
-from core.exception_handlers import invalid_verify_token_handler
-from core import exceptions
 from core.status_codes import ErrorCode
 from core.rate_limit import rate_limiter
 from schemas.User import User
@@ -20,10 +18,8 @@ from services.auth import authenticate_user, get_user_by_uuid
 from utils.token import (
     create_access_token,
     create_fresh_token,
-    verify_access_token,
     verify_fresh_token,
 )
-from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Union
 from db.connector import DatabaseConnector
