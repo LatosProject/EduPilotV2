@@ -3,12 +3,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from api.v1 import users
 from api.v1 import auth
+from core.exception_handlers import register_exception_handlers
 from core.middleware import AccessLogMiddleware
 from api.v1 import users
 from db.connector import DatabaseConnector
 from fastapi.middleware.cors import CORSMiddleware
 from core.logger import setup_logging
-from core.exception_handlers import exception_handler_map
 import uvicorn
 
 
@@ -29,9 +29,8 @@ app.include_router(auth.router, prefix="/api/v1", tags=["Auth"])
 app.include_router(users.router, prefix="/api/v1", tags=["Users"])
 app.add_middleware(AccessLogMiddleware)
 
-# 导入错误处理器
-for exc_cls, handler in exception_handler_map.items():
-    app.add_exception_handler(exc_cls, handler)
+
+register_exception_handlers(app)
 
 app.add_middleware(
     CORSMiddleware,
