@@ -59,30 +59,3 @@ class DatabaseConnector:
         """
         async with cls.async_session() as session:
             yield session
-
-
-# DATABASE_URL = "sqlite+aiosqlite:///./app.db"
-# logger = logging.getLogger("db")
-
-# engine = create_async_engine(
-#     DATABASE_URL,
-#     connect_args={"check_same_thread": False}  # SQLite
-# )
-# # 设置 WAL 模式
-# async def set_wal_mode():
-#     """设置 SQLite 数据库为 WAL 模式
-#     这可以提高并发性能，特别是在高并发读写场景下。
-#     """
-#     async with engine.begin() as conn:
-#         await conn.execute(text("PRAGMA journal_mode=WAL"))
-
-# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-# Base = declarative_base()
-
-# def get_db():
-#     logger.info("创建数据库会话")
-#     db = SessionLocal()
-#     try:
-#         yield db
-#     finally:
-#         db.close()
