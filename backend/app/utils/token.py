@@ -15,6 +15,7 @@ ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(
     os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 )  # Token 过期时间（单位：分钟）
+FRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("FRESH_TOKEN_EXPIRE_DAYS", 7))
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
@@ -41,13 +42,45 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
             minutes=ACCESS_TOKEN_EXPIRE_MINUTES
         )
 
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire,"token_type":"access"})
 
     # 生成 token
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     expires_in = int((expire - datetime.now(timezone.utc)).total_seconds())
 
     return encoded_jwt, expires_in
+
+
+def create_fresh_token(data: dict, expires_delta: Optional[timedelta] = None) -> tuple[str, int]:
+    """
+    生成 JWT Fresh Token（用于刷新 Access Token）
+
+    参数:
+        data (dict): 需要编码进令牌的有效负载数据，通常包含用户身份标识等信息。
+        expires_delta (Optional[timedelta]): 令牌的过期时长，若不指定则使用默认过期时间（FRESH_TOKEN_EXPIRE_DAYS）。
+
+    返回:
+        Tuple[str, int]: 返回生成的 JWT 字符串和该令牌剩余有效时间（秒）。
+
+    说明:
+        - Fresh Token 通常用于生成新的 Access Token，而不需要用户重新登录。
+        - 默认有效期为若干天（通过环境变量配置）。
+        - 令牌中自动包含“exp”字段，表示过期时间，JWT 解码时会自动校验。
+    """
+    to_encode = data.copy()
+
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        expire = datetime.now(timezone.utc) + timedelta(days=FRESH_TOKEN_EXPIRE_DAYS)
+
+    to_encode.update({"exp": expire,"token_type":"fresh"})
+
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    expires_in = int((expire - datetime.now(timezone.utc)).total_seconds())
+
+    return encoded_jwt, expires_in
+
 
 
 def verify_access_token(token: str) -> dict:
@@ -70,6 +103,18 @@ def verify_access_token(token: str) -> dict:
     """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        if payload.get("token_type") != "access":
+            raise exceptions.InvalidVerifyToken()
+        return payload
+    except:
+        raise exceptions.InvalidVerifyToken()
+
+
+def verify_fresh_token(token: str) -> dict:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        if payload.get("token_type") != "fresh":
+            raise exceptions.InvalidVerifyToken()
         return payload
     except:
         raise exceptions.InvalidVerifyToken()
