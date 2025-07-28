@@ -39,7 +39,7 @@ async def get_user_by_username(db: AsyncSession, username: str) -> User:
         logger.error("数据库查询异常: 用户名: %s, 错误: %s", username, e)
         raise exceptions.DatabaseQueryError() from e
     if user is None:
-        raise exceptions.NotExists(username=username)
+        raise exceptions.AuthenticationFailed()
     return user
 
 

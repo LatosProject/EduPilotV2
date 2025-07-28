@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI):
     await DatabaseConnector.engine.dispose()  # 清理资源
 
 
-app = FastAPI(title="EduPilot", version="0.1a", lifespan=lifespan)
+app = FastAPI(title="EduPilot", version="0.1a", reload=True, lifespan=lifespan)
 # 注册路由
 app.include_router(auth.router, prefix="/api/v1", tags=["Auth"])
 app.include_router(users.router, prefix="/api/v1", tags=["Users"])

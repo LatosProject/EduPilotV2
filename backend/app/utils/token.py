@@ -12,9 +12,7 @@ load_dotenv()  # 加载环境变量
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(
-    os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
-)  # Token 过期时间（单位：分钟）
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 FRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("FRESH_TOKEN_EXPIRE_DAYS", 7))
 
 
@@ -42,7 +40,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
             minutes=ACCESS_TOKEN_EXPIRE_MINUTES
         )
 
-    to_encode.update({"exp": expire,"token_type":"access"})
+    to_encode.update({"exp": expire, "token_type": "access"})
 
     # 生成 token
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
@@ -51,7 +49,9 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     return encoded_jwt, expires_in
 
 
-def create_fresh_token(data: dict, expires_delta: Optional[timedelta] = None) -> tuple[str, int]:
+def create_fresh_token(
+    data: dict, expires_delta: Optional[timedelta] = None
+) -> tuple[str, int]:
     """
     生成 JWT Fresh Token（用于刷新 Access Token）
 
@@ -74,13 +74,12 @@ def create_fresh_token(data: dict, expires_delta: Optional[timedelta] = None) ->
     else:
         expire = datetime.now(timezone.utc) + timedelta(days=FRESH_TOKEN_EXPIRE_DAYS)
 
-    to_encode.update({"exp": expire,"token_type":"fresh"})
+    to_encode.update({"exp": expire, "token_type": "fresh"})
 
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     expires_in = int((expire - datetime.now(timezone.utc)).total_seconds())
 
     return encoded_jwt, expires_in
-
 
 
 def verify_access_token(token: str) -> dict:

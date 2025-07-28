@@ -1,6 +1,8 @@
 import logging
+import os
 import time
 from typing import AsyncGenerator
+from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import event, text
@@ -8,6 +10,7 @@ from sqlalchemy.engine import Engine
 
 logger = logging.getLogger("db")
 Base = declarative_base()
+load_dotenv()
 
 
 # SQL 执行前事件
@@ -30,7 +33,7 @@ class DatabaseConnector:
     用于创建异步数据库引擎和会话工厂，并提供数据库连接和会话管理功能。
     """
 
-    DATABASE_URL = "sqlite+aiosqlite:///./app.db"  # 使用 aiosqlite 作为异步 SQLite 驱动
+    DATABASE_URL = os.getenv("DATABASE_URL")  # 使用 aiosqlite 作为异步 SQLite 驱动
 
     @classmethod
     async def initialize(cls):
