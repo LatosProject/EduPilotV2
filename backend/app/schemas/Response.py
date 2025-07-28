@@ -33,16 +33,3 @@ class LoginResponse(ApiResponse):
 
 class ErrorResponse(ApiResponse):
     error: Error
-
-
-class LoginRequest(BaseModel):
-    username: str
-    password: str
-
-
-class RegisterRequest(BaseModel):
-    username: str
-    email: str
-    password: str
-    role: str = Field(..., description="用户角色")
-    profile: UserProfile

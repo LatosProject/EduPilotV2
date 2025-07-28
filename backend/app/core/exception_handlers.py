@@ -9,10 +9,10 @@ from schemas.Response import Error, ErrorResponse, Meta
 from core.exceptions import (
     BaseAppException,
     InvalidVerifyToken,
-    UserNotExists,
+    NotExists,
     AuthenticationFailed,
     PermissionDenied,
-    UserAlreadyExists,
+    AlreadyExists,
     InvalidParameter,
     RateLimitExceeded,
 )
@@ -54,7 +54,7 @@ async def invalid_verify_token_handler(
     )
 
 
-async def user_not_exists_handler(request: Request, exc: UserNotExists) -> JSONResponse:
+async def user_not_exists_handler(request: Request, exc: NotExists) -> JSONResponse:
     user_info = (
         f"UUID: {exc.uuid}" if getattr(exc, "uuid", None) else f"user: {exc.username}"
     )
@@ -86,7 +86,7 @@ async def authentication_failed_handler(
 
 
 async def user_already_exists_handler(
-    request: Request, exc: UserAlreadyExists
+    request: Request, exc: AlreadyExists
 ) -> JSONResponse:
     return build_response(
         exc,
@@ -127,10 +127,10 @@ async def rate_limit_exceeded_handler(
 
 exception_handler_map = {
     InvalidVerifyToken: invalid_verify_token_handler,
-    UserNotExists: user_not_exists_handler,
+    NotExists: user_not_exists_handler,
     BaseAppException: global_exception_handler,
     AuthenticationFailed: authentication_failed_handler,
-    UserAlreadyExists: user_already_exists_handler,
+    AlreadyExists: user_already_exists_handler,
     PermissionDenied: permission_denied_handler,
     InvalidParameter: invalid_parameter_handler,
     RateLimitExceeded: rate_limit_exceeded_handler,

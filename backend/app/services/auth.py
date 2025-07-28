@@ -24,7 +24,7 @@ async def get_user_by_username(db: AsyncSession, username: str) -> User:
         User: 查询到的用户对象
 
     异常说明:
-        - UserNotExists: 用户不存在
+        - NotExists: 用户不存在
         - DatabaseQueryError: 数据库执行失败
 
     其他说明:
@@ -39,7 +39,7 @@ async def get_user_by_username(db: AsyncSession, username: str) -> User:
         logger.error("数据库查询异常: 用户名: %s, 错误: %s", username, e)
         raise exceptions.DatabaseQueryError() from e
     if user is None:
-        raise exceptions.UserNotExists(username=username)
+        raise exceptions.NotExists(username=username)
     return user
 
 
@@ -55,7 +55,7 @@ async def get_user_by_uuid(db: AsyncSession, uuid: str) -> User | None:
         User: 查询到的用户对象
 
     异常说明:
-        - UserNotExists: 用户不存在
+        - NotExists: 用户不存在
         - DatabaseQueryError: 数据库执行失败
     """
     logger.info("使用 UUID 查询用户 %s", uuid)
@@ -67,7 +67,7 @@ async def get_user_by_uuid(db: AsyncSession, uuid: str) -> User | None:
         logger.error("数据库查询异常: UUID: %s, 错误: %s", uuid, e)
         raise exceptions.DatabaseQueryError() from e
     if user is None:
-        raise exceptions.UserNotExists(uuid=uuid)
+        raise exceptions.NotExists(uuid=uuid)
     return user
 
 
@@ -121,7 +121,7 @@ async def create_user(
         User | None: 成功创建则返回用户对象，失败返回 None
 
     异常说明:
-        - UserAlreadyExists: 用户名或邮箱已存在（唯一性约束冲突）
+        - AlreadyExists: 用户名或邮箱已存在（唯一性约束冲突）
 
     其他说明:
         - 密码将使用哈希函数加密存储
@@ -154,10 +154,10 @@ async def create_user(
     except IntegrityError as e:
         await db.rollback()
         if "UNIQUE constraint failed" in str(e.orig):
-            raise exceptions.UserAlreadyExists()
+            raise exceptions.AlreadyExists()
     except Exception as e:
         logger.error("添加用户到数据库失败: 用户名: %s, 错误: %s", username, e)
-        return None
+        raise exceptions.InvalidParameter()
 
 
 async def authenticate_user(
@@ -175,7 +175,7 @@ async def authenticate_user(
         User: 验证成功的用户对象
 
     异常说明:
-        - UserNotExists: 用户不存在
+        - NotExists: 用户不存在
         - AuthenticationFailed: 密码验证失败
         - DatabaseQueryError: 查询过程中发生数据库错误
     """

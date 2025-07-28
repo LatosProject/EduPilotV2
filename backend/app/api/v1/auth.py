@@ -3,7 +3,6 @@ from datetime import datetime, timezone
 import logging
 from fastapi import APIRouter, Cookie, Depends
 from fastapi.responses import JSONResponse
-from core.status_codes import ErrorCode
 from core.rate_limit import rate_limiter
 from schemas.User import User
 from schemas.Response import (
@@ -11,9 +10,9 @@ from schemas.Response import (
     ErrorResponse,
     Meta,
     LoginData,
-    LoginRequest,
     ApiResponse,
 )
+from schemas.Request import LoginRequest
 from services.auth import authenticate_user, get_user_by_uuid
 from utils.token import (
     create_access_token,

@@ -10,7 +10,8 @@ from core import exceptions
 from core.security import is_admin
 from services.auth import create_user
 from db.connector import DatabaseConnector
-from schemas.Response import ApiResponse, Meta, RegisterRequest
+from schemas.Response import ApiResponse, Meta
+from schemas.Request import RegisterRequest
 from schemas.User import UserProfile
 from sqlalchemy.orm import Session
 
@@ -37,9 +38,6 @@ async def register(
             avatar_url=form_data.profile.avatar_url,
             role=form_data.role,
         )
-        if user is None:
-            logger.warning(f"用户注册失败: 参数无效: {form_data.username}")
-            raise exceptions.InvalidParameter()
         logger.info(f"用户注册成功: 用户名: {user.username}, UUID: {user.uuid}")
         success_resp = ApiResponse(
             status=0,

@@ -30,7 +30,7 @@ async def get_current_user(
 
     异常说明:
         - InvalidVerifyToken: 令牌无效、缺失或格式错误
-        - UserNotExists: 数据库中不存在与令牌中 UUID 匹配的用户
+        - NotExists: 数据库中不存在与令牌中 UUID 匹配的用户
         - DatabaseQueryError: 查询过程中发生数据库访问异常
 
     使用场景:
@@ -56,7 +56,7 @@ async def get_current_user(
         return user
     except exceptions.InvalidVerifyToken:
         raise
-    except exceptions.UserNotExists:
+    except exceptions.NotExists:
         logger.info("用户不存在")
         raise
     except Exception as e:

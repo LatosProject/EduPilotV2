@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from api.v1 import users
 from api.v1 import auth
+from api.v1 import classes
 from core.exception_handlers import register_exception_handlers
 from core.middleware import AccessLogMiddleware
 from api.v1 import users
@@ -27,6 +28,7 @@ app = FastAPI(title="EduPilot", version="0.1a", lifespan=lifespan)
 # 注册路由
 app.include_router(auth.router, prefix="/api/v1", tags=["Auth"])
 app.include_router(users.router, prefix="/api/v1", tags=["Users"])
+app.include_router(classes.router, prefix="/api/v1", tags=["Classes"])
 app.add_middleware(AccessLogMiddleware)
 
 

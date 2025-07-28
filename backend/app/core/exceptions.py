@@ -49,24 +49,24 @@ class InvalidID(BaseAppException):
     pass
 
 
-class UserAlreadyExists(BaseAppException):
-    """用户已存在"""
+class AlreadyExists(BaseAppException):
+    """资源已存在"""
 
     code = 400
     error_status = ErrorCode.PARAMETER_ERROR
     http_status = status.HTTP_400_BAD_REQUEST
-    message = "User registration failed"
-    detail = "User already exists or invalid data"
+    message = "创建失败"
+    detail = "资源已存在或数据无效"
 
 
-class UserNotExists(BaseAppException):
-    """用户不存在"""
+class NotExists(BaseAppException):
+    """资源不存在"""
 
-    code = 400
+    code = 404
     error_status = ErrorCode.RESOURCE_NOT_FOUND
-    http_status = status.HTTP_400_BAD_REQUEST
-    message = "User not found"
-    detail = "User does not exist"
+    http_status = status.HTTP_404_NOT_FOUND
+    message = "资源未找到"
+    detail = "资源不存在或已被删除"
 
     def __init__(self, *, uuid: str = None, username: str = None):
         self.uuid = uuid
