@@ -3,8 +3,6 @@ import logging
 from typing import Union
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-
-from core import exceptions
 from services.classes import create_assignment, create_class
 from core.security import is_admin, is_teacher
 from db.connector import DatabaseConnector

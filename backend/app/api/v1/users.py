@@ -4,7 +4,6 @@ from datetime import datetime, timezone
 import logging
 from fastapi import APIRouter, Depends, status
 from typing import Union
-
 from fastapi.responses import JSONResponse
 from core.security import is_admin
 from services.auth import create_user, delete_user

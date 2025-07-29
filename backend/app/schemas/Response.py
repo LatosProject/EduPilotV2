@@ -1,7 +1,7 @@
 # schemas/Response.py
 from pydantic import BaseModel, StrictInt, StrictStr, Field
 from typing import Optional, Dict, Any
-from schemas.User import User, UserProfile
+from schemas.User import User
 
 
 class Meta(BaseModel):

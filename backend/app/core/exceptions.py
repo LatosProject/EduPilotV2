@@ -1,5 +1,3 @@
-from typing import Any
-
 from core.status_codes import ErrorCode
 from fastapi import status
 

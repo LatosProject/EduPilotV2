@@ -1,5 +1,4 @@
 from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from redis.asyncio import Redis
 from core import exceptions
