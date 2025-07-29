@@ -55,7 +55,7 @@ pip install -r requirements.txt
 启动后端
 
 ```bash
-uvicorn app.main:app --reload
+python app.py
 ```
 
 启动前端
