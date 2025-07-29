@@ -25,29 +25,29 @@ async def register_route(
     db: Session = Depends(DatabaseConnector.get_db),
     is_admin_user: bool = Depends(is_admin),
 ):
-    if is_admin_user:
-        logger.info(
-            f"用户注册请求: 用户名: {form_data.username}, 角色: {form_data.role}"
-        )
-        user = await create_user(
-            db=db,
-            username=form_data.username,
-            email=form_data.email,
-            password=form_data.password,
-            profile_name=form_data.profile.profile_name,
-            avatar_url=form_data.profile.avatar_url,
-            role=form_data.role,
-        )
-        logger.info(f"用户注册成功: 用户名: {user.username}, UUID: {user.uuid}")
-        success_resp = ApiResponse(
-            status=0,
-            message="User registered successfully",
-            data={},
-            meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
-        )
-        return JSONResponse(
-            status_code=status.HTTP_201_CREATED,
-            content=success_resp.model_dump(by_alias=True, exclude_none=True),
-        )
-    else:
-        raise exceptions.PermissionDenied()
+    logger.info(f"用户注册请求: 用户名: {form_data.username}, 角色: {form_data.role}")
+    user = await create_user(
+        db=db,
+        username=form_data.username,
+        email=form_data.email,
+        password=form_data.password,
+        profile_name=form_data.profile.profile_name,
+        avatar_url=form_data.profile.avatar_url,
+        role=form_data.role,
+    )
+    logger.info(f"用户注册成功: 用户名: {user.username}, UUID: {user.uuid}")
+    success_resp = ApiResponse(
+        status=0,
+        message="User registered successfully",
+        data={},
+        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
+    )
+    return JSONResponse(
+        status_code=status.HTTP_201_CREATED,
+        content=success_resp.model_dump(by_alias=True, exclude_none=True),
+    )
+
+
+# TO-DO
+async def delete_route():
+    pass
