@@ -12,6 +12,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from core.logger import setup_logging
 import uvicorn
 
+logo = r"""
+$$$$$$$$\      $$\           $$$$$$$\  $$\ $$\            $$\     
+$$  _____|     $$ |          $$  __$$\ \__|$$ |           $$ |    
+$$ |      $$$$$$$ |$$\   $$\ $$ |  $$ |$$\ $$ | $$$$$$\ $$$$$$\   
+$$$$$\   $$  __$$ |$$ |  $$ |$$$$$$$  |$$ |$$ |$$  __$$\\_$$  _|  
+$$  __|  $$ /  $$ |$$ |  $$ |$$  ____/ $$ |$$ |$$ /  $$ | $$ |    
+$$ |     $$ |  $$ |$$ |  $$ |$$ |      $$ |$$ |$$ |  $$ | $$ |$$\ 
+$$$$$$$$\\$$$$$$$ |\$$$$$$  |$$ |      $$ |$$ |\$$$$$$  | \$$$$  |
+\________|\_______| \______/ \__|      \__|\__| \______/   \____/ 
+"""
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -49,6 +60,7 @@ def read_root():
 
 
 if __name__ == "__main__":
+    print(logo)
     uvicorn.run(
         "app:app",
         host="0.0.0.0",
