@@ -108,8 +108,8 @@ class PermissionDenied(BaseAppException):
     code = 403
     error_status = ErrorCode.PERMISSION_DENIED
     http_status = status.HTTP_403_FORBIDDEN
-    message = "User registration failed"
-    detail = "Only admin can register users"
+    message = "Permission denied"
+    detail = "You do not have permission to perform this action"
 
 
 class RateLimitExceeded(BaseAppException):

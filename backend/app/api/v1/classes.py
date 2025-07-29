@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 
 from core import exceptions
 from services.classes import create_assignment, create_class
-from core.security import is_admin
+from core.security import is_admin, is_teacher
 from db.connector import DatabaseConnector
 from schemas.Response import ApiResponse, ErrorResponse, Meta
 from schemas.Request import CreateAssignmentRequest, CreateClassRequest
@@ -46,7 +46,7 @@ async def create_assignment_route(
     form_data: CreateAssignmentRequest,
     class_uuid: str,
     db: Session = Depends(DatabaseConnector.get_db),
-    is_admin_user: bool = Depends(is_admin),
+    is_teacher_user: bool = Depends(is_teacher),
 ):
     logger.info(f"创建新作业请求，{form_data.title}")
     await create_assignment(
