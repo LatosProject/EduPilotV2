@@ -8,7 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import event, text
 from sqlalchemy.engine import Engine
 
-logger = logging.getLogger("db")
+logger = logging.getLogger("db.connector")
 Base = declarative_base()
 load_dotenv()
 
@@ -24,7 +24,7 @@ def before_cursor_execute(conn, cursor, statement, parameters, context, executem
 def after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
     start_time = conn.info["query_start_time"].pop(-1)
     total = (time.time() - start_time) * 1000
-    logger.info("SQL 执行时间: %.2fms", total)
+    logger.debug("SQL 执行时间: %.2fms", total)
 
 
 class DatabaseConnector:

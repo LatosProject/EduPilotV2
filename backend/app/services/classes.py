@@ -1,4 +1,5 @@
 import logging
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from fastapi import logger
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,6 +8,36 @@ from models.class_model import Assignment, ClassModel
 from utils import uuid
 
 logger = logging.getLogger("services.classes")
+
+
+async def get_class_by_uuid(db: AsyncSession, class_uuid: str) -> ClassModel:
+    """
+    根据 class_uuid 查询班级信息。
+
+    参数说明:
+        db (AsyncSession): 异步数据库会话
+        class_uuid (str): 班级唯一标识符
+
+    返回值:
+        Class: 查询到的班级对象
+
+    异常说明:
+        - NotExists: 班级不存在
+        - DatabaseQueryError: 数据库查询失败
+    """
+    logger.debug("查询班级信息: %s", class_uuid)
+    try:
+        stmt = select(ClassModel).where(ClassModel.class_uuid == class_uuid)
+        result = await db.execute(stmt)
+        class_obj = result.scalar_one_or_none()
+    except Exception as e:
+        logger.error("查询班级失败: %s, 错误: %s", class_uuid, e)
+        raise exceptions.DatabaseQueryError("查询班级信息失败") from e
+
+    if class_obj is None:
+        raise exceptions.InvalidParameter("班级不存在")
+
+    return class_obj
 
 
 async def create_class(
@@ -44,6 +75,7 @@ async def create_assignment(
     allow_late_submission: bool,
     attachments: list[str],
 ):
+    await get_class_by_uuid(db, class_uuid)
     new_assignment = Assignment(
         uuid=uuid.generate_uuid(),
         class_uuid=class_uuid,
