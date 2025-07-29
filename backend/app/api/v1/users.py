@@ -8,7 +8,7 @@ from typing import Union
 from fastapi.responses import JSONResponse
 from core import exceptions
 from core.security import is_admin
-from services.auth import create_user
+from services.auth import create_user, delete_user
 from db.connector import DatabaseConnector
 from schemas.Response import ApiResponse, Meta
 from schemas.Request import RegisterRequest
@@ -48,6 +48,20 @@ async def register_route(
     )
 
 
-# TO-DO
-async def delete_route():
-    pass
+@router.delete("/{user_uuid}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_route(
+    user_uuid: str,
+    db: Session = Depends(DatabaseConnector.get_db),
+    is_admin_user: bool = Depends(is_admin),
+):
+    delete_user(db, user_uuid)
+    success_resp = ApiResponse(
+        status=0,
+        message="User deleted successfully",
+        data={},
+        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
+    )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=success_resp.model_dump(by_alias=True, exclude_none=True),
+    )
