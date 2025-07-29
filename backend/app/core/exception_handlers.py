@@ -116,7 +116,7 @@ async def invalid_parameter_handler(
 
 
 async def rate_limit_exceeded_handler(
-    request: Request, exc: InvalidParameter
+    request: Request, exc: RateLimitExceeded
 ) -> JSONResponse:
     return build_response(
         exc,

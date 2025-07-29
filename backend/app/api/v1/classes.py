@@ -20,7 +20,7 @@ logger = logging.getLogger("api.v1.classes")
 async def create_class_route(
     form_data: CreateClassRequest,
     db: Session = Depends(DatabaseConnector.get_db),
-    is_admin_user: bool = Depends(is_admin),
+    _: None = Depends(is_admin),
 ):
     logger.info(f"创建新班级请求，{form_data.class_name}")
     await create_class(
@@ -46,7 +46,7 @@ async def create_assignment_route(
     form_data: CreateAssignmentRequest,
     class_uuid: str,
     db: Session = Depends(DatabaseConnector.get_db),
-    is_teacher_user: bool = Depends(is_teacher),
+    _: None = Depends(is_teacher),
 ):
     logger.info(f"创建新作业请求，{form_data.title}")
     await create_assignment(
