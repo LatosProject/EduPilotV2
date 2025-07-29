@@ -159,6 +159,7 @@ async def create_user(
         logger.error("添加用户到数据库失败: 用户名: %s, 错误: %s", username, e)
         raise exceptions.InvalidParameter()
 
+
 async def delete_user(
     db: AsyncSession,
     user_uuid: str,
@@ -172,18 +173,20 @@ async def delete_user(
     Raises:
         exceptions.InvalidParameter: HTTP 400, 用户不存在
         exceptions.NotExists: HTTP 404, 记录不存在
-    """    
+    """
     logger.info(f"删除用户请求: 用户UUID: {user_uuid}")
-    if not user_uuid:
-        logger.error("用户UUID无效，无法删除用户")
-        raise exceptions.InvalidParameter("Cannot get uuid from request")
     user = await get_user_by_uuid(db, user_uuid)
     if not user:
         logger.error(f"用户不存在: 用户UUID: {user_uuid}")
         raise exceptions.NotExists("User not found")
-    await db.delete(user)
-    await db.commit()
+    try:
+        await db.delete(user)
+        await db.commit()
+    except Exception as e:
+        logger.error("删除用户到数据库失败: 用户名: %s, 错误: %s", user.username, e)
+        raise exceptions.InvalidParameter()
     logger.info(f"用户删除成功: 用户UUID: {user_uuid}")
+
 
 async def authenticate_user(
     db: AsyncSession, username: str, password: str
