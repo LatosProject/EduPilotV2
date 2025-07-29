@@ -38,7 +38,7 @@ async def is_admin(
         uuid = user.uuid
         if not uuid:
             logger.warning("用户UUID无效，无法检查管理员权限")
-            exceptions.InvalidVerifyToken()
+            raise exceptions.InvalidVerifyToken()
 
         # 构造 Redis 缓存键
         cache_key = f"auth:role:{uuid}"
@@ -54,7 +54,7 @@ async def is_admin(
 
             if not role:
                 logger.warning(f"用户角色查询失败: UUID: {uuid}")
-                return None
+                raise exceptions.PermissionDenied()
 
             # 写入缓存，有效期 3600 秒（1 小时）
             await redis.set(cache_key, role, ex=3600)
@@ -63,9 +63,11 @@ async def is_admin(
         logger.info(f"用户角色: {cached_role}")
 
         # 判断角色是否为管理员
-        return cached_role == "admin"
-
+        if cached_role != "admin":
+            raise exceptions.PermissionDenied()
+    except exceptions.PermissionDenied:
+        raise
     except Exception as e:
         # 静默失败，不抛出异常（可调整为 raise HTTPException 如有需要）
         logger.debug(f"Redis 缓存错误 {e}")
-        return None
+        raise exceptions.BaseAppException("Internal Server Error") from e

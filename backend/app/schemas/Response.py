@@ -11,7 +11,7 @@ class Meta(BaseModel):
 
 class Error(BaseModel):
     code: StrictInt = Field(..., description="错误代码")
-    details: StrictStr = Field(..., description="错误详情")
+    details: StrictStr = Field(None, description="错误详情")
 
 
 class ApiResponse(BaseModel):

@@ -20,7 +20,7 @@ logger = logging.getLogger("api.v1.users")
 
 
 @router.post("", response_model=Union[ApiResponse, UserProfile])
-async def register(
+async def register_route(
     form_data: RegisterRequest,
     db: Session = Depends(DatabaseConnector.get_db),
     is_admin_user: bool = Depends(is_admin),

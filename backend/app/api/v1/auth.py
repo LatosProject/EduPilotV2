@@ -34,7 +34,7 @@ logger = logging.getLogger("api.v1.auth")
     dependencies=[Depends(rate_limiter(limit=10, windows=60))],
     response_model=Union[LoginResponse, ErrorResponse],
 )
-async def login(
+async def login_route(
     form_data: LoginRequest, db: AsyncSession = Depends(DatabaseConnector.get_db)
 ):
 
@@ -79,7 +79,7 @@ async def login(
 
 
 @router.get("/profile", response_model=Union[ApiResponse, ErrorResponse])
-async def profile(current_user: User = Depends(get_current_user)):
+async def profile_route(current_user: User = Depends(get_current_user)):
     logger.info(
         "获取用户信息成功: 用户名: %s, UUID: %s",
         current_user.username,
@@ -110,7 +110,7 @@ async def profile(current_user: User = Depends(get_current_user)):
     dependencies=[Depends(rate_limiter(limit=10, windows=60))],
     response_model=Union[LoginResponse, ErrorResponse],
 )
-async def refresh_token(
+async def refresh_token_route(
     refresh_token: str = Cookie(...),
     db: AsyncSession = Depends(DatabaseConnector.get_db),
 ):
@@ -146,7 +146,7 @@ async def refresh_token(
 
 
 @router.get("/verify_token", response_model=Union[ApiResponse, ErrorResponse])
-async def verify_token(current_user: User = Depends(get_current_user)):
+async def verify_token_route(current_user: User = Depends(get_current_user)):
     logger.info(
         "令牌验证成功: 用户名: %s, UUID: %s", current_user.username, current_user.uuid
     )
