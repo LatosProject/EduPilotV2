@@ -2,8 +2,12 @@
 .DS_Store
 **/.env
 
+#py cache files
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 *.log
+
+#vscode
+.vscode/
