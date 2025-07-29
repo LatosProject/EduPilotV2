@@ -10,7 +10,10 @@ from core import exceptions
 from core.security import is_admin
 from services.auth import create_user, delete_user
 from db.connector import DatabaseConnector
-from schemas.Response import ApiResponse, Meta
+from schemas.Response import (
+    ApiResponse,
+    ErrorResponse,
+    Meta)
 from schemas.Request import RegisterRequest
 from schemas.User import UserProfile
 from sqlalchemy.orm import Session
@@ -48,13 +51,13 @@ async def register_route(
     )
 
 
-@router.delete("/{user_uuid}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{user_uuid}", response_model=Union[ApiResponse, ErrorResponse])
 async def delete_route(
     user_uuid: str,
     db: Session = Depends(DatabaseConnector.get_db),
     is_admin_user: bool = Depends(is_admin),
 ):
-    delete_user(db, user_uuid)
+    await delete_user(db, user_uuid)
     success_resp = ApiResponse(
         status=0,
         message="User deleted successfully",
