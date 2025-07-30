@@ -8,6 +8,7 @@ from services.auth import get_user_role_by_uuid
 from core.redis import redis_client
 from schemas.User import User
 import logging
+from sqlalchemy.ext.asyncio import AsyncSession
 
 # 设置安全相关的日志记录器
 logger = logging.getLogger("core.security")
@@ -15,7 +16,7 @@ logger = logging.getLogger("core.security")
 
 async def is_admin(
     user: User = Depends(get_current_user),  # 获取当前登录用户（从 JWT 中解析）
-    db: Session = Depends(DatabaseConnector.get_db),  # 获取数据库连接会话
+    db: AsyncSession = Depends(DatabaseConnector.get_db),  # 获取数据库连接会话
     redis: Redis = Depends(lambda: redis_client),  # 获取 Redis 客户端（异步）
 ) -> None:
     """
@@ -74,7 +75,7 @@ async def is_admin(
 
 async def is_teacher(
     user: User = Depends(get_current_user),  # 获取当前登录用户（从 JWT 中解析）
-    db: Session = Depends(DatabaseConnector.get_db),  # 获取数据库连接会话
+    db: AsyncSession = Depends(DatabaseConnector.get_db),  # 获取数据库连接会话
     redis: Redis = Depends(lambda: redis_client),  # 获取 Redis 客户端（异步）
 ) -> None:
     """
@@ -128,4 +129,65 @@ async def is_teacher(
     except Exception as e:
         # 静默失败，不抛出异常（可调整为 raise HTTPException 如有需要）
         logger.debug(f"Redis 缓存错误 {e}")
+        raise exceptions.BaseAppException("Internal Server Error") from e
+
+
+async def is_self_or_admin(
+    user_uuid: str,
+    current_user: User = Depends(get_current_user),  # 当前登录用户
+    db: AsyncSession = Depends(DatabaseConnector.get_db),  # 数据库连接
+    redis: Redis = Depends(lambda: redis_client),  # Redis 客户端
+) -> None:
+    """
+    验证请求用户是否为本人或管理员。
+    优先使用 Redis 缓存角色信息，未命中则回退数据库。
+
+    参数:
+        user_uuid: 路由中目标用户的 UUID。
+        current_user: 当前认证用户，依赖于 get_current_user。
+        db: 数据库连接。
+        redis: Redis 客户端。
+
+    异常:
+        PermissionDenied: 非本人且非管理员，拒绝访问。
+    """
+    try:
+        logger.info(
+            f"检查用户权限: 当前用户 UUID: {current_user.uuid}, 目标 UUID: {user_uuid}"
+        )
+
+        # 本人访问，无需进一步判断
+        if str(current_user.uuid) == user_uuid:
+            logger.debug("当前用户即为请求用户，权限验证通过")
+            return
+
+        # 构造 Redis 缓存键
+        cache_key = f"auth:role:{current_user.uuid}"
+
+        # 尝试从 Redis 获取角色
+        cached_role = await redis.get(cache_key)
+        logger.debug(f"缓存角色查询: key={cache_key}, value={cached_role}")
+
+        if not cached_role:
+            logger.debug("角色未命中缓存，回退数据库查询")
+            role = await get_user_role_by_uuid(db, current_user.uuid)
+
+            if not role:
+                logger.warning(f"角色查询失败: UUID: {current_user.uuid}")
+                raise exceptions.PermissionDenied("无法获取用户权限")
+
+            # 写入 Redis 缓存，1 小时过期
+            await redis.set(cache_key, role, ex=3600)
+            cached_role = role
+
+        logger.info(f"当前用户角色: {cached_role}")
+
+        # 判断是否管理员
+        if cached_role != "admin":
+            raise exceptions.PermissionDenied("非本人或管理员，拒绝访问")
+
+    except exceptions.PermissionDenied:
+        raise
+    except Exception as e:
+        logger.debug(f"权限检查时发生错误: {e}")
         raise exceptions.BaseAppException("Internal Server Error") from e

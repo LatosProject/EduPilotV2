@@ -6,11 +6,11 @@ from fastapi import APIRouter, Depends, status
 from typing import Union
 from fastapi.responses import JSONResponse
 from core.security import is_admin
-from services.auth import create_user, delete_user
+from services.auth import create_user, delete_user, get_user_by_uuid
 from db.connector import DatabaseConnector
 from schemas.Response import ApiResponse, ErrorResponse, Meta
 from schemas.Request import RegisterRequest
-from schemas.User import UserProfile
+from schemas.User import User, UserProfile
 from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -60,6 +60,33 @@ async def delete_route(
         meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
     )
     return JSONResponse(
-        status_code=status.HTTP_200_OK,
+        status_code=200,
         content=success_resp.model_dump(by_alias=True, exclude_none=True),
     )
+
+
+@router.get("/{user_uuid}", response_model=Union[ApiResponse, ErrorResponse])
+async def retrieve_user_route(
+    user_uuid: str,
+    db: Session = Depends(DatabaseConnector.get_db),
+    _: None = Depends(is_admin),
+):
+    user = await get_user_by_uuid(db, user_uuid)
+
+    logger.info("成功获取用户信息: 用户名: %s, UUID: %s", user.username, user.uuid)
+
+    success_resp = ApiResponse(
+        status=0,
+        message="User retrieved successfully",
+        data=User(
+            uuid=user.uuid,
+            username=user.username,
+            email=user.email,
+            role=user.role,
+            status=user.status,
+            created_at=user.created_at.isoformat(),
+            last_login=user.last_login.isoformat(),
+        ).model_dump(),
+        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
+    )
+    return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))
