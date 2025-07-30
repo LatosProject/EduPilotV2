@@ -69,6 +69,7 @@ async def create_assignment_route(
     return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))
 
 
+# TO-DO
 async def get_assignment_route():
     await get_assignment()
     pass
