@@ -3,7 +3,7 @@ import logging
 from typing import Union
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-from services.classes import create_assignment, create_class
+from services.classes import create_assignment, create_class, get_assignment
 from core.security import is_admin, is_teacher
 from db.connector import DatabaseConnector
 from schemas.Response import ApiResponse, ErrorResponse, Meta
@@ -67,3 +67,8 @@ async def create_assignment_route(
         meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
     )
     return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))
+
+
+async def get_assignment_route():
+    await get_assignment()
+    pass

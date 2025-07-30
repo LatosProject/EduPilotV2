@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core import exceptions
 from models.user import User
 from utils.auth_utils import hash_password, verify_password
-from utils.uuid import generate_uuid
+from utils.random import generate_uuid
 
 logger = logging.getLogger("services.auth")
 

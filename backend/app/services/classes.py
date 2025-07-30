@@ -5,7 +5,7 @@ from fastapi import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 from core import exceptions
 from models.class_model import Assignment, ClassModel
-from utils import uuid
+from utils import random
 
 logger = logging.getLogger("services.classes")
 
@@ -47,6 +47,7 @@ async def create_class(
         class_name=class_name,
         description=description,
         teacher_uuid=teacher_uuid,
+        invite_code=random.generate_invite_code(),
     )
     try:
         logger.info("尝试添加新班级到数据库: 班级名: %s", class_name)
@@ -77,7 +78,7 @@ async def create_assignment(
 ):
     await get_class_by_uuid(db, class_uuid)
     new_assignment = Assignment(
-        uuid=uuid.generate_uuid(),
+        uuid=random.generate_uuid(),
         class_uuid=class_uuid,
         title=title,
         description=description,
@@ -101,4 +102,13 @@ async def create_assignment(
     except Exception as e:
         logger.error("添加新作业到数据库失败, 错误: %s", e)
         raise exceptions.InvalidParameter()
+    pass
+
+
+# TO-DO
+async def get_assignment():
+    pass
+
+
+async def join_class():
     pass

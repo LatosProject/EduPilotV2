@@ -10,7 +10,7 @@ from sqlalchemy import (
     ForeignKey,
 )
 from db.connector import Base
-from utils import uuid
+from utils import random
 from sqlalchemy.orm import relationship
 
 
@@ -20,7 +20,7 @@ class ClassModel(Base):
     class_uuid = Column(
         String(36),
         primary_key=True,
-        default=lambda: str(uuid.generate_uuid()),
+        default=lambda: str(random.generate_uuid()),
         comment="班级 UUID",
     )
     class_name = Column(String(100), nullable=False, unique=True, comment="班级名称")
@@ -28,6 +28,7 @@ class ClassModel(Base):
     teacher_uuid = Column(
         String(36), ForeignKey("users.uuid"), nullable=False, comment="教师 UUID"
     )
+    invite_code = Column(String(6), primary_key=True)
 
 
 class Assignment(Base):
@@ -36,7 +37,7 @@ class Assignment(Base):
     uuid = Column(
         String(36),
         primary_key=True,
-        default=lambda: str(uuid.generate_uuid()),
+        default=lambda: str(random.generate_uuid()),
         comment="作业 UUID",
     )
 
@@ -50,7 +51,7 @@ class Assignment(Base):
     uuid = Column(
         String(36),
         primary_key=True,
-        default=lambda: str(uuid.uuid4()),  # 或你的 generate_uuid()
+        default=lambda: str(random.uuid4()),  # 或你的 generate_uuid()
         comment="作业 UUID",
     )
 
