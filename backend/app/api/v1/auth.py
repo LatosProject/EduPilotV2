@@ -71,24 +71,25 @@ async def profile_route(current_user: User = Depends(get_current_user)):
         current_user.username,
         current_user.uuid,
     )
-    success_resp = ApiResponse(
-        status=0,
-        message="User profile retrieved successfully",
-        data=User(
-            uuid=current_user.uuid,
-            username=current_user.username,
-            email=current_user.email,
-            role=current_user.role,
-            status=current_user.status,
-            created_at=current_user.created_at.isoformat(),
-            last_login=current_user.last_login.isoformat(),
-        ).model_dump(),
-        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
-    )
-    return JSONResponse(
-        status_code=200,
-        content=success_resp.model_dump(by_alias=True, exclude_none=True),
-    )
+    # success_resp = ApiResponse(
+    #     status=0,
+    #     message="User profile retrieved successfully",
+    #     data=User(
+    #         uuid=current_user.uuid,
+    #         username=current_user.username,
+    #         email=current_user.email,
+    #         role=current_user.role,
+    #         status=current_user.status,
+    #         created_at=current_user.created_at.isoformat(),
+    #         last_login=current_user.last_login.isoformat(),
+    #     ).model_dump(),
+    #     meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
+    # )
+    # return JSONResponse(
+    #     status_code=200,
+    #     content=success_resp.model_dump(by_alias=True, exclude_none=True),
+    # )
+    return to_response(data=User.model_validate(current_user))
 
 
 @router.post(
