@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 import logging
 from fastapi import APIRouter, Cookie, Depends
 from fastapi.responses import JSONResponse
+from core.response import to_response
 from core.rate_limit import rate_limiter
 from schemas.User import User
 from schemas.Response import (
@@ -43,27 +44,10 @@ async def login_route(
     logger.info("登录成功: 用户名: %s, UUID: %s", user.username, user.uuid)
     token, expires_in = create_access_token({"uuid": str(user.uuid)})
     fresh_token, fresh_expires_in = create_fresh_token({"uuid": str(user.uuid)})
-
-    success_resp = LoginResponse(
-        status=0,
-        message="Login successful",
+    response = to_response(
         data=LoginData(
-            access_token=token,
-            expires_in=expires_in,
-            user=User(
-                uuid=user.uuid,
-                username=user.username,
-                email=user.email,
-                role=user.role,
-                status=user.status,
-                created_at=user.created_at.isoformat(),
-                last_login=user.last_login.isoformat(),
-            ),
+            access_token=token, expires_in=expires_in, user=User.model_validate(user)
         ),
-        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
-    )
-    response = JSONResponse(
-        status_code=200, content=success_resp.model_dump(by_alias=True)
     )
     response.set_cookie(
         key="fresh_token",
