@@ -41,9 +41,11 @@ async def login_route(
 
     logger.info("登录请求: 用户名:%s", form_data.username)
     user = await authenticate_user(db, form_data.username, form_data.password)
-    logger.info("登录成功: 用户名: %s, UUID: %s", user.username, user.uuid)
+
     token, expires_in = create_access_token({"uuid": str(user.uuid)})
     fresh_token, fresh_expires_in = create_fresh_token({"uuid": str(user.uuid)})
+
+    logger.info("登录成功: 用户名: %s, UUID: %s", user.username, user.uuid)
     response = to_response(
         data=LoginData(
             access_token=token, expires_in=expires_in, user=User.model_validate(user)
@@ -56,7 +58,7 @@ async def login_route(
         httponly=True,
         secure=True,
         samesite="Lax",
-        path="/",
+        path="/api/v1/auth/refresh",
     )
 
     return response
