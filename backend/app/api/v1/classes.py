@@ -9,6 +9,7 @@ from db.connector import DatabaseConnector
 from schemas.Response import ApiResponse, ErrorResponse, Meta
 from schemas.Request import CreateAssignmentRequest, CreateClassRequest
 from sqlalchemy.orm import Session
+from core.response import to_response
 
 router = APIRouter(prefix="/classes", tags=["Classes"])
 logger = logging.getLogger("api.v1.classes")
@@ -20,6 +21,15 @@ async def create_class_route(
     db: Session = Depends(DatabaseConnector.get_db),
     _: None = Depends(is_admin),
 ):
+    """
+    创建新班级接口
+
+    仅管理员可访问，用于创建新的班级并指定负责教师。
+
+    - 权限：仅限管理员（is_admin）
+    - 参数：班级名、描述、教师UUID
+    - 返回：创建成功消息
+    """
     logger.info(f"创建新班级请求，{form_data.class_name}")
     await create_class(
         db,
@@ -28,13 +38,7 @@ async def create_class_route(
         teacher_uuid=form_data.teacher_uuid,
     )
     logger.info(f"创建新班级成功，{form_data.class_name}")
-    success_resp = ApiResponse(
-        status=0,
-        message="Class created successfully",
-        data={},
-        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
-    )
-    return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))
+    return to_response(data=ApiResponse(message="Class created successfully"))
 
 
 @router.post(
@@ -46,6 +50,15 @@ async def create_assignment_route(
     db: Session = Depends(DatabaseConnector.get_db),
     _: None = Depends(is_teacher),
 ):
+    """
+    创建作业接口
+
+    教师用户在指定班级下创建新的作业。
+
+    - 权限：教师（is_teacher）
+    - 参数：作业标题、描述、内容、截止时间、是否允许迟交、最大分数、附件
+    - 返回：创建成功消息
+    """
     logger.info(f"创建新作业请求，{form_data.title}")
     await create_assignment(
         db,
@@ -60,13 +73,7 @@ async def create_assignment_route(
         attachments=form_data.attachments,
     )
     logger.info(f"创建新作业成功，{form_data.title}")
-    success_resp = ApiResponse(
-        status=0,
-        message="Assignment created successfully",
-        data={},
-        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
-    )
-    return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))
+    return to_response(data=ApiResponse(message="Assignment created successfully"))
 
 
 # TO-DO

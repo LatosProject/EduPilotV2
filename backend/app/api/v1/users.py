@@ -5,6 +5,7 @@ import logging
 from fastapi import APIRouter, Depends, status
 from typing import Union
 from fastapi.responses import JSONResponse
+from core.response import to_response
 from core.security import is_admin
 from services.auth import create_user, delete_user, get_user_by_uuid
 from db.connector import DatabaseConnector
@@ -23,6 +24,16 @@ async def register_route(
     db: Session = Depends(DatabaseConnector.get_db),
     _: None = Depends(is_admin),
 ):
+    """
+    注册新用户接口
+
+    仅管理员可用，用于创建新用户账号，并指定角色与初始用户资料。
+
+    - 权限：仅限管理员
+    - 请求体：用户名、密码、邮箱、角色、用户资料（昵称、头像URL）
+    - 返回：用户信息或错误信息
+    - 状态码：201 Created
+    """
     logger.info(f"用户注册请求: 用户名: {form_data.username}, 角色: {form_data.role}")
     user = await create_user(
         db=db,
@@ -34,16 +45,7 @@ async def register_route(
         role=form_data.role,
     )
     logger.info(f"用户注册成功: 用户名: {user.username}, UUID: {user.uuid}")
-    success_resp = ApiResponse(
-        status=0,
-        message="User registered successfully",
-        data={},
-        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
-    )
-    return JSONResponse(
-        status_code=status.HTTP_201_CREATED,
-        content=success_resp.model_dump(by_alias=True, exclude_none=True),
-    )
+    return to_response(status_code=201, message="User registered successfully")
 
 
 @router.delete("/{user_uuid}", response_model=Union[ApiResponse, ErrorResponse])
@@ -52,17 +54,17 @@ async def delete_route(
     db: Session = Depends(DatabaseConnector.get_db),
     _: None = Depends(is_admin),
 ):
+    """
+    删除用户接口
+
+    仅管理员可调用，删除指定 UUID 的用户。
+
+    - 权限：仅限管理员
+    - 路径参数：用户 UUID
+    - 返回：删除成功信息
+    """
     await delete_user(db, user_uuid)
-    success_resp = ApiResponse(
-        status=0,
-        message="User deleted successfully",
-        data={},
-        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
-    )
-    return JSONResponse(
-        status_code=200,
-        content=success_resp.model_dump(by_alias=True, exclude_none=True),
-    )
+    return to_response(message="User deleted successfully")
 
 
 @router.get("/{user_uuid}", response_model=Union[ApiResponse, ErrorResponse])
@@ -71,22 +73,18 @@ async def retrieve_user_route(
     db: Session = Depends(DatabaseConnector.get_db),
     _: None = Depends(is_admin),
 ):
+    """
+    获取用户信息接口
+
+    仅管理员可访问，返回指定 UUID 的用户详细信息。
+
+    - 权限：仅限管理员
+    - 路径参数：用户 UUID
+    - 返回：用户详细信息或错误信息
+    """
     user = await get_user_by_uuid(db, user_uuid)
 
     logger.info("成功获取用户信息: 用户名: %s, UUID: %s", user.username, user.uuid)
-
-    success_resp = ApiResponse(
-        status=0,
-        message="User retrieved successfully",
-        data=User(
-            uuid=user.uuid,
-            username=user.username,
-            email=user.email,
-            role=user.role,
-            status=user.status,
-            created_at=user.created_at.isoformat(),
-            last_login=user.last_login.isoformat(),
-        ).model_dump(),
-        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
+    return to_response(
+        message="User retrieved successfully", data=User.model_validate(user)
     )
-    return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))

@@ -1,15 +1,12 @@
 # routers/auth.py
-from datetime import datetime, timezone
 import logging
 from fastapi import APIRouter, Cookie, Depends
-from fastapi.responses import JSONResponse
 from core.response import to_response
 from core.rate_limit import rate_limiter
 from schemas.User import User
 from schemas.Response import (
     LoginResponse,
     ErrorResponse,
-    Meta,
     LoginData,
     ApiResponse,
 )
@@ -38,7 +35,15 @@ logger = logging.getLogger("api.v1.auth")
 async def login_route(
     form_data: LoginRequest, db: AsyncSession = Depends(DatabaseConnector.get_db)
 ):
+    """
+    用户登录接口
 
+    验证用户名和密码，认证成功后生成 access token 和 refresh token。
+    refresh_token 以 HttpOnly Cookie 的形式返回，access_token 包含在响应体中。
+
+    - 请求频率限制：每分钟最多10次
+    - 返回：LoginResponse 或 ErrorResponse
+    """
     logger.info("登录请求: 用户名:%s", form_data.username)
     user = await authenticate_user(db, form_data.username, form_data.password)
 
@@ -66,29 +71,19 @@ async def login_route(
 
 @router.get("/profile", response_model=Union[ApiResponse, ErrorResponse])
 async def profile_route(current_user: User = Depends(get_current_user)):
+    """
+    获取当前登录用户信息
+
+    通过 access_token 验证后，返回用户基础信息。
+
+    - 需要提供有效的 access_token
+    - 返回：ApiResponse 包含用户信息，或 ErrorResponse
+    """
     logger.info(
         "获取用户信息成功: 用户名: %s, UUID: %s",
         current_user.username,
         current_user.uuid,
     )
-    # success_resp = ApiResponse(
-    #     status=0,
-    #     message="User profile retrieved successfully",
-    #     data=User(
-    #         uuid=current_user.uuid,
-    #         username=current_user.username,
-    #         email=current_user.email,
-    #         role=current_user.role,
-    #         status=current_user.status,
-    #         created_at=current_user.created_at.isoformat(),
-    #         last_login=current_user.last_login.isoformat(),
-    #     ).model_dump(),
-    #     meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
-    # )
-    # return JSONResponse(
-    #     status_code=200,
-    #     content=success_resp.model_dump(by_alias=True, exclude_none=True),
-    # )
     return to_response(data=User.model_validate(current_user))
 
 
@@ -101,6 +96,15 @@ async def refresh_token_route(
     refresh_token: str = Cookie(...),
     db: AsyncSession = Depends(DatabaseConnector.get_db),
 ):
+    """
+    刷新 access token 接口
+
+    从 Cookie 中读取 fresh_token（HttpOnly），验证通过后签发新的 access_token。
+
+    - 适用于 access_token 过期但 fresh_token 仍有效的场景
+    - 返回：新的 access_token 及用户信息
+    - 请求频率限制：每分钟最多10次
+    """
 
     payload = verify_fresh_token(refresh_token)
     user = await get_user_by_uuid(db, payload["uuid"])
@@ -111,36 +115,27 @@ async def refresh_token_route(
         user.uuid,
         new_token,
     )
-    success_resp = LoginResponse(
-        status=0,
+    return to_response(
         message="Token refreshed successfully",
         data=LoginData(
             access_token=new_token,
             expires_in=expires_in,
-            user=User(
-                uuid=user.uuid,
-                username=user.username,
-                email=user.email,
-                role=user.role,
-                status=user.status,
-                created_at=user.created_at.isoformat(),
-                last_login=user.last_login.isoformat(),
-            ),
+            data=User.model_validate(user),
         ),
-        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
     )
-    return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))
 
 
 @router.get("/verify_token", response_model=Union[ApiResponse, ErrorResponse])
 async def verify_token_route(current_user: User = Depends(get_current_user)):
+    """
+    验证 access token 接口
+
+    用于判断 access_token 是否有效，常用于前端页面刷新时验证会话是否仍然有效。
+
+    - 返回：验证通过则返回 "Token is valid"，否则返回错误信息
+    """
+
     logger.info(
         "令牌验证成功: 用户名: %s, UUID: %s", current_user.username, current_user.uuid
     )
-    success_resp = ApiResponse(
-        status=0,
-        message="Token is valid",
-        data={},
-        meta=Meta(timestamp=datetime.now(timezone.utc).isoformat()),
-    )
-    return JSONResponse(status_code=200, content=success_resp.model_dump(by_alias=True))
+    return to_response(message="Token is valid")
