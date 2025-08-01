@@ -83,7 +83,7 @@ async def create_assignment_route(
         created_by=current_user.username,
     )
     logger.info(f"创建新作业成功，{form_data.title}")
-    return to_response(data=ApiResponse(message="Assignment created successfully"))
+    return to_response(message="Assignment created successfully")
 
 
 # TO-DO
