@@ -100,4 +100,7 @@ async def get_assignment_route(
     assignment = await get_assignment(
         db, assignment_uuid, class_uuid, current_user.uuid
     )
+    logger.info(
+        f"请求结束 - 查询作业成功: class_uuid: {class_uuid}, assignment_uuid: {assignment_uuid}, user_uuid: {current_user.uuid}"
+    )
     return to_response(data=AssignmentData.model_validate(assignment))
