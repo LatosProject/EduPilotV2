@@ -3,10 +3,18 @@ import logging
 from typing import Union
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
+from core.dependencies import get_current_user
+from schemas import User
 from services.classes import create_assignment, create_class, get_assignment
 from core.security import is_admin, is_teacher
 from db.connector import DatabaseConnector
-from schemas.Response import ApiResponse, ErrorResponse, Meta
+from schemas.Response import (
+    ApiResponse,
+    AssignmentData,
+    AssignmentResponse,
+    ErrorResponse,
+    Meta,
+)
 from schemas.Request import CreateAssignmentRequest, CreateClassRequest
 from sqlalchemy.orm import Session
 from core.response import to_response
@@ -48,6 +56,7 @@ async def create_assignment_route(
     form_data: CreateAssignmentRequest,
     class_uuid: str,
     db: Session = Depends(DatabaseConnector.get_db),
+    current_user: User = Depends(get_current_user),
     _: None = Depends(is_teacher),
 ):
     """
@@ -71,12 +80,24 @@ async def create_assignment_route(
         max_score=form_data.max_score,
         allow_late_submission=form_data.allow_late_submission,
         attachments=form_data.attachments,
+        created_by=current_user.username,
     )
     logger.info(f"创建新作业成功，{form_data.title}")
     return to_response(data=ApiResponse(message="Assignment created successfully"))
 
 
 # TO-DO
-async def get_assignment_route():
-    await get_assignment()
-    pass
+@router.get(
+    "/{class_uuid}/homeworks/{assignment_uuid}",
+    response_model=Union[AssignmentResponse, ErrorResponse],
+)
+async def get_assignment_route(
+    assignment_uuid: str,
+    class_uuid: str,
+    db: Session = Depends(DatabaseConnector.get_db),
+    current_user: User = Depends(get_current_user),
+):
+    assignment = await get_assignment(
+        db, assignment_uuid, class_uuid, current_user.uuid
+    )
+    return to_response(data=AssignmentData.model_validate(assignment))

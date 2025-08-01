@@ -1,4 +1,7 @@
+from datetime import datetime
+from typing import Optional
 import uuid
+from pydantic import Field, StrictInt, StrictStr
 from sqlalchemy import (
     JSON,
     Boolean,
@@ -9,6 +12,7 @@ from sqlalchemy import (
     Text,
     ForeignKey,
 )
+from schemas import User
 from db.connector import Base
 from utils import random
 from sqlalchemy.orm import relationship
@@ -31,7 +35,7 @@ class ClassModel(Base):
     invite_code = Column(String(6), primary_key=True)
 
 
-class Assignment(Base):
+class AssignmentModel(Base):
     __tablename__ = "assignments"
 
     uuid = Column(
@@ -48,12 +52,6 @@ class Assignment(Base):
         index=True,
         comment="班级 UUID",
     )
-    uuid = Column(
-        String(36),
-        primary_key=True,
-        default=lambda: str(random.uuid4()),  # 或你的 generate_uuid()
-        comment="作业 UUID",
-    )
 
     title = Column(String(100), nullable=False, comment="作业标题")
     description = Column(Text, nullable=True, comment="作业描述")
@@ -63,6 +61,37 @@ class Assignment(Base):
     max_score = Column(Integer, nullable=False, default=100, comment="满分")
     allow_late_submission = Column(Boolean, default=False, comment="允许迟交")
     attachments = Column(JSON, nullable=True, comment="附件列表（JSON数组）")
+    submission_count = Column(Integer, default=0, comment="提交次数")
+    updated_at = Column(DateTime, nullable=True, comment="更新时间")
+    created_by = Column(String(100), nullable=True, comment="创建者信息")
+    created_at = Column(DateTime, nullable=True, comment="创建时间")
 
     # 可选：ORM 映射
     class_ = relationship("ClassModel", backref="assignments")
+
+
+class ClassMemberModel(Base):
+    __tablename__ = "class_members"
+    id = Column(Integer, primary_key=True, autoincrement=True, comment="主键ID")
+    class_uuid = Column(
+        String(36),
+        ForeignKey("classes.class_uuid", ondelete="CASCADE"),
+        nullable=False,
+        comment="班级 UUID",
+    )
+    user_uuid = Column(
+        String(36),
+        ForeignKey("users.uuid", ondelete="CASCADE"),
+        nullable=False,
+        comment="用户 UUID",
+    )
+
+    role = Column(
+        String(20), nullable=False, comment="用户在班级中的角色（如 student / teacher）"
+    )
+
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        comment="创建时间",
+    )

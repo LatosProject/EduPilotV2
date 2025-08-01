@@ -1,10 +1,11 @@
+from datetime import datetime, timezone
 import logging
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from fastapi import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 from core import exceptions
-from models.class_model import Assignment, ClassModel
+from models.class_model import AssignmentModel, ClassMemberModel, ClassModel
 from utils import random
 
 logger = logging.getLogger("services.classes")
@@ -75,9 +76,10 @@ async def create_assignment(
     max_score: int,
     allow_late_submission: bool,
     attachments: list[str],
+    created_by: str,
 ):
     await get_class_by_uuid(db, class_uuid)
-    new_assignment = Assignment(
+    new_assignment = AssignmentModel(
         uuid=random.generate_uuid(),
         class_uuid=class_uuid,
         title=title,
@@ -88,6 +90,10 @@ async def create_assignment(
         max_score=max_score,
         allow_late_submission=allow_late_submission,
         attachments=attachments,
+        submission_count=0,
+        updated_at=datetime.now(timezone.utc),
+        created_by=created_by,
+        created_at=datetime.now(timezone.utc),
     )
     try:
         logger.info("尝试添加新作业到数据库: 作业名: %s", title)
@@ -106,8 +112,44 @@ async def create_assignment(
 
 
 # TO-DO
-async def get_assignment():
-    pass
+async def get_assignment(
+    db: AsyncSession, assignment_uuid: str, class_uuid: str, user_uuid: str
+):
+    await get_class_member_by_uuid(db, class_uuid, user_uuid)
+
+    logger.debug("正在查询作业: uuid: %s, class: %s", assignment_uuid, class_uuid)
+
+    try:
+        stmt = select(AssignmentModel).where(
+            AssignmentModel.uuid == assignment_uuid,
+            AssignmentModel.class_uuid == class_uuid,
+        )
+        result = await db.execute(stmt)
+        assignment = result.scalar_one_or_none()
+    except Exception as e:
+        logger.error("查询作业失败: %s", e)
+        raise exceptions.DatabaseQueryError("查询作业信息失败") from e
+
+    if assignment is None:
+        raise exceptions.NotExists()
+
+    return assignment
+
+
+async def get_class_member_by_uuid(db: AsyncSession, class_uuid: str, user_uuid: str):
+    try:
+        stmt = select(ClassMemberModel).where(
+            ClassMemberModel.user_uuid == user_uuid,
+            ClassMemberModel.class_uuid == class_uuid,  # 限定只查本班级的作业
+        )
+        result = await db.execute(stmt)
+        assignment = result.scalar_one_or_none()
+    except Exception as e:
+        logger.error("查询班级成员失败: %s，错误: %s", user_uuid, e)
+        raise exceptions.DatabaseQueryError("查询班级成员失败") from e
+
+    if assignment is None:
+        raise exceptions.InvalidParameter()
 
 
 async def join_class():
