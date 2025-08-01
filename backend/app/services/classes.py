@@ -151,6 +151,8 @@ async def get_class_member_by_uuid(db: AsyncSession, class_uuid: str, user_uuid:
     if assignment is None:
         raise exceptions.InvalidParameter()
 
+    return assignment
+
 
 async def join_class():
     pass
