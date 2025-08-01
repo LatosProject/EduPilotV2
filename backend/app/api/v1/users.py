@@ -1,5 +1,3 @@
-# TO-DO: Implement user registration endpoint
-
 from datetime import datetime, timezone
 import logging
 from fastapi import APIRouter, Depends, status
