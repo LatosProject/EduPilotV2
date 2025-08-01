@@ -97,6 +97,18 @@ async def get_assignment_route(
     db: Session = Depends(DatabaseConnector.get_db),
     current_user: User = Depends(get_current_user),
 ):
+    """
+    查询作业详情接口
+
+    当前用户在指定班级中查询指定作业的详细信息。
+
+    - 权限：班级成员（已通过 get_class_member_by_uuid 验证）
+    - 参数：
+        - class_uuid：班级唯一标识符
+        - assignment_uuid：作业唯一标识符
+    - 返回：作业详情（包含标题、内容、截止时间、附件等信息）
+    """
+
     assignment = await get_assignment(
         db, assignment_uuid, class_uuid, current_user.uuid
     )
