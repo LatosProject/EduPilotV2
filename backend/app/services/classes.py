@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from fastapi import logger
 from sqlalchemy.ext.asyncio import AsyncSession
+from schemas.Response import ClassUserData
 from core import exceptions
 from models.class_model import AssignmentModel, ClassMemberModel, ClassModel
 from utils import random
@@ -152,25 +153,28 @@ async def get_class_member_by_uuid(db: AsyncSession, class_uuid: str, user_uuid:
     if assignment is None:
         raise exceptions.InvalidParameter()
 
-    return assignment
+
+async def get_class_by_invite_code(db: AsyncSession, invite_code: str):
+    stmt = select(ClassModel).where(ClassModel.invite_code == invite_code)
+    result = await db.execute(stmt)
+    class_obj = result.scalar_one_or_none()
+    if not class_obj:
+        raise exceptions.InvalidParameter("无效的邀请码")
+    return class_obj
 
 
-async def join_class(db: AsyncSession, invite_code: str, user_uuid: str):
+async def join_class(
+    db: AsyncSession,
+    invite_code: str,
+    user_uuid: str,
+    profile_name: str,
+):
     try:
-        stmt = select(ClassModel).where(ClassModel.invite_code == invite_code)
-        result = await db.execute(stmt)
-        class_obj = result.scalar_one_or_none()
-        if not class_obj:
-            raise exceptions.InvalidParameter("无效的邀请码")
-
+        class_obj = await get_class_by_invite_code(db, invite_code)
         class_uuid = str(class_obj.class_uuid)
-        stmt = (
-            select(ClassMemberModel)
-            .where(
-                ClassMemberModel.class_uuid == class_uuid,
-                ClassMemberModel.user_uuid == user_uuid,
-            )
-            .options(selectinload(ClassMemberModel.user))
+        stmt = select(ClassMemberModel).where(
+            ClassMemberModel.class_uuid == class_uuid,
+            ClassMemberModel.user_uuid == user_uuid,
         )
         result = await db.execute(stmt)
         existing = result.scalar_one_or_none()
@@ -184,6 +188,14 @@ async def join_class(db: AsyncSession, invite_code: str, user_uuid: str):
         )
         db.add(new_member)
         await db.commit()
+        await db.refresh(new_member)
+        return ClassUserData(
+            role=new_member.role,
+            class_uuid=new_member.class_uuid,
+            user_uuid=user_uuid,
+            profile_name=profile_name,
+            created_at=new_member.created_at,
+        )
 
     except exceptions.AlreadyExists as e:
         logger.warning(f"加入班级失败: {e}")
@@ -206,4 +218,3 @@ async def join_class(db: AsyncSession, invite_code: str, user_uuid: str):
             "加入班级失败: user=%s, invite_code=%s, 错误=%s", user_uuid, invite_code, e
         )
         raise exceptions.DatabaseQueryError("加入班级失败")
-    return new_member

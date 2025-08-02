@@ -8,7 +8,7 @@ from models.user import User
 from schemas.User import User
 from services.auth import get_user_by_uuid
 from db.connector import DatabaseConnector
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger("core.dependencies")
 
@@ -16,7 +16,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 
 
 async def get_current_user(
-    token: str = Depends(oauth2_scheme), db: Session = Depends(DatabaseConnector.get_db)
+    token: str = Depends(oauth2_scheme),
+    db: AsyncSession = Depends(DatabaseConnector.get_db),
 ) -> User | None:
     """
     从请求中提取访问令牌，验证其有效性，并返回对应的用户对象。

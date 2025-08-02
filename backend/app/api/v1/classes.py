@@ -3,13 +3,7 @@ from typing import Union
 from fastapi import APIRouter, Depends
 from core.dependencies import get_current_user
 from schemas import User
-from services.classes import (
-    create_assignment,
-    create_class,
-    get_assignment,
-    get_class_member_by_uuid,
-    join_class,
-)
+from services.classes import create_assignment, create_class, get_assignment, join_class
 from core.security import is_admin, is_teacher
 from db.connector import DatabaseConnector
 from schemas.Response import (
@@ -55,7 +49,7 @@ async def create_class_route(
         teacher_uuid=form_data.teacher_uuid,
     )
     logger.info(f"创建新班级成功，{form_data.class_name}")
-    return to_response(data=ApiResponse(message="Class created successfully"))
+    return to_response(message="Class created successfully")
 
 
 @router.post(
@@ -145,18 +139,16 @@ async def join_class_route(
     - 返回：
         - 当前用户在该班级中的角色信息及加入时间
     """
-    joined_class = await join_class(db, form_data.invite_code, current_user.uuid)
-    logger.info(
-        "请求结束 - 加入班级成功: class_uuid=%s, user_uuid=%s",
-        joined_class.class_uuid,
-        joined_class.user.uuid,
+    user_uuid = current_user.uuid
+    user_profile_name = current_user.profile_name
+    joined_class = await join_class(
+        db, form_data.invite_code, user_uuid, user_profile_name
     )
 
-    obj = ClassUserData(
-        class_uuid=joined_class.class_uuid,
-        user_uuid=joined_class.user.uuid,
-        profile_name=joined_class.user.profile_name,
-        role=joined_class.role,
-        created_at=joined_class.created_at,
+    logger.info(
+        "请求结束 - 加入班级成功: class_uuid=%s, user_uuid=%s",
+        joined_class.class_uuid,  # 使用本地变量
+        user_profile_name,
     )
-    return to_response(data=obj)
+
+    return to_response(data=joined_class)
