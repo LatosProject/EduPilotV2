@@ -160,7 +160,7 @@ async def get_class_by_invite_code(db: AsyncSession, invite_code: str):
     result = await db.execute(stmt)
     class_obj = result.scalar_one_or_none()
     if not class_obj:
-        raise exceptions.InvalidParameter("无效的邀请码")
+        raise exceptions.InvalidParameter()
     return class_obj
 
 
@@ -209,13 +209,13 @@ async def join_class(db: AsyncSession, invite_code: str, current_user: User):
             e,
         )
         raise exceptions.DatabaseQueryError("数据库操作失败")
-
-    except Exception as e:
-        await db.rollback()
-        logger.error(
-            "加入班级失败: user=%s, invite_code=%s, 错误=%s",
+    except exceptions.InvalidParameter as e:
+        logger.warning(
+            "加入班级失败: user=%s, invite_code=%s",
             current_user.uuid,
             invite_code,
-            e,
         )
+        raise exceptions.InvalidParameter("无效的邀请码")
+    except Exception as e:
+        await db.rollback()
         raise exceptions.DatabaseQueryError("加入班级失败")
