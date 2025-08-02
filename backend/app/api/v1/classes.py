@@ -139,16 +139,14 @@ async def join_class_route(
     - 返回：
         - 当前用户在该班级中的角色信息及加入时间
     """
-    user_uuid = current_user.uuid
-    user_profile_name = current_user.profile_name
-    joined_class = await join_class(
-        db, form_data.invite_code, user_uuid, user_profile_name
-    )
+    # user_uuid = current_user.uuid
+    # user_profile_name = current_user.profile_name
+    joined_class = await join_class(db, form_data.invite_code, current_user)
 
     logger.info(
         "请求结束 - 加入班级成功: class_uuid=%s, user_uuid=%s",
         joined_class.class_uuid,  # 使用本地变量
-        user_profile_name,
+        joined_class.profile_name,
     )
 
     return to_response(data=joined_class)

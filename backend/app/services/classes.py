@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from fastapi import logger
 from sqlalchemy.ext.asyncio import AsyncSession
+from models.user import User
 from schemas.Response import ClassUserData
 from core import exceptions
 from models.class_model import AssignmentModel, ClassMemberModel, ClassModel
@@ -163,18 +164,13 @@ async def get_class_by_invite_code(db: AsyncSession, invite_code: str):
     return class_obj
 
 
-async def join_class(
-    db: AsyncSession,
-    invite_code: str,
-    user_uuid: str,
-    profile_name: str,
-):
+async def join_class(db: AsyncSession, invite_code: str, current_user: User):
     try:
         class_obj = await get_class_by_invite_code(db, invite_code)
         class_uuid = str(class_obj.class_uuid)
         stmt = select(ClassMemberModel).where(
             ClassMemberModel.class_uuid == class_uuid,
-            ClassMemberModel.user_uuid == user_uuid,
+            ClassMemberModel.user_uuid == current_user.uuid,
         )
         result = await db.execute(stmt)
         existing = result.scalar_one_or_none()
@@ -184,16 +180,18 @@ async def join_class(
             created_at=datetime.now(timezone.utc),
             role="student",
             class_uuid=class_uuid,
-            user_uuid=user_uuid,
+            user_uuid=current_user.uuid,
         )
         db.add(new_member)
         await db.commit()
+        # NOTE:根据SQL库源码显示，commit后所有会话将会标为已过期，这将无法再操作sql对象。所以需要refresh重新刷新
         await db.refresh(new_member)
+        await db.refresh(current_user)
         return ClassUserData(
             role=new_member.role,
             class_uuid=new_member.class_uuid,
-            user_uuid=user_uuid,
-            profile_name=profile_name,
+            user_uuid=current_user.uuid,
+            profile_name=current_user.profile_name,
             created_at=new_member.created_at,
         )
 
@@ -206,7 +204,7 @@ async def join_class(
             raise exceptions.AlreadyExists("您已经加入该班级")
         logger.error(
             "数据库完整性错误: user=%s, invite_code=%s, 错误=%s",
-            user_uuid,
+            current_user.uuid,
             invite_code,
             e,
         )
@@ -215,6 +213,9 @@ async def join_class(
     except Exception as e:
         await db.rollback()
         logger.error(
-            "加入班级失败: user=%s, invite_code=%s, 错误=%s", user_uuid, invite_code, e
+            "加入班级失败: user=%s, invite_code=%s, 错误=%s",
+            current_user.uuid,
+            invite_code,
+            e,
         )
         raise exceptions.DatabaseQueryError("加入班级失败")
