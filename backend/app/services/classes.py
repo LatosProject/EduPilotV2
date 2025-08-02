@@ -164,9 +164,13 @@ async def join_class(db: AsyncSession, invite_code: str, user_uuid: str):
             raise exceptions.InvalidParameter("无效的邀请码")
 
         class_uuid = str(class_obj.class_uuid)
-        stmt = select(ClassMemberModel).where(
-            ClassMemberModel.class_uuid == class_uuid,
-            ClassMemberModel.user_uuid == user_uuid,
+        stmt = (
+            select(ClassMemberModel)
+            .where(
+                ClassMemberModel.class_uuid == class_uuid,
+                ClassMemberModel.user_uuid == user_uuid,
+            )
+            .options(selectinload(ClassMemberModel.user))
         )
         result = await db.execute(stmt)
         existing = result.scalar_one_or_none()

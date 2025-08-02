@@ -149,13 +149,14 @@ async def join_class_route(
     logger.info(
         "请求结束 - 加入班级成功: class_uuid=%s, user_uuid=%s",
         joined_class.class_uuid,
-        current_user.uuid,
+        joined_class.user.uuid,
     )
+
     obj = ClassUserData(
         class_uuid=joined_class.class_uuid,
-        user_uuid=current_user.uuid,
-        profile_name=current_user.profile_name,
-        role=current_user.role,
+        user_uuid=joined_class.user.uuid,
+        profile_name=joined_class.user.profile_name,
+        role=joined_class.role,
         created_at=joined_class.created_at,
     )
     return to_response(data=obj)

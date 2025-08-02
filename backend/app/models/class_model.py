@@ -34,6 +34,8 @@ class ClassModel(Base):
     )
     invite_code = Column(String(6), primary_key=True)
 
+    members = relationship("ClassMemberModel", back_populates="class_", lazy="selectin")
+
 
 class AssignmentModel(Base):
     __tablename__ = "assignments"
@@ -95,3 +97,5 @@ class ClassMemberModel(Base):
         nullable=False,
         comment="创建时间",
     )
+    class_ = relationship("ClassModel", back_populates="members", lazy="selectin")
+    user = relationship("User", back_populates="class_memberships", lazy="selectin")
