@@ -1,22 +1,31 @@
-from datetime import datetime, timezone
 import logging
 from typing import Union
 from fastapi import APIRouter, Depends
-from fastapi.responses import JSONResponse
 from core.dependencies import get_current_user
 from schemas import User
-from services.classes import create_assignment, create_class, get_assignment
+from services.classes import (
+    create_assignment,
+    create_class,
+    get_assignment,
+    get_class_member_by_uuid,
+    join_class,
+)
 from core.security import is_admin, is_teacher
 from db.connector import DatabaseConnector
 from schemas.Response import (
     ApiResponse,
     AssignmentData,
     AssignmentResponse,
+    ClassUserData,
     ErrorResponse,
-    Meta,
 )
-from schemas.Request import CreateAssignmentRequest, CreateClassRequest
+from schemas.Request import (
+    CreateAssignmentRequest,
+    CreateClassRequest,
+    JoinClassRequest,
+)
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from core.response import to_response
 
 router = APIRouter(prefix="/classes", tags=["Classes"])
@@ -26,7 +35,7 @@ logger = logging.getLogger("api.v1.classes")
 @router.post("", response_model=Union[ApiResponse, ErrorResponse])
 async def create_class_route(
     form_data: CreateClassRequest,
-    db: Session = Depends(DatabaseConnector.get_db),
+    db: AsyncSession = Depends(DatabaseConnector.get_db),
     _: None = Depends(is_admin),
 ):
     """
@@ -55,7 +64,7 @@ async def create_class_route(
 async def create_assignment_route(
     form_data: CreateAssignmentRequest,
     class_uuid: str,
-    db: Session = Depends(DatabaseConnector.get_db),
+    db: AsyncSession = Depends(DatabaseConnector.get_db),
     current_user: User = Depends(get_current_user),
     _: None = Depends(is_teacher),
 ):
@@ -86,7 +95,6 @@ async def create_assignment_route(
     return to_response(message="Assignment created successfully")
 
 
-# TO-DO
 @router.get(
     "/{class_uuid}/homeworks/{assignment_uuid}",
     response_model=Union[AssignmentResponse, ErrorResponse],
@@ -94,7 +102,7 @@ async def create_assignment_route(
 async def get_assignment_route(
     assignment_uuid: str,
     class_uuid: str,
-    db: Session = Depends(DatabaseConnector.get_db),
+    db: AsyncSession = Depends(DatabaseConnector.get_db),
     current_user: User = Depends(get_current_user),
 ):
     """
@@ -116,3 +124,38 @@ async def get_assignment_route(
         f"请求结束 - 查询作业成功: class_uuid: {class_uuid}, assignment_uuid: {assignment_uuid}, user_uuid: {current_user.uuid}"
     )
     return to_response(data=AssignmentData.model_validate(assignment))
+
+
+@router.post("/students", response_model=Union[ApiResponse, ErrorResponse])
+async def join_class_route(
+    form_data: JoinClassRequest,
+    db: AsyncSession = Depends(
+        DatabaseConnector.get_db,
+    ),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    学生加入班级接口
+
+    当前登录用户通过邀请码加入指定班级。
+
+    - 权限要求：当前用户必须为学生（逻辑上校验）
+    - 参数：
+        - invite_code：班级的邀请码
+    - 返回：
+        - 当前用户在该班级中的角色信息及加入时间
+    """
+    joined_class = await join_class(db, form_data.invite_code, current_user.uuid)
+    logger.info(
+        "请求结束 - 加入班级成功: class_uuid=%s, user_uuid=%s",
+        joined_class.class_uuid,
+        current_user.uuid,
+    )
+    obj = ClassUserData(
+        class_uuid=joined_class.class_uuid,
+        user_uuid=current_user.uuid,
+        profile_name=current_user.profile_name,
+        role=current_user.role,
+        created_at=joined_class.created_at,
+    )
+    return to_response(data=obj)

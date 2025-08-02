@@ -1,6 +1,7 @@
 # schema/User.py
 from datetime import datetime
 from pydantic import BaseModel, StrictStr, StrictInt, Field
+from sqlalchemy.orm import relationship
 
 
 class User(BaseModel):

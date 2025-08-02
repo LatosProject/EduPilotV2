@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core import exceptions
 from models.class_model import AssignmentModel, ClassMemberModel, ClassModel
 from utils import random
+from sqlalchemy.orm import selectinload
 
 logger = logging.getLogger("services.classes")
 
@@ -154,5 +155,51 @@ async def get_class_member_by_uuid(db: AsyncSession, class_uuid: str, user_uuid:
     return assignment
 
 
-async def join_class():
-    pass
+async def join_class(db: AsyncSession, invite_code: str, user_uuid: str):
+    try:
+        stmt = select(ClassModel).where(ClassModel.invite_code == invite_code)
+        result = await db.execute(stmt)
+        class_obj = result.scalar_one_or_none()
+        if not class_obj:
+            raise exceptions.InvalidParameter("无效的邀请码")
+
+        class_uuid = str(class_obj.class_uuid)
+        stmt = select(ClassMemberModel).where(
+            ClassMemberModel.class_uuid == class_uuid,
+            ClassMemberModel.user_uuid == user_uuid,
+        )
+        result = await db.execute(stmt)
+        existing = result.scalar_one_or_none()
+        if existing:
+            raise exceptions.AlreadyExists("您已经加入该班级")
+        new_member = ClassMemberModel(
+            created_at=datetime.now(timezone.utc),
+            role="student",
+            class_uuid=class_uuid,
+            user_uuid=user_uuid,
+        )
+        db.add(new_member)
+        await db.commit()
+
+    except exceptions.AlreadyExists as e:
+        logger.warning(f"加入班级失败: {e}")
+        raise e  # 直接抛出原始业务异常，不要改成别的异常
+    except IntegrityError as e:
+        await db.rollback()
+        if "UNIQUE constraint failed" in str(e.orig):
+            raise exceptions.AlreadyExists("您已经加入该班级")
+        logger.error(
+            "数据库完整性错误: user=%s, invite_code=%s, 错误=%s",
+            user_uuid,
+            invite_code,
+            e,
+        )
+        raise exceptions.DatabaseQueryError("数据库操作失败")
+
+    except Exception as e:
+        await db.rollback()
+        logger.error(
+            "加入班级失败: user=%s, invite_code=%s, 错误=%s", user_uuid, invite_code, e
+        )
+        raise exceptions.DatabaseQueryError("加入班级失败")
+    return new_member

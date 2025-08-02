@@ -58,5 +58,14 @@ class AssignmentData(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class ClassUserData(BaseModel):
+    class_uuid: StrictStr = Field(..., description="用户名")
+    user_uuid: StrictStr = Field(..., description="用户唯一标识符")
+    profile_name: StrictStr = Field(..., description="用户个人资料名称")
+    role: StrictStr = Field(..., description="用户角色")
+    created_at: Optional[datetime] = Field(None, description="加入时间")
+    model_config = {"from_attributes": True}
+
+
 class AssignmentResponse(ApiResponse):
     data: AssignmentData

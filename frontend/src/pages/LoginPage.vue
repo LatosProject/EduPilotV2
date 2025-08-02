@@ -19,12 +19,10 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
 
 const username = ref('')
 const password = ref('')
 const error = ref('')
-const router = useRouter()
 
 const handleLogin = async () => {
     error.value = ''
@@ -43,7 +41,7 @@ const handleLogin = async () => {
             localStorage.setItem('access_token', token)
             console.log('Login successful, token:', token)
             // router.push('/')
-        } 
+        }
         else {
             error.value = 'Lgoin failed, please try again'
         }

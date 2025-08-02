@@ -32,3 +32,7 @@ class CreateAssignmentRequest(BaseModel):
     max_score: int
     allow_late_submission: bool
     attachments: List[str]
+
+
+class JoinClassRequest(BaseModel):
+    invite_code: str
