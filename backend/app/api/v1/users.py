@@ -89,5 +89,5 @@ async def retrieve_user_route(
 
 
 # TO-DO
-async def get_users():
+async def get_users_route():
     pass
