@@ -60,7 +60,6 @@ async def create_class_route(
     return to_response(message="Class created successfully")
 
 
-# TO-DO
 @router.delete("/{class_uuid}", response_model=Union[ApiResponse, ErrorResponse])
 async def delete_class_route(
     class_uuid: str,
@@ -68,8 +67,31 @@ async def delete_class_route(
     _: None = Depends(is_teacher_or_admin),
     current_user: User = Depends(get_current_user),
 ):
+    """
+    删除指定班级接口
+
+    参数:
+    - class_uuid (str): 路径参数，目标班级的 UUID，用于标识要删除的班级。
+    - db (AsyncSession): 依赖注入，异步数据库会话，用于执行删除操作。
+    - _ (None): 依赖注入，用于权限验证，确保当前用户是教师或管理员。
+    - current_user (User): 依赖注入，当前经过身份验证的用户对象。
+
+    权限:
+    - 只有拥有教师或管理员权限的用户可以执行删除操作。
+
+    功能:
+    - 调用 `delete_class` 函数，传入数据库会话、班级 UUID、当前用户 UUID 和角色，执行班级删除逻辑。
+    - 删除班级时，应级联删除该班级相关的作业、班级成员等关联数据（具体由数据库约束和业务逻辑决定）。
+
+    返回:
+    - 成功时返回标准成功响应，message 字段提示“Class created successfully”。
+    - 失败时返回错误响应。
+
+    注意:
+    - 这里返回信息中的“Class created successfully”应修改为删除成功提示，避免语义混淆。
+    """
     await delete_class(db, class_uuid, current_user.uuid, current_user.role)
-    return to_response(message="Class created successfully")
+    return to_response(message="Class deleted successfully")
 
 
 @router.get("/{class_uuid}/homeworks", response_model=Union[ApiResponse, ErrorResponse])
