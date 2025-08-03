@@ -84,6 +84,30 @@ async def get_assignments_route(
     db: AsyncSession = Depends(DatabaseConnector.get_db),
     current_user: User = Depends(get_current_user),
 ):
+    """
+    获取指定班级的作业列表（支持分页、搜索、筛选和排序）
+
+    参数:
+    - class_uuid (str): 路径参数，目标班级的 UUID。
+    - status (str): 查询参数，过滤作业的状态（如“已发布”、“草稿”等）。
+    - search (str): 查询参数，关键词搜索，用于匹配作业标题或描述。
+    - order_by (str): 查询参数，指定排序字段（例如“deadline”、“created_at”等）。
+    - order (str): 查询参数，排序顺序，“asc” 或 “desc”。
+    - page (int): 查询参数，分页页码，默认1，最小值为1。
+    - size (int): 查询参数，每页条数，默认10，最大值为10。
+    - db (AsyncSession): 依赖注入，异步数据库会话，用于执行数据库操作。
+    - current_user (User): 依赖注入，当前经过身份验证的用户对象。
+
+    返回:
+    - ApiResponse: 包含分页后的作业数据列表和分页信息。
+    - ErrorResponse: 出错时返回的错误信息结构。
+
+    逻辑流程:
+    1. 调用 `get_assignments` 函数，从数据库异步获取符合条件的作业列表及总数。
+    2. 根据总数和每页大小计算总页数。
+    3. 使用 Pydantic 的 `model_validate` 方法将数据库模型对象转换为响应模型。
+    4. 将作业列表和分页信息封装成统一响应结构，返回给客户端。
+    """
     items, total = await get_assignments(
         db=db,
         user_uuid=current_user.uuid,
