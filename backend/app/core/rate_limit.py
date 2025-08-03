@@ -1,6 +1,6 @@
 import logging
 from typing import Callable
-from fastapi import HTTPException, Request
+from fastapi import Request
 from core.redis import redis_client  # 引入 Redis 异步客户端
 from core import exceptions
 

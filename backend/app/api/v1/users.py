@@ -86,3 +86,8 @@ async def retrieve_user_route(
     return to_response(
         message="User retrieved successfully", data=User.model_validate(user)
     )
+
+
+# TO-DO
+async def get_users():
+    pass

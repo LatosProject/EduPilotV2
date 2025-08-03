@@ -1,6 +1,6 @@
 # schemas/Response.py
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr, Field
+from pydantic import BaseModel, StrictInt, StrictStr, Field
 from typing import List, Optional, Dict, Any
 from schemas.User import User
 
@@ -69,3 +69,15 @@ class ClassUserData(BaseModel):
 
 class AssignmentResponse(ApiResponse):
     data: AssignmentData
+
+
+class Pagination(BaseModel):
+    page: int
+    size: int
+    total: int
+    pages: int
+
+
+class PageData(BaseModel):
+    items: List[AssignmentData]
+    pagination: Pagination

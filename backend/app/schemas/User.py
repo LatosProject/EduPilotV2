@@ -1,6 +1,6 @@
 # schema/User.py
 from datetime import datetime
-from pydantic import BaseModel, StrictStr, StrictInt, Field
+from pydantic import BaseModel, StrictStr, Field
 from sqlalchemy.orm import relationship
 
 

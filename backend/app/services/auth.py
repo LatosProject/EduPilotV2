@@ -176,9 +176,6 @@ async def delete_user(
     """
     logger.info(f"删除用户请求: 用户UUID: {user_uuid}")
     user = await get_user_by_uuid(db, user_uuid)
-    if not user:
-        logger.error(f"用户不存在: 用户UUID: {user_uuid}")
-        raise exceptions.NotExists("User not found")
     try:
         await db.delete(user)
         await db.commit()

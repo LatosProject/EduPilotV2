@@ -66,3 +66,18 @@ async def is_self_or_admin(
     role = await get_role_with_cache(current_user.uuid, db, redis)
     if role != "admin":
         raise exceptions.PermissionDenied("非本人或管理员，拒绝访问")
+
+
+async def is_teacher_or_admin(
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(DatabaseConnector.get_db),
+    redis: Redis = Depends(lambda: redis_client),
+):
+    if not user.uuid:
+        raise exceptions.InvalidVerifyToken()
+
+    role = await get_role_with_cache(user.uuid, db, redis)
+
+    # 检查角色是否在允许的列表中
+    if role not in ["teacher", "admin"]:
+        raise exceptions.PermissionDenied("非教师或管理员，拒绝访问")

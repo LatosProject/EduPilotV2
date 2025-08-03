@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 import logging
-from sqlalchemy import select
+from typing import Optional
+from sqlalchemy import asc, desc, func, or_, select
 from sqlalchemy.exc import IntegrityError
 from fastapi import logger
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,7 +10,7 @@ from schemas.Response import ClassUserData
 from core import exceptions
 from models.class_model import AssignmentModel, ClassMemberModel, ClassModel
 from utils import random
-from sqlalchemy.orm import selectinload
+
 
 logger = logging.getLogger("services.classes")
 
@@ -66,6 +67,21 @@ async def create_class(
     except Exception as e:
         logger.error("添加新班级到数据库失败, 错误: %s", e)
         raise exceptions.InvalidParameter()
+
+
+async def delete_class(
+    db: AsyncSession, class_uuid: str, user_uuid: str, user_role: str
+) -> None:
+    if not user_role == "admin":
+        get_class_member_by_uuid(db, class_uuid, user_uuid)
+    try:
+        class_to_delete = await get_class_by_uuid(db, class_uuid)
+        await db.delete(class_to_delete)
+        await db.commit()
+    except Exception as e:
+        logger.error("删除班级到数据库失败: 班级ID: %s, 错误: %s", class_uuid, e)
+        raise exceptions.InvalidParameter()
+    logger.info(f"用户删除成功: 班级UUID: {class_uuid}")
 
 
 async def create_assignment(
@@ -219,3 +235,67 @@ async def join_class(db: AsyncSession, invite_code: str, current_user: User):
     except Exception as e:
         await db.rollback()
         raise exceptions.DatabaseQueryError("加入班级失败")
+
+
+async def get_assignments(
+    user_uuid: str,
+    db: AsyncSession,
+    class_uuid: str,
+    page: int,
+    size: int,
+    status: Optional[str],
+    search: Optional[str],
+    order_by: str,
+    order: str,
+):
+    await get_class_member_by_uuid(db, class_uuid, user_uuid)
+    # 偏移量
+    offset = (page - 1) * size
+    stmt = select(AssignmentModel).where(AssignmentModel.class_uuid == class_uuid)
+
+    # 状态过滤（如 status='published'）
+    if status:
+        stmt = stmt.where(AssignmentModel.status == status)
+
+    # 模糊搜索（匹配 title 或 description）
+    if search:
+        stmt = stmt.where(
+            or_(
+                AssignmentModel.title.ilike(f"%{search}%"),
+                AssignmentModel.description.ilike(f"%{search}%"),
+            )
+        )
+    # 排序字段和方向
+    order_column = getattr(AssignmentModel, order_by, None)
+    if order_column is not None:
+        stmt = stmt.order_by(
+            desc(order_column) if order == "desc" else asc(order_column)
+        )
+
+    # 分页
+    stmt = stmt.offset(offset).limit(size)
+
+    # 查询数据
+    result = await db.execute(stmt)
+    items = result.scalars().all()
+
+    # 总数查询（用于分页）
+    count_stmt = (
+        select(func.count())
+        .select_from(AssignmentModel)
+        .where(AssignmentModel.class_uuid == class_uuid)
+    )
+
+    if status:
+        count_stmt = count_stmt.where(AssignmentModel.status == status)
+    if search:
+        count_stmt = count_stmt.where(
+            or_(
+                AssignmentModel.title.ilike(f"%{search}%"),
+                AssignmentModel.description.ilike(f"%{search}%"),
+            )
+        )
+
+    total = (await db.execute(count_stmt)).scalar_one()
+
+    return items, total

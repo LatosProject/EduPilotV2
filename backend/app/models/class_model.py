@@ -1,7 +1,3 @@
-from datetime import datetime
-from typing import Optional
-import uuid
-from pydantic import Field, StrictInt, StrictStr
 from sqlalchemy import (
     JSON,
     Boolean,
@@ -12,7 +8,6 @@ from sqlalchemy import (
     Text,
     ForeignKey,
 )
-from schemas import User
 from db.connector import Base
 from utils import random
 from sqlalchemy.orm import relationship
@@ -33,6 +28,17 @@ class ClassModel(Base):
         String(36), ForeignKey("users.uuid"), nullable=False, comment="教师 UUID"
     )
     invite_code = Column(String(6), primary_key=True)
+
+    assignments = relationship(
+        "AssignmentModel",
+        back_populates="class_",
+        cascade="all, delete-orphan",
+    )
+    members = relationship(
+        "ClassMemberModel",
+        back_populates="class_",
+        cascade="all, delete-orphan",
+    )
 
 
 class AssignmentModel(Base):
@@ -66,8 +72,7 @@ class AssignmentModel(Base):
     created_by = Column(String(100), nullable=True, comment="创建者信息")
     created_at = Column(DateTime, nullable=True, comment="创建时间")
 
-    # 可选：ORM 映射
-    class_ = relationship("ClassModel", backref="assignments")
+    class_ = relationship("ClassModel", back_populates="assignments")
 
 
 class ClassMemberModel(Base):
@@ -95,3 +100,5 @@ class ClassMemberModel(Base):
         nullable=False,
         comment="创建时间",
     )
+    class_ = relationship("ClassModel", back_populates="members")
+    user = relationship("User", back_populates="class_members")

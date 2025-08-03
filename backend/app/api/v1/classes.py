@@ -1,17 +1,25 @@
 import logging
 from typing import Union
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from core.dependencies import get_current_user
 from schemas import User
-from services.classes import create_assignment, create_class, get_assignment, join_class
-from core.security import is_admin, is_teacher
+from services.classes import (
+    create_assignment,
+    create_class,
+    delete_class,
+    get_assignment,
+    get_assignments,
+    join_class,
+)
+from core.security import is_admin, is_teacher, is_teacher_or_admin
 from db.connector import DatabaseConnector
 from schemas.Response import (
     ApiResponse,
     AssignmentData,
     AssignmentResponse,
-    ClassUserData,
     ErrorResponse,
+    PageData,
+    Pagination,
 )
 from schemas.Request import (
     CreateAssignmentRequest,
@@ -50,6 +58,52 @@ async def create_class_route(
     )
     logger.info(f"创建新班级成功，{form_data.class_name}")
     return to_response(message="Class created successfully")
+
+
+# TO-DO
+@router.delete("/{class_uuid}", response_model=Union[ApiResponse, ErrorResponse])
+async def delete_class_route(
+    class_uuid: str,
+    db: AsyncSession = Depends(DatabaseConnector.get_db),
+    _: None = Depends(is_teacher_or_admin),
+    current_user: User = Depends(get_current_user),
+):
+    await delete_class(db, class_uuid, current_user.uuid, current_user.role)
+    return to_response(message="Class created successfully")
+
+
+@router.get("/{class_uuid}/homeworks", response_model=Union[ApiResponse, ErrorResponse])
+async def get_assignments_route(
+    class_uuid: str,
+    status: str,
+    search: str,
+    order_by: str,
+    order: str,
+    page: int = Query(1, ge=1),
+    size: int = Query(10, le=10),
+    db: AsyncSession = Depends(DatabaseConnector.get_db),
+    current_user: User = Depends(get_current_user),
+):
+    items, total = await get_assignments(
+        db=db,
+        user_uuid=current_user.uuid,
+        class_uuid=class_uuid,
+        page=page,
+        size=size,
+        status=status,
+        search=search,
+        order_by=order_by,
+        order=order,
+    )
+
+    pages = (total + size - 1) // size
+
+    return to_response(
+        data=PageData(
+            items=[AssignmentData.model_validate(item) for item in items],
+            pagination=Pagination(page=page, size=size, total=total, pages=pages),
+        )
+    )
 
 
 @router.post(
@@ -143,7 +197,7 @@ async def join_class_route(
 
     logger.info(
         "请求结束 - 加入班级成功: class_uuid=%s, user_uuid=%s",
-        joined_class.class_uuid,  # 使用本地变量
+        joined_class.class_uuid,
         joined_class.profile_name,
     )
 

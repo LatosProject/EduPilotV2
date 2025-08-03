@@ -18,3 +18,7 @@ class User(Base):
 
     profile_name = Column(String(100), nullable=True)
     avatar_url = Column(String(255), nullable=False)
+
+    class_members = relationship(
+        "ClassMemberModel", back_populates="user", cascade="all, delete-orphan"
+    )
