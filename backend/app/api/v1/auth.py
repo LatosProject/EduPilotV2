@@ -120,7 +120,7 @@ async def refresh_token_route(
         data=LoginData(
             access_token=new_token,
             expires_in=expires_in,
-            data=User.model_validate(user),
+            user=User.model_validate(user),
         ),
     )
 
