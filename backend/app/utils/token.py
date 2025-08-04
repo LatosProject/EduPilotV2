@@ -105,7 +105,7 @@ def verify_access_token(token: str) -> dict:
         if payload.get("token_type") != "access":
             raise exceptions.InvalidVerifyToken()
         return payload
-    except:
+    except Exception:
         raise exceptions.InvalidVerifyToken()
 
 
@@ -115,5 +115,5 @@ def verify_fresh_token(token: str) -> dict:
         if payload.get("token_type") != "fresh":
             raise exceptions.InvalidVerifyToken()
         return payload
-    except:
+    except Exception:
         raise exceptions.InvalidVerifyToken()
