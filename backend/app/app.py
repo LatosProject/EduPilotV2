@@ -1,5 +1,6 @@
 # app.py
 from contextlib import asynccontextmanager
+import os
 from fastapi import FastAPI
 from api.v1 import users
 from api.v1 import auth
@@ -63,10 +64,10 @@ if __name__ == "__main__":
     print(logo)
     uvicorn.run(
         "app:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,
+        host=os.getenv("APP_HOST", "127.0.0.1"),
+        port=int(os.getenv("APP_PORT", 8000)),
+        reload=bool(os.getenv("APP_RELOAD", "false")),
         server_header=False,
-        log_level="debug",
+        log_level=os.getenv("LOG_LEVEL", "info").lower(),
         reload_excludes=["**/logs/*", "**/*.log"],
     )
