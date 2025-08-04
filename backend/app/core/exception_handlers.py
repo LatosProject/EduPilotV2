@@ -29,6 +29,17 @@ def build_response(
     log_func: Callable[[str], None],
     log_msg: str | None = None,
 ) -> JSONResponse:
+    """
+    根据异常构建统一的 JSON 响应格式，同时执行日志记录。
+
+    参数：
+        exc (BaseAppException): 继承自基础异常的自定义异常实例。
+        log_func (Callable): 日志记录函数（如 logger.warning 或 logger.error）。
+        log_msg (str | None): 日志自定义消息，默认根据异常类型和详情自动生成。
+
+    返回：
+        JSONResponse: FastAPI 的 JSON 响应对象，包含错误信息和元数据。
+    """
     message = log_msg or f"{exc.__class__.__name__}: {exc.detail or exc.message}"
     log_func(message, exc_info=(log_func == logger.error))
 

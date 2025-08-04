@@ -48,6 +48,18 @@ async def get_class_by_uuid(db: AsyncSession, class_uuid: str) -> ClassModel:
 async def create_class(
     db: AsyncSession, class_name: str, description: str, teacher_uuid: str
 ) -> ClassModel | None:
+    """
+    创建新班级记录
+
+    参数:
+        db (AsyncSession): 数据库会话（异步）
+        class_name (str): 班级名称
+        description (str): 班级描述
+        teacher_uuid (str): 班主任用户的 UUID
+
+    返回:
+        ClassModel | None: 创建成功则返回班级模型实例；若已存在则抛出异常
+    """
     new_class = ClassModel(
         class_name=class_name,
         description=description,
@@ -72,6 +84,19 @@ async def create_class(
 async def delete_class(
     db: AsyncSession, class_uuid: str, user_uuid: str, user_role: str
 ) -> None:
+    """
+    删除指定班级（支持管理员或班主任操作）
+
+    参数:
+        db (AsyncSession): 异步数据库会话
+        class_uuid (str): 班级唯一标识符
+        user_uuid (str): 请求用户的 UUID
+        user_role (str): 请求用户的角色（admin 或 teacher）
+
+    异常:
+        - 如果用户无权限，将抛出 NotFound 或 InvalidParameter 异常
+        - 发生数据库错误时抛出 InvalidParameter 异常
+    """
     if not user_role == "admin":
         get_class_member_by_uuid(db, class_uuid, user_uuid)
     try:
@@ -97,6 +122,39 @@ async def create_assignment(
     attachments: list[str],
     created_by: str,
 ):
+    """
+    创建新的作业记录，并保存到数据库。
+
+    该函数会校验目标班级是否存在，然后基于传入的字段构建作业数据模型，并写入数据库。
+    若作业已存在（如 UUID 或其他唯一约束冲突），会抛出 AlreadyExists 异常。
+    所有异常会记录日志，事务失败时自动回滚。
+
+    参数:
+        db (AsyncSession): 数据库异步会话，用于执行写入操作。
+        class_uuid (str): 作业所属的班级 UUID。必须是存在的班级，否则抛出异常。
+        title (str): 作业标题，通常要求在班级中具有唯一性。
+        description (str): 作业摘要，用于简要说明内容。
+        content (str): 作业正文，支持富文本或 markdown。
+        status (str): 作业状态，推荐使用枚举值（如 "draft", "published"）。
+        deadline (str): 截止日期，建议传入 ISO 8601 格式的字符串。
+        max_score (int): 作业满分，必须为非负整数。
+        allow_late_submission (bool): 是否允许迟交。为 True 表示过期仍可提交。
+        attachments (list[str]): 附件列表，格式为 URL 或文件名数组。
+        created_by (str): 创建该作业的用户 UUID，通常为教师或管理员。
+
+    返回:
+        AssignmentModel: 创建成功的作业对象，包含数据库自动生成的字段（如主键、时间戳等）。
+
+    异常:
+        AlreadyExists: 若违反唯一性约束（如标题重复）则抛出。
+        InvalidParameter: 捕捉所有其他非法参数或数据库写入失败的场景。
+    
+    注意事项:
+        - deadline 应与数据库模型字段类型保持一致（datetime），如传入字符串需确保格式正确或转换。
+        - attachments 字段应为 JSON 可序列化格式（如字符串列表）。
+        - 数据提交前已通过 get_class_by_uuid 验证班级存在性，避免外键错误。
+        - 所有数据库操作失败均会自动 rollback，确保数据一致性。
+    """
     await get_class_by_uuid(db, class_uuid)
     new_assignment = AssignmentModel(
         uuid=random.generate_uuid(),
@@ -130,10 +188,29 @@ async def create_assignment(
     pass
 
 
-# TO-DO
 async def get_assignment(
     db: AsyncSession, assignment_uuid: str, class_uuid: str, user_uuid: str
 ):
+    """
+    获取指定班级内的单个作业详情。
+
+    该函数会先验证用户是否为班级成员，然后根据作业 UUID 与班级 UUID 查询目标作业。
+    若作业不存在，将抛出 NotExists 异常；若查询数据库失败，将抛出 DatabaseQueryError 异常。
+
+    参数:
+        db (AsyncSession): 异步数据库会话。
+        assignment_uuid (str): 要查询的作业唯一标识符（UUID）。
+        class_uuid (str): 作业所属班级的 UUID。
+        user_uuid (str): 当前请求用户的 UUID，用于验证是否属于该班级。
+
+    返回:
+        AssignmentModel: 作业对象，若存在并查询成功。
+
+    异常:
+        NotExists: 若作业不存在或不属于该班级。
+        DatabaseQueryError: 数据库查询过程中发生未知错误。
+        NotClassMember: 若用户不是该班级成员（由 get_class_member_by_uuid 抛出）。
+    """
     await get_class_member_by_uuid(db, class_uuid, user_uuid)
 
     logger.debug("正在查询作业: uuid: %s, class: %s", assignment_uuid, class_uuid)
@@ -156,6 +233,21 @@ async def get_assignment(
 
 
 async def get_class_member_by_uuid(db: AsyncSession, class_uuid: str, user_uuid: str):
+    """
+    根据班级 UUID 和用户 UUID 查询班级成员信息，验证该用户是否属于该班级。
+
+    参数:
+        db (AsyncSession): 异步数据库会话。
+        class_uuid (str): 班级唯一标识符。
+        user_uuid (str): 用户唯一标识符。
+
+    返回:
+        ClassMemberModel 实例，若找到对应成员。
+
+    异常:
+        DatabaseQueryError: 查询数据库时出现异常。
+        InvalidParameter: 未找到对应班级成员，表示用户不属于该班级。
+    """
     try:
         stmt = select(ClassMemberModel).where(
             ClassMemberModel.user_uuid == user_uuid,
@@ -172,6 +264,19 @@ async def get_class_member_by_uuid(db: AsyncSession, class_uuid: str, user_uuid:
 
 
 async def get_class_by_invite_code(db: AsyncSession, invite_code: str):
+    """
+    通过邀请码查询对应的班级信息。
+
+    参数:
+        db (AsyncSession): 异步数据库会话，用于执行查询。
+        invite_code (str): 班级邀请码，唯一标识。
+
+    返回:
+        ClassModel: 对应的邀请码所关联的班级对象。
+
+    异常:
+        InvalidParameter: 若未找到对应的班级，表示邀请码无效。
+    """
     stmt = select(ClassModel).where(ClassModel.invite_code == invite_code)
     result = await db.execute(stmt)
     class_obj = result.scalar_one_or_none()
@@ -181,6 +286,28 @@ async def get_class_by_invite_code(db: AsyncSession, invite_code: str):
 
 
 async def join_class(db: AsyncSession, invite_code: str, current_user: User):
+    """
+    用户通过邀请码加入班级。
+
+    流程说明：
+    1. 通过邀请码查找对应班级。
+    2. 检查用户是否已经是该班级成员，防止重复加入。
+    3. 若未加入，则创建新的班级成员记录，默认角色为学生。
+    4. 提交数据库事务并刷新对象状态，返回成员信息。
+
+    参数：
+        db (AsyncSession): 异步数据库会话。
+        invite_code (str): 班级邀请码，用于查找对应班级。
+        current_user (User): 当前请求的用户对象。
+
+    返回：
+        ClassUserData: 新加入的班级成员数据，包含角色、班级ID、用户ID、用户昵称和加入时间。
+
+    异常：
+        AlreadyExists: 用户已是该班级成员时抛出。
+        InvalidParameter: 邀请码无效或对应班级不存在。
+        DatabaseQueryError: 数据库操作失败或其他未知异常。
+    """
     try:
         class_obj = await get_class_by_invite_code(db, invite_code)
         class_uuid = str(class_obj.class_uuid)
@@ -213,7 +340,7 @@ async def join_class(db: AsyncSession, invite_code: str, current_user: User):
 
     except exceptions.AlreadyExists as e:
         logger.warning(f"加入班级失败: {e}")
-        raise e  # 直接抛出原始业务异常，不要改成别的异常
+        raise e  
     except IntegrityError as e:
         await db.rollback()
         if "UNIQUE constraint failed" in str(e.orig):
@@ -248,6 +375,37 @@ async def get_assignments(
     order_by: str,
     order: str,
 ):
+    """
+    获取指定班级的作业列表，支持分页、筛选、模糊搜索及排序。
+
+    主要流程：
+    1. 校验用户是否为该班级成员，非成员无权访问。
+    2. 根据分页参数计算偏移量。
+    3. 根据传入的筛选条件（状态、搜索关键字）构造查询。
+    4. 根据排序字段及方向排序。
+    5. 执行分页查询获取作业列表。
+    6. 查询满足条件的作业总数，用于前端分页展示。
+
+    参数：
+        user_uuid (str): 当前请求用户的 UUID。
+        db (AsyncSession): 异步数据库会话。
+        class_uuid (str): 目标班级 UUID。
+        page (int): 页码，从 1 开始。
+        size (int): 每页记录数。
+        status (Optional[str]): 作业状态过滤（可选，如 'published'）。
+        search (Optional[str]): 模糊搜索关键词（匹配标题或描述）。
+        order_by (str): 排序字段名（必须是 AssignmentModel 的属性）。
+        order (str): 排序方向，'asc' 升序或 'desc' 降序。
+
+    返回：
+        tuple: (items, total)
+            - items (List[AssignmentModel]): 当前页查询到的作业列表。
+            - total (int): 满足条件的作业总数，用于分页计算。
+
+    异常：
+        - 若用户非班级成员，将由 get_class_member_by_uuid 抛出异常。
+        - 查询过程中可能抛出数据库异常。
+    """
     await get_class_member_by_uuid(db, class_uuid, user_uuid)
     # 偏移量
     offset = (page - 1) * size
@@ -309,6 +467,31 @@ async def get_users(
     page: int,
     size: int,
 ):
+    """
+    查询用户列表，支持分页、按状态、角色筛选及模糊搜索。
+
+    主要流程：
+    1. 根据分页参数计算偏移量。
+    2. 构造查询条件，支持状态过滤、角色过滤和关键词模糊匹配（用户名、昵称、邮箱）。
+    3. 执行分页查询获取符合条件的用户列表。
+    4. 执行统计查询获取满足条件的用户总数，方便分页展示。
+
+    参数：
+        db (AsyncSession): 异步数据库会话，用于执行查询。
+        status (Optional[str]): 用户状态筛选（如 "active", "inactive"），可选。
+        search (Optional[str]): 模糊搜索关键字，匹配用户名、昵称或邮箱。
+        role (str): 用户角色筛选，必须传入。
+        page (int): 页码，从1开始。
+        size (int): 每页条数。
+
+    返回：
+        tuple: (items, total)
+            - items (List[User]): 当前页符合条件的用户对象列表。
+            - total (int): 满足查询条件的用户总数。
+
+    异常：
+        - 可能抛出数据库操作相关异常。
+    """
     # 偏移量
     offset = (page - 1) * size
 

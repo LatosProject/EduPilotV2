@@ -87,7 +87,6 @@ async def retrieve_user_route(
     )
 
 
-# TO-DO
 @router.get("", response_model=Union[ApiResponse, ErrorResponse])
 async def get_users_route(
     status: str,
@@ -98,6 +97,21 @@ async def get_users_route(
     db: AsyncSession = Depends(DatabaseConnector.get_db),
     _: None = Depends(is_admin),
 ):
+    """
+    获取用户列表（分页、筛选）
+    
+    参数:
+        status (str): 用户状态筛选（如 active, inactive）
+        search (str): 搜索关键字（如用户名、邮箱等）
+        role (str): 用户角色（如 student, teacher, admin）
+        page (int): 当前页码（从1开始）
+        size (int): 每页记录数（最大10）
+        db (AsyncSession): 数据库异步会话
+        _: 权限校验（管理员）
+
+    返回:
+        ApiResponse | ErrorResponse: 标准化响应，包含分页后的用户列表
+    """
     items, total = await get_users(
         db=db, page=page, size=size, status=status, search=search, role=role
     )
