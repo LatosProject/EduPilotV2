@@ -26,7 +26,6 @@ from schemas.Request import (
     CreateClassRequest,
     JoinClassRequest,
 )
-from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.response import to_response
 

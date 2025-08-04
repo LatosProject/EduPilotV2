@@ -79,5 +79,5 @@ class Pagination(BaseModel):
 
 
 class PageData(BaseModel):
-    items: List[AssignmentData]
+    items: List[Any]
     pagination: Pagination

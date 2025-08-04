@@ -299,3 +299,53 @@ async def get_assignments(
     total = (await db.execute(count_stmt)).scalar_one()
 
     return items, total
+
+
+async def get_users(
+    db: AsyncSession,
+    status: Optional[str],
+    search: Optional[str],
+    role: str,
+    page: int,
+    size: int,
+):
+    # 偏移量
+    offset = (page - 1) * size
+
+    stmt = select(User)
+    # 状态过滤（如 status='active'）
+    if status:
+        stmt = stmt.where(User.status == status)
+    if role:
+        stmt = stmt.where(User.role == role)
+    # 模糊搜索（匹配 profile_name 或 email)
+    if search:
+        stmt = stmt.where(
+            or_(
+                User.profile_name.ilike(f"%{search}%"),
+                User.email.ilike(f"%{search}%"),
+                User.username.ilike(f"%{search}%"),
+            )
+        )
+    # 分页
+    stmt = stmt.offset(offset).limit(size)
+    # 查询数据
+    result = await db.execute(stmt)
+    items = result.scalars().all()
+    # 总数查询（用于分页）
+    count_stmt = select(func.count()).select_from(User)
+
+    if status:
+        count_stmt = count_stmt.where(User.status == status)
+    if role:
+        count_stmt = count_stmt.where(User.role == role)
+    if search:
+        count_stmt = count_stmt.where(
+            or_(
+                User.profile_name.ilike(f"%{search}%"),
+                User.email.ilike(f"%{search}%"),
+            )
+        )
+    total = (await db.execute(count_stmt)).scalar_one()
+
+    return items, total

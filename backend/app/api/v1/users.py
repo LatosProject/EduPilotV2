@@ -1,16 +1,15 @@
-from datetime import datetime, timezone
 import logging
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query
 from typing import Union
-from fastapi.responses import JSONResponse
+from services.classes import get_users
 from core.response import to_response
 from core.security import is_admin
 from services.auth import create_user, delete_user, get_user_by_uuid
 from db.connector import DatabaseConnector
-from schemas.Response import ApiResponse, ErrorResponse, Meta
+from schemas.Response import ApiResponse, ErrorResponse, PageData, Pagination
 from schemas.Request import RegisterRequest
 from schemas.User import User, UserProfile
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/users", tags=["Users"])
 logger = logging.getLogger("api.v1.users")
@@ -19,7 +18,7 @@ logger = logging.getLogger("api.v1.users")
 @router.post("", response_model=Union[ApiResponse, UserProfile])
 async def register_route(
     form_data: RegisterRequest,
-    db: Session = Depends(DatabaseConnector.get_db),
+    db: AsyncSession = Depends(DatabaseConnector.get_db),
     _: None = Depends(is_admin),
 ):
     """
@@ -49,7 +48,7 @@ async def register_route(
 @router.delete("/{user_uuid}", response_model=Union[ApiResponse, ErrorResponse])
 async def delete_route(
     user_uuid: str,
-    db: Session = Depends(DatabaseConnector.get_db),
+    db: AsyncSession = Depends(DatabaseConnector.get_db),
     _: None = Depends(is_admin),
 ):
     """
@@ -68,7 +67,7 @@ async def delete_route(
 @router.get("/{user_uuid}", response_model=Union[ApiResponse, ErrorResponse])
 async def retrieve_user_route(
     user_uuid: str,
-    db: Session = Depends(DatabaseConnector.get_db),
+    db: AsyncSession = Depends(DatabaseConnector.get_db),
     _: None = Depends(is_admin),
 ):
     """
@@ -89,5 +88,24 @@ async def retrieve_user_route(
 
 
 # TO-DO
-async def get_users_route():
-    pass
+@router.get("", response_model=Union[ApiResponse, ErrorResponse])
+async def get_users_route(
+    status: str,
+    search: str,
+    role: str,
+    page: int = Query(1, ge=1),
+    size: int = Query(10, le=10),
+    db: AsyncSession = Depends(DatabaseConnector.get_db),
+    _: None = Depends(is_admin),
+):
+    items, total = await get_users(
+        db=db, page=page, size=size, status=status, search=search, role=role
+    )
+    pages = (total + size - 1) // size
+
+    return to_response(
+        data=PageData(
+            items=[User.model_validate(item) for item in items],
+            pagination=Pagination(page=page, size=size, total=total, pages=pages),
+        )
+    )
