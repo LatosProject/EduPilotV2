@@ -52,17 +52,11 @@ pip install -r requirements.txt
 
 ### 🚀 启动应用
 
-启动后端
-
 ```bash
-python app.py
+运行 /scripts/start_dev.bat
 ```
 
-启动前端
 
-```bash
-npm run dev
-```
 
 访问接口文档：
 
