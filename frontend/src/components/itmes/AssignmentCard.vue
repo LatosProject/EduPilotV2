@@ -18,12 +18,12 @@
                 line-height: 24px;
                 letter-spacing: 0.1px;
                 color: #4f378a;
-              "> {{ subject ? subject.charAt(0).toUpperCase() : '' }}</div>
+              "> {{ title ? title.charAt(0).toUpperCase() : '' }}</div>
 
                     <div style="flex: 1; display: flex; flex-direction: column; padding-left: 8px;">
                         <p
                             style="font-family: 'Roboto', sans-serif; font-weight: 600; font-size: 16px; line-height: 24px; letter-spacing: 0.15px; color: #1d1b20; margin: 0; padding-top: 2px;">
-                            {{ subject }}</p>
+                            {{ title }}</p>
                         <p
                             style="font-family: 'Roboto', sans-serif; font-weight: 400; font-size: 14px; line-height: 20px; letter-spacing: 0.25px; color: #1d1b20; margin: 0; padding-bottom: 2px;">
                             {{ deadline }}</p>
@@ -34,7 +34,7 @@
             <div style="flex: 1; display: flex; flex-direction: column;">
                 <div style="height: 40px; padding: 8px 16px 0 24px;">
                     <p style="font-size: 14px; color: rgb(var(--mdui-color-on-surface-variant)); margin: 0;">
-                        {{ description }}
+                        {{ content }}
                     </p>
                 </div>
                 <div
@@ -49,9 +49,9 @@
 <script setup>
 const props = defineProps({
     selected: Boolean,
-    subject: String,
+    title: String,
     deadline: String,
-    description: String
+    content: String
 });
 </script>
 <style scoped>

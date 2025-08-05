@@ -1,6 +1,7 @@
 # schemas/Response.py
 from datetime import datetime
-from pydantic import BaseModel, StrictInt, StrictStr, Field
+import json
+from pydantic import BaseModel, StrictInt, StrictStr, Field, field_validator
 from typing import List, Optional, Dict, Any
 from schemas.User import User
 
@@ -56,6 +57,29 @@ class AssignmentData(BaseModel):
     created_at: Optional[datetime] = Field(None, description="创建时间")
     updated_at: Optional[datetime] = Field(None, description="更新时间")
     model_config = {"from_attributes": True}
+
+    @field_validator("attachments", mode="before")
+    @classmethod
+    def parse_attachments_from_db_string(cls, v: Any) -> List[Dict[str, Any]]:
+        """
+        在验证 attachments 字段之前，如果它是字符串（来自数据库），
+        则尝试将其解析为 Python 列表。
+        """
+        if isinstance(v, list):
+            return v
+        if isinstance(v, str):
+            try:
+                parsed_list = json.loads(v)
+                return parsed_list
+            except json.JSONDecodeError as e:
+                import logging
+
+                logger = logging.getLogger("schemas.response")
+                logger.warning(f"无法解析 attachments 字段为 JSON 列表: {v}, 错误: {e}")
+                return []
+        if v is None:
+            return []
+        return v
 
 
 class ClassUserData(BaseModel):

@@ -1,5 +1,5 @@
 import logging
-from typing import Union
+from typing import Optional, Union
 from fastapi import APIRouter, Depends, Query
 from core.dependencies import get_current_user
 from schemas import User
@@ -100,12 +100,12 @@ async def delete_class_route(
 @router.get("/{class_uuid}/homeworks", response_model=Union[ApiResponse, ErrorResponse])
 async def get_assignments_route(
     class_uuid: str,
-    status: str,
-    search: str,
     order_by: str,
     order: str,
+    status: Optional[str] = None,
+    search: Optional[str] = None,
     page: int = Query(1, ge=1),
-    size: int = Query(10, le=10),
+    size: int = Query(10, le=15),
     db: AsyncSession = Depends(DatabaseConnector.get_db),
     current_user: User = Depends(get_current_user),
 ):

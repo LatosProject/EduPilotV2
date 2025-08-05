@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+import json
 import logging
 from typing import Optional
 from sqlalchemy import asc, desc, func, or_, select
@@ -155,6 +156,9 @@ async def create_assignment(
         - 数据提交前已通过 get_class_by_uuid 验证班级存在性，避免外键错误。
         - 所有数据库操作失败均会自动 rollback，确保数据一致性。
     """
+    attachments = json.dumps(
+        [{**a.dict(), "url": str(a.url)} for a in attachments], separators=(",", ":")
+    )
     await get_class_by_uuid(db, class_uuid)
     new_assignment = AssignmentModel(
         uuid=random.generate_uuid(),

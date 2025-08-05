@@ -11,120 +11,12 @@
         <search-card />
         <!-- 搜索框下方按钮组 -->
         <TaskButtonGroup />
-        <!-- 作业卡片（示例1） -->
-        <mdui-card clickable style="
-          border-radius: var(--mdui-shape-corner-medium);
-          height: 200px;
-          display: flex;
-          flex-direction: column;
-          padding: 0;
-          margin-top: 16px;
-          box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.20);
-          background-color: rgb(var(--mdui-color-surface));
-        ">
-          <div style="min-height: 72px;">
-            <div
-              style="height: 48px; width: 300px; padding-left: 16px; padding-top: 18px; display: flex; align-items: center;">
-              <div style="
-                width: 40px;
-                height: 40px;
-                background-color: #eaddff;
-                border-radius: 50%;
-                margin: 4px 8px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-family: 'Roboto', sans-serif;
-                font-weight: 500;
-                font-size: 16px;
-                line-height: 24px;
-                letter-spacing: 0.1px;
-                color: #4f378a;
-              ">C</div>
+        <!-- 作业卡片-->
+        <AssignmentCard v-for="assignment in assignments" :key="assignment.uuid" :title="assignment.title"
+          :deadline="formatDeadline(assignment.deadline)" :content="assignment.content" :selected="false" />
 
-              <div style="flex: 1; display: flex; flex-direction: column; padding-left: 8px;">
-                <p
-                  style="font-family: 'Roboto', sans-serif; font-weight: 600; font-size: 16px; line-height: 24px; letter-spacing: 0.15px; color: #1d1b20; margin: 0; padding-top: 2px;">
-                  Chemistry</p>
-                <p
-                  style="font-family: 'Roboto', sans-serif; font-weight: 400; font-size: 14px; line-height: 20px; letter-spacing: 0.25px; color: #1d1b20; margin: 0; padding-bottom: 2px;">
-                  2天后截至</p>
-              </div>
-            </div>
-          </div>
-
-          <div style="flex: 1; display: flex; flex-direction: column;">
-            <div style="height: 40px; padding: 8px 16px 0 24px;">
-              <p style="font-size: 14px; color: rgb(var(--mdui-color-on-surface-variant)); margin: 0;">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              </p>
-            </div>
-            <div
-              style="flex: 1; display: flex; justify-content: flex-end; align-items: flex-end; padding: 0 16px 16px 0;">
-              <mdui-button class="on-surface-variant" variant="outlined" style="margin-right: 8px;">忽略</mdui-button>
-              <mdui-button variant="filled">查看</mdui-button>
-            </div>
-          </div>
-        </mdui-card>
-
-        <mdui-card clickable style="
-          border-radius: var(--mdui-shape-corner-medium);
-          height: 200px;
-          display: flex;
-          flex-direction: column;
-          padding: 0;
-          margin-top: 16px;
-          box-shadow: none;
-          background-color: rgb(var(--mdui-color-on-primary));
-        ">
-          <div style="min-height: 72px;">
-            <div
-              style="height: 48px; width: 300px; padding-left: 16px; padding-top: 18px; display: flex; align-items: center;">
-              <div style="
-                width: 40px;
-                height: 40px;
-                background-color: #eaddff;
-                border-radius: 50%;
-                margin: 4px 8px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-family: 'Roboto', sans-serif;
-                font-weight: 500;
-                font-size: 16px;
-                line-height: 24px;
-                letter-spacing: 0.1px;
-                color: #4f378a;
-              ">C</div>
-
-              <div style="flex: 1; display: flex; flex-direction: column; padding-left: 8px;">
-                <p
-                  style="font-family: 'Roboto', sans-serif; font-weight: 600; font-size: 16px; line-height: 24px; letter-spacing: 0.15px; color: #1d1b20; margin: 0; padding-top: 2px;">
-                  Math</p>
-                <p
-                  style="font-family: 'Roboto', sans-serif; font-weight: 400; font-size: 14px; line-height: 20px; letter-spacing: 0.25px; color: #1d1b20; margin: 0; padding-bottom: 2px;">
-                  1天后截至</p>
-              </div>
-            </div>
-          </div>
-
-          <div style="flex: 1; display: flex; flex-direction: column;">
-            <div style="height: 40px; padding: 8px 16px 0 24px;">
-              <p style="font-size: 14px; color: rgb(var(--mdui-color-on-surface-variant)); margin: 0;">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              </p>
-            </div>
-            <div
-              style="flex: 1; display: flex; justify-content: flex-end; align-items: flex-end; padding: 0 16px 16px 0;">
-              <mdui-button class="on-surface-variant" variant="outlined" style="margin-right: 8px;">忽略</mdui-button>
-              <mdui-button variant="filled">查看</mdui-button>
-            </div>
-          </div>
-        </mdui-card>
-      </div>
-
-      <!-- 主体内容卡片容器 -->
-      <div style="
+        <!-- 主体内容卡片容器 -->
+        <div style="
         flex-grow: 1;
         margin-left: 16px;
         margin-right: 24px;
@@ -132,14 +24,39 @@
         box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.20);
         border-radius: var(--mdui-shape-corner-extra-large);
       ">
-        <!-- 内容 -->
+          <!-- 内容 -->
+        </div>
+
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import NavigationRail from '../components/common/NavigationRail.vue';
 import SearchCard from '../components/common/SearchCard.vue';
 import TaskButtonGroup from '../components/common/TaskButtonGroup.vue';
+import AssignmentCard from '../components/itmes/AssignmentCard.vue'
+import { getAssignments } from '../apis/assignment.js'  // 关键：导入这里
+// 其他导入...
+
+const assignments = ref([])
+
+function formatDeadline(deadline) {
+  if (!deadline) return '无截止日期'
+  const date = new Date(deadline)
+  return date.toLocaleString()  // 你可以改成自己喜欢的格式
+}
+const classUuid = "e0453e99-a7e4-43fa-a480-5272add34867"
+onMounted(async () => {
+  try {
+    const res = await getAssignments(classUuid)
+    console.log('接口返回的数据:', res)
+
+    assignments.value = res.items // ✅ 这才是真正的作业列表
+  } catch (e) {
+    console.error('获取任务失败', e)
+  }
+})
 </script>
