@@ -20,3 +20,4 @@ __pycache__/
 *.db-wal
 *.1
 *.log
+*.log.1
