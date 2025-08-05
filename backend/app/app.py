@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from api.v1 import users
 from api.v1 import auth
 from api.v1 import classes
+from api.v1 import health
 from core.exception_handlers import register_exception_handlers
 from core.middleware import AccessLogMiddleware
 from api.v1 import users
@@ -41,6 +42,7 @@ app = FastAPI(title="EduPilot", version="0.1a", reload=True, lifespan=lifespan)
 app.include_router(auth.router, prefix="/api/v1", tags=["Auth"])
 app.include_router(users.router, prefix="/api/v1", tags=["Users"])
 app.include_router(classes.router, prefix="/api/v1", tags=["Classes"])
+app.include_router(health.router, prefix="", tags=["Health"])
 app.add_middleware(AccessLogMiddleware)
 
 
