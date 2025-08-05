@@ -6,7 +6,7 @@ const instance = axios.create({
   timeout: 5000,
 })
 
-export async function getAssignments(classUuid, page = 2, size = 15, order_by = 'created_at', order = 'desc') {
+export async function getAssignments(classUuid, page = 1, size = 10, order_by = 'created_at', order = 'asc') {
   try {
     const token = localStorage.getItem('access_token')
     if (token) {
