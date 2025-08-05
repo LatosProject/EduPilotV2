@@ -81,3 +81,12 @@ class Pagination(BaseModel):
 class PageData(BaseModel):
     items: List[Any]
     pagination: Pagination
+
+
+class ClassData(BaseModel):
+    class_uuid: StrictStr = Field(..., description="班级唯一标识符")
+    class_name: StrictStr = Field(..., description="班级名称")
+    description: Optional[StrictStr] = Field(None, description="班级描述")
+    teacher_uuid: StrictStr = Field(..., description="班主任唯一标识符")
+    invite_code: StrictStr = Field(..., description="班级邀请码")
+    model_config = {"from_attributes": True}

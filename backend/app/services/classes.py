@@ -568,6 +568,7 @@ async def update_class(
         - NotFoundException: 如果班级或班级成员不存在。
         - InvalidParameter: 其他参数错误或未处理异常。
     """
+    logger.debug("更新班级信息: %s", class_uuid)
     if not user_role == "admin":
         await get_class_member_by_uuid(db, class_uuid, user_uuid)
     try:
@@ -583,3 +584,39 @@ async def update_class(
         await db.rollback()
         logger.error("添加新班级信息到数据库失败, 错误: %s", e)
         raise exceptions.InvalidParameter()
+
+
+async def get_class(db: AsyncSession, class_uuid: str, user_role: str):
+    """
+    根据班级 UUID 获取班级信息。
+
+    主要流程：
+    1. 如果用户角色为“教师”，则校验其是否为该班级成员（无权限将抛出异常）。
+    2. 根据 class_uuid 获取班级对象。
+    3. 如果班级不存在，则抛出 NotFoundException。
+    4. 成功获取后返回班级对象。
+    5. 所有失败情况均进行异常处理和日志记录。
+
+    参数：
+        db (AsyncSession): 异步数据库会话，用于执行查询。
+        class_uuid (str): 要查询的班级的唯一标识符。
+        user_role (str): 当前用户的角色。
+        user_uuid (str): 当前用户的唯一标识符，用于权限校验。
+
+    返回：
+        class_obj: 查询到的班级对象。
+
+    异常：
+        - NotFoundException: 如果班级或班级成员不存在。
+        - DatabaseQueryError: 如果数据库查询失败。
+    """
+    if user_role == "teacher":
+        await get_class_member_by_uuid(class_uuid)
+    try:
+        class_obj = await get_class_by_uuid(db, class_uuid)
+    except Exception as e:
+        logger.error("查询作业失败: %s", e)
+        raise exceptions.DatabaseQueryError("查询作业信息失败") from e
+    if class_obj is None:
+        raise exceptions.NotExists()
+    return class_obj

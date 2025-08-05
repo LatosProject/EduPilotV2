@@ -9,6 +9,7 @@ from services.classes import (
     delete_class,
     get_assignment,
     get_assignments,
+    get_class,
     join_class,
     update_class,
 )
@@ -18,6 +19,7 @@ from schemas.Response import (
     ApiResponse,
     AssignmentData,
     AssignmentResponse,
+    ClassData,
     ErrorResponse,
     PageData,
     Pagination,
@@ -304,3 +306,37 @@ async def update_class_route(
 
     logger.info("请求结束 - 更新班级信息班级成功: class_uuid=%s", class_uuid)
     return to_response(message="success")
+
+
+@router.get("/{class_uuid}", response_model=Union[ApiResponse, ErrorResponse])
+async def get_class_route(
+    class_uuid: str,
+    db: AsyncSession = Depends(
+        DatabaseConnector.get_db,
+    ),
+    _: None = Depends(is_teacher_or_admin),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    根据班级UUID获取单个班级信息。
+
+    主要流程：
+    1. 通过路径参数 {class_uuid} 接收班级唯一标识符。
+    2. 使用 `Depends(is_teacher_or_admin)` 确保只有教师或管理员角色能访问此路由。
+    3. 获取当前登录的用户信息，以便进行后续的权限校验。
+    4. 调用 `get_class` 业务逻辑函数，传入数据库会话、班级UUID和当前用户信息。
+       - **注意：这里需要传入 `current_user.user_uuid` 参数，以确保 `get_class` 函数能够正确校验权限。**
+    5. 将获取到的班级对象 `class_obj` 传递给 `ClassData.model_validate` 进行数据验证和模型转换。
+    6. 使用 `to_response` 函数封装最终的响应数据，返回给客户端。
+
+    参数：
+        class_uuid (str): 班级的唯一标识符。
+        db (AsyncSession): 数据库异步会话。
+        current_user (User): 当前认证的用户对象。
+
+    返回：
+        ApiResponse: 包含班级数据的成功响应。
+        ErrorResponse: 如果发生错误（如班级不存在、权限不足等）则返回错误响应。
+    """
+    class_obj = await get_class(db, class_uuid, current_user.role)
+    return to_response(data=ClassData.model_validate(class_obj))
