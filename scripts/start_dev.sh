@@ -12,8 +12,9 @@ end tell'
 
 cd "$PROJECT_ROOT/backend/app"
 osascript -e 'tell app "Terminal"
-    do script "cd '"$PROJECT_ROOT/backend/app"' && python3 app.py"
+    do script "cd '$PROJECT_ROOT' && source .venv/bin/activate && cd backend/app && python3 app.py"
 end tell'
 
 cd "$PROJECT_ROOT/scripts"
 python3 warmup.py
+osascript -e 'tell application "Terminal" to do script "exit" in front window'
