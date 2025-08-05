@@ -230,6 +230,35 @@ async def update_user(
     profile_name: Optional[str] = None,
     avatar_url: Optional[str] = None,
 ):
+    """
+    灵活地更新用户信息，只更新提供了新值的字段。
+
+    主要流程：
+    1. 根据 user_uuid 从数据库获取用户对象。
+    2. 对每个传入的非 None 参数进行检查，并更新用户对象的相应属性。
+    3. 如果当前用户角色是 "admin"，则允许更新敏感信息（用户名、角色、状态）。
+    4. 提交数据库事务，如果发生唯一约束冲突则回滚并抛出 AlreadyExists 异常。
+    5. 如果发生其他异常，则回滚并记录日志，抛出 InvalidParameter 异常。
+    6. 成功后，将更新后的用户对象属性映射到 UpdateUserData 模型并返回。
+
+    参数：
+        db (AsyncSession): 数据库会话。
+        user_uuid (str): 要更新的用户的唯一标识符。
+        current_role (str): 执行此操作的用户的角色。
+        username (Optional[str]): 可选的新用户名。
+        new_role (Optional[str]): 可选的新用户角色。
+        email (Optional[str]): 可选的新邮箱。
+        status (Optional[str]): 可选的新用户状态。
+        profile_name (Optional[str]): 可选的新个人资料名称。
+        avatar_url (Optional[str]): 可选的新头像 URL。
+
+    返回：
+        UpdateUserData: 包含更新后用户信息的 Pydantic 模型。
+
+    异常：
+        - AlreadyExists: 如果更新的用户名或邮箱已存在。
+        - InvalidParameter: 如果发生其他数据库错误。
+    """
     try:
         user_obj = await get_user_by_uuid(db, user_uuid)
         # 更新非敏感信息

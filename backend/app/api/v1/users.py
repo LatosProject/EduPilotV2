@@ -132,7 +132,6 @@ async def get_users_route(
     )
 
 
-# TO-DO
 @router.put("/{user_uuid}", response_model=Union[ApiResponse, ErrorResponse])
 async def update_user_route(
     form_data: UpdateUserRequest,
@@ -141,6 +140,27 @@ async def update_user_route(
     current_user: User = Depends(get_current_user),
     _: None = Depends(is_self_or_admin),
 ):
+    """
+    更新用户信息。
+
+    主要流程：
+    1. 通过路径参数 {user_uuid} 和请求体 `form_data` 接收更新数据。
+    2. 使用 `Depends(is_self_or_admin)` 依赖项进行权限校验，确保只有用户自己或管理员可以修改其信息。
+    3. 获取当前登录的用户信息 `current_user`，用于判断其角色。
+    4. 调用 `update_user` 业务逻辑函数，传入所有必要的参数，包括数据库会话、用户UUID、当前用户角色，以及从 `form_data` 中解构出的所有待更新字段。
+    5. `update_user` 函数负责实际的数据库操作和权限逻辑，并返回更新后的用户对象。
+    6. 使用 `to_response` 函数封装更新后的用户对象，返回给客户端。
+
+    参数：
+        form_data (UpdateUserRequest): 包含要更新的用户信息的请求体模型。
+        user_uuid (str): 目标用户的唯一标识符。
+        db (AsyncSession): 数据库异步会话。
+        current_user (User): 当前认证的用户对象。
+
+    返回：
+        ApiResponse: 包含更新后用户数据的成功响应。
+        ErrorResponse: 如果发生错误（如权限不足、用户不存在等）则返回错误响应。
+    """
     user_obj = await update_user(
         db,
         user_uuid,
