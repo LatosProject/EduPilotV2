@@ -52,10 +52,15 @@ pip install -r requirements.txt
 
 ### 🚀 启动应用
 
+对于 Windows:
 ```bash
-运行 /scripts/start_dev.bat
+/scripts/start_dev.bat
 ```
 
+对于 macOS:
+```bash
+/scripts/start_dev.sh
+```
 
 
 访问接口文档：
