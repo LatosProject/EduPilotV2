@@ -36,3 +36,8 @@ class CreateAssignmentRequest(BaseModel):
 
 class JoinClassRequest(BaseModel):
     invite_code: str
+
+
+class UpdateClassRequest(BaseModel):
+    class_name: str
+    description: str

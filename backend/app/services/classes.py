@@ -148,7 +148,7 @@ async def create_assignment(
     异常:
         AlreadyExists: 若违反唯一性约束（如标题重复）则抛出。
         InvalidParameter: 捕捉所有其他非法参数或数据库写入失败的场景。
-    
+
     注意事项:
         - deadline 应与数据库模型字段类型保持一致（datetime），如传入字符串需确保格式正确或转换。
         - attachments 字段应为 JSON 可序列化格式（如字符串列表）。
@@ -340,7 +340,7 @@ async def join_class(db: AsyncSession, invite_code: str, current_user: User):
 
     except exceptions.AlreadyExists as e:
         logger.warning(f"加入班级失败: {e}")
-        raise e  
+        raise e
     except IntegrityError as e:
         await db.rollback()
         if "UNIQUE constraint failed" in str(e.orig):
@@ -532,3 +532,54 @@ async def get_users(
     total = (await db.execute(count_stmt)).scalar_one()
 
     return items, total
+
+
+async def update_class(
+    db: AsyncSession,
+    class_uuid: str,
+    class_name: str,
+    description: str,
+    user_uuid: str,
+    user_role: str,
+):
+    """
+    更新班级信息，仅允许管理员或该班级成员执行此操作。
+
+    主要流程：
+    1. 如果当前用户不是管理员，则校验其是否为该班级成员（无权限将抛出异常）。
+    2. 根据 class_uuid 获取目标班级对象，若不存在则抛出 NotFound 异常。
+    3. 更新班级名称与描述字段。
+    4. 尝试提交事务，捕获唯一约束冲突（班级名重复）并转换为业务异常。
+    5. 所有失败情况均进行事务回滚，并记录日志。
+
+    参数：
+        db (AsyncSession): 异步数据库会话，用于执行查询与事务。
+        class_uuid (str): 要更新的班级的唯一标识符。
+        class_name (str): 新的班级名称。
+        description (str): 新的班级描述。
+        user_uuid (str): 当前执行操作的用户 UUID。
+        user_role (str): 当前用户的角色（如 "admin"）。
+
+    返回：
+        None
+
+    异常：
+        - AlreadyExists: 如果班级名称已存在（违反唯一约束）。
+        - NotFoundException: 如果班级或班级成员不存在。
+        - InvalidParameter: 其他参数错误或未处理异常。
+    """
+    if not user_role == "admin":
+        await get_class_member_by_uuid(db, class_uuid, user_uuid)
+    try:
+        class_obj = await get_class_by_uuid(db, class_uuid)
+        class_obj.class_name = class_name
+        class_obj.description = description
+        await db.commit()
+    except IntegrityError as e:
+        await db.rollback()
+        if "UNIQUE constraint failed" in str(e.orig):
+            raise exceptions.AlreadyExists()
+    except Exception as e:
+        await db.rollback()
+        logger.error("添加新班级信息到数据库失败, 错误: %s", e)
+        raise exceptions.InvalidParameter()

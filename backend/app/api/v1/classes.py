@@ -10,6 +10,7 @@ from services.classes import (
     get_assignment,
     get_assignments,
     join_class,
+    update_class,
 )
 from core.security import is_admin, is_teacher, is_teacher_or_admin
 from db.connector import DatabaseConnector
@@ -25,6 +26,7 @@ from schemas.Request import (
     CreateAssignmentRequest,
     CreateClassRequest,
     JoinClassRequest,
+    UpdateClassRequest,
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.response import to_response
@@ -247,3 +249,58 @@ async def join_class_route(
     )
 
     return to_response(data=joined_class)
+
+
+@router.put("/{class_uuid}", response_model=Union[ApiResponse, ErrorResponse])
+async def update_class_route(
+    class_uuid: str,
+    form_data: UpdateClassRequest,
+    db: AsyncSession = Depends(
+        DatabaseConnector.get_db,
+    ),
+    current_user: User = Depends(get_current_user),
+    _: None = Depends(is_teacher_or_admin),
+):
+    """
+    更新指定班级的信息，仅限管理员或教师角色访问。
+
+    接口路径：
+        PUT /{class_uuid}
+
+    功能描述：
+    1. 校验当前用户是否具备管理员或教师权限（依赖注入方式）。
+    2. 获取请求体中的班级名称和描述字段。
+    3. 调用服务层函数执行更新操作，包括权限校验、数据落库和异常处理。
+    4. 成功后返回统一的成功响应，失败时由全局异常处理器捕获并响应。
+
+    路径参数：
+        class_uuid (str): 要更新的班级唯一标识符。
+
+    请求体：
+        form_data (UpdateClassRequest):
+            - class_name (str): 新的班级名称。
+            - description (str): 新的班级描述。
+
+    权限依赖：
+        - 当前用户必须为教师或管理员（通过 is_teacher_or_admin 依赖注入）。
+
+    响应：
+        - 成功：返回 ApiResponse，message 为 "success"
+        - 失败：返回 ErrorResponse，由异常处理器捕捉抛出
+
+    异常：
+        - AlreadyExists: 如果班级名称已存在。
+        - NotFoundException: 班级不存在或用户不具备班级成员身份。
+        - InvalidParameter: 非法请求参数或其他更新异常。
+    """
+    await update_class(
+        db,
+        class_uuid,
+        form_data.class_name,
+        form_data.description,
+        current_user.uuid,
+        current_user.role,
+    )
+
+    logger.info("请求结束 - 更新班级信息班级成功: class_uuid=%s", class_uuid)
+    return to_response(message="success")
