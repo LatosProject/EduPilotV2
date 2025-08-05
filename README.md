@@ -57,7 +57,7 @@ pip install -r requirements.txt
 /scripts/start_dev.bat
 ```
 
-对于 macOS:
+对于 macOS/Linux:
 ```bash
 /scripts/start_dev.sh
 ```
