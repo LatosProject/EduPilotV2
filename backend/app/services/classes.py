@@ -576,6 +576,7 @@ async def update_class(
         class_obj.class_name = class_name
         class_obj.description = description
         await db.commit()
+        await db.refresh(class_obj)
     except IntegrityError as e:
         await db.rollback()
         if "UNIQUE constraint failed" in str(e.orig):
@@ -584,6 +585,7 @@ async def update_class(
         await db.rollback()
         logger.error("添加新班级信息到数据库失败, 错误: %s", e)
         raise exceptions.InvalidParameter()
+    return class_obj
 
 
 async def get_class(db: AsyncSession, class_uuid: str, user_role: str):

@@ -99,7 +99,7 @@ async def get_users_route(
 ):
     """
     获取用户列表（分页、筛选）
-    
+
     参数:
         status (str): 用户状态筛选（如 active, inactive）
         search (str): 搜索关键字（如用户名、邮箱等）
@@ -123,3 +123,8 @@ async def get_users_route(
             pagination=Pagination(page=page, size=size, total=total, pages=pages),
         )
     )
+
+
+# TO-DO
+async def update_user_route():
+    pass

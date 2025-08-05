@@ -295,7 +295,7 @@ async def update_class_route(
         - NotFoundException: 班级不存在或用户不具备班级成员身份。
         - InvalidParameter: 非法请求参数或其他更新异常。
     """
-    await update_class(
+    class_obj = await update_class(
         db,
         class_uuid,
         form_data.class_name,
@@ -305,7 +305,7 @@ async def update_class_route(
     )
 
     logger.info("请求结束 - 更新班级信息班级成功: class_uuid=%s", class_uuid)
-    return to_response(message="success")
+    return to_response(data=ClassData.model_validate(class_obj))
 
 
 @router.get("/{class_uuid}", response_model=Union[ApiResponse, ErrorResponse])
