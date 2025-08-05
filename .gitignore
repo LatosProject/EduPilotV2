@@ -16,3 +16,5 @@ __pycache__/
 *.old
 
 *.db
+*.db-shm
+*.db-wal
