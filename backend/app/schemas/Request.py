@@ -41,3 +41,12 @@ class JoinClassRequest(BaseModel):
 class UpdateClassRequest(BaseModel):
     class_name: str
     description: str
+
+
+class UpdateUserRequest(BaseModel):
+    username: str
+    email: str
+    role: str
+    status: str
+    profile_name: str
+    avatar_url: str

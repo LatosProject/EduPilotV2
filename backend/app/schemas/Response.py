@@ -90,3 +90,14 @@ class ClassData(BaseModel):
     teacher_uuid: StrictStr = Field(..., description="班主任唯一标识符")
     invite_code: StrictStr = Field(..., description="班级邀请码")
     model_config = {"from_attributes": True}
+
+
+class UpdateUserData(BaseModel):
+    username: Optional[StrictStr] = Field(None, description="新的用户名")
+    email: Optional[StrictStr] = Field(None, description="新的邮箱")
+    profile_name: Optional[StrictStr] = Field(None, description="新的个人资料名称")
+    avatar_url: Optional[StrictStr] = Field(None, description="新的头像URL")
+    role: Optional[StrictStr] = Field(None, description="新的用户角色")
+    status: Optional[StrictStr] = Field(None, description="新的用户状态")
+
+    model_config = {"from_attributes": True}

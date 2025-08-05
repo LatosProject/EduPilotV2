@@ -1,13 +1,20 @@
 import logging
 from fastapi import APIRouter, Depends, Query
 from typing import Union
+from core.dependencies import get_current_user
 from services.classes import get_users
 from core.response import to_response
-from core.security import is_admin
-from services.auth import create_user, delete_user, get_user_by_uuid
+from core.security import is_admin, is_self_or_admin
+from services.auth import create_user, delete_user, get_user_by_uuid, update_user
 from db.connector import DatabaseConnector
-from schemas.Response import ApiResponse, ErrorResponse, PageData, Pagination
-from schemas.Request import RegisterRequest
+from schemas.Response import (
+    ApiResponse,
+    ErrorResponse,
+    PageData,
+    Pagination,
+    UpdateUserData,
+)
+from schemas.Request import RegisterRequest, UpdateUserRequest
 from schemas.User import User, UserProfile
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -126,5 +133,23 @@ async def get_users_route(
 
 
 # TO-DO
-async def update_user_route():
-    pass
+@router.put("/{user_uuid}", response_model=Union[ApiResponse, ErrorResponse])
+async def update_user_route(
+    form_data: UpdateUserRequest,
+    user_uuid: str,
+    db: AsyncSession = Depends(DatabaseConnector.get_db),
+    current_user: User = Depends(get_current_user),
+    _: None = Depends(is_self_or_admin),
+):
+    user_obj = await update_user(
+        db,
+        user_uuid,
+        current_user.role,
+        form_data.username,
+        form_data.role,
+        form_data.email,
+        form_data.status,
+        form_data.profile_name,
+        form_data.avatar_url,
+    )
+    return to_response(data=user_obj)

@@ -1,9 +1,11 @@
 # services/auth.py
 from datetime import datetime, timezone
 import logging
+from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+from schemas.Response import UpdateUserData
 from core import exceptions
 from models.user import User
 from utils.auth_utils import hash_password, verify_password
@@ -215,3 +217,52 @@ async def authenticate_user(
     if not verify_password(password, user.hashed_password):
         raise exceptions.AuthenticationFailed(username)
     return user
+
+
+async def update_user(
+    db: AsyncSession,
+    user_uuid: str,
+    current_role: str,
+    username: Optional[str] = None,
+    role: Optional[str] = None,
+    email: Optional[str] = None,
+    status: Optional[str] = None,
+    profile_name: Optional[str] = None,
+    avatar_url: Optional[str] = None,
+):
+    try:
+        user_obj = await get_user_by_uuid(db, user_uuid)
+        # 更新非敏感信息
+        if email is not None:
+            user_obj.email = email
+        if profile_name is not None:
+            user_obj.profile_name = profile_name
+        if avatar_url is not None:
+            user_obj.avatar_url = avatar_url
+
+        # 仅当当前用户是管理员时，才允许更新敏感信息
+        if current_role == "admin":
+            if role is not None:
+                user_obj.role = role
+            if username is not None:
+                user_obj.username = username
+            if status is not None:
+                user_obj.status = status
+        await db.commit()
+        await db.refresh(user_obj)
+        return UpdateUserData(
+            username=user_obj.username,
+            email=user_obj.email,
+            profile_name=user_obj.profile_name,
+            avatar_url=user_obj.avatar_url,
+            role=user_obj.role,
+            status=user_obj.status,
+        )
+    except IntegrityError as e:
+        await db.rollback()
+        if "UNIQUE constraint failed" in str(e.orig):
+            raise exceptions.AlreadyExists()
+    except Exception as e:
+        await db.rollback()
+        logger.error("添加新用户信息到数据库失败, 错误: %s", e)
+        raise exceptions.InvalidParameter()
