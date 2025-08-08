@@ -48,9 +48,14 @@ app.add_middleware(AccessLogMiddleware)
 
 register_exception_handlers(app)
 
+origins = [
+    "http://localhost:5173",
+    # 如果有多个前端，可以继续添加
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 生产环境建议限制
+    allow_origins=origins,  # ⬅️ 正确写法：直接传递 origins 列表
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

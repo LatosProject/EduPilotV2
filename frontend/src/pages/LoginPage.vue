@@ -18,7 +18,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
+import { login } from '../api/auth'
 
 const username = ref('')
 const password = ref('')
@@ -31,16 +31,12 @@ const handleLogin = async () => {
         return
     }
     try {
-        const res = await axios.post('/api/v1/auth/login', {
-            username: username.value,
-            password: password.value
-
-        })
+        const res = await login(username.value, password.value)
         const token = res.data?.data?.access_token
         if (token) {
             localStorage.setItem('access_token', token)
             console.log('Login successful, token:', token)
-            // router.push('/')
+            router.push('/')
         }
         else {
             error.value = 'Lgoin failed, please try again'

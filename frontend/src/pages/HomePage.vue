@@ -33,12 +33,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import NavigationRail from '../components/common/NavigationRail.vue';
 import SearchCard from '../components/common/SearchCard.vue';
 import TaskButtonGroup from '../components/common/TaskButtonGroup.vue';
 import AssignmentCard from '../components/itmes/AssignmentCard.vue'
-import { getAssignments } from '../apis/assignment.js'  // 关键：导入这里
+import { getAssignments } from '../api/assignment.js'  // 关键：导入这里
 // 其他导入...
 
 const assignments = ref([])
@@ -46,17 +46,32 @@ const assignments = ref([])
 function formatDeadline(deadline) {
   if (!deadline) return '无截止日期'
   const date = new Date(deadline)
-  return date.toLocaleString()  // 你可以改成自己喜欢的格式
+  return date.toLocaleString()
 }
+
 const classUuid = "e0453e99-a7e4-43fa-a480-5272add34867"
-onMounted(async () => {
+
+async function fetchAssignments() {
   try {
     const res = await getAssignments(classUuid)
     console.log('接口返回的数据:', res)
-
-    assignments.value = res.items // ✅ 这才是真正的作业列表
+    assignments.value = res.items
   } catch (e) {
     console.error('获取任务失败', e)
   }
+}
+
+let intervalId = null
+
+onMounted(() => {
+  fetchAssignments()
+
+  intervalId = setInterval(() => {
+    fetchAssignments()
+  }, 15000)
+})
+
+onUnmounted(() => {
+  clearInterval(intervalId)
 })
 </script>

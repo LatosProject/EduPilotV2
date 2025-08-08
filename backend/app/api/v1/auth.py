@@ -48,7 +48,7 @@ async def login_route(
     user = await authenticate_user(db, form_data.username, form_data.password)
 
     token, expires_in = create_access_token({"uuid": str(user.uuid)})
-    fresh_token, fresh_expires_in = create_fresh_token({"uuid": str(user.uuid)})
+    refresh_token, refresh_expires_in = create_fresh_token({"uuid": str(user.uuid)})
 
     logger.info("登录成功: 用户名: %s, UUID: %s", user.username, user.uuid)
     response = to_response(
@@ -57,9 +57,9 @@ async def login_route(
         ),
     )
     response.set_cookie(
-        key="fresh_token",
-        value=fresh_token,
-        max_age=fresh_expires_in,
+        key="refresh_token",
+        value=refresh_token,
+        max_age=refresh_expires_in,
         httponly=True,
         secure=True,
         samesite="Lax",
