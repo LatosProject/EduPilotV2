@@ -19,10 +19,12 @@
 <script setup>
 import { ref } from 'vue'
 import { login } from '../api/auth'
+import { useRouter } from 'vue-router'
 
 const username = ref('')
 const password = ref('')
 const error = ref('')
+const router = useRouter()
 
 const handleLogin = async () => {
     error.value = ''
