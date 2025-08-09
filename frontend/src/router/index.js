@@ -36,58 +36,67 @@ const router = createRouter({
   routes
 })
 
+async function isTokenValid() {
+  try {
+    const result = await verifyToken()
+    return result.status
+  } catch {
+    return null
+  }
+}
+
+async function tryRefreshToken() {
+  try {
+    const res = await refreshToken()
+    localStorage.setItem('access_token', res.access_token)
+    return true
+  } catch {
+    return false
+  }
+}
+
+function redirectToLoginOrNext(to, next) {
+  if (to.name !== 'Login') {
+    return next({ name: 'Login' })
+  }
+  return next()
+}
+
+function redirectToHomeOrNext(to, next) {
+  if (to.name === 'Login') {
+    return next({ name: 'Home' })
+  }
+  return next()
+}
+
 router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem('access_token')
-  console.log(token)
 
   if (!token && to.meta.requiresAuth) {
-    if (to.name !== 'Login') {
-      return next({ name: 'Login' })
-    } else {
-      return next()
-    }
+    return redirectToLoginOrNext(to, next)
   }
 
   if (token) {
-    try {
-      const result = await verifyToken()
-      const status = result.status
+    const status = await isTokenValid()
 
-      if (status === 1002) {
-        const res = await refreshToken()
-        const new_token = res.access_token
-        localStorage.setItem('access_token', new_token)
-        return next({ name: 'Home' })
-      } else if (status === 0) {
-        // 已登录
-        if (to.name === 'Login') {
+    switch (status) {
+      case 1002: // token过期，尝试刷新
+        const refreshed = await tryRefreshToken()
+        if (refreshed) {
+          // 刷新成功，跳转首页
           return next({ name: 'Home' })
-        } else {
-          return next()
         }
-      } else {
-        // 其他异常，跳登录页
-        if (to.name !== 'Login') {
-          return next({ name: 'Login' })
-        } else {
-          return next()
-        }
-      }
-    } catch (e) {
-      if (to.name !== 'Login') {
-        return next({ name: 'Login' })
-      } else {
-        return next()
-      }
-    }
-  } else {
-    if (to.name !== 'Login') {
-      return next({ name: 'Login' })
-    } else {
-      return next()
+        // 刷新失败，去登录
+        return redirectToLoginOrNext(to, next)
+      case 0: // token有效
+        return redirectToHomeOrNext(to, next)
+      default: // 其他状态异常
+        return redirectToLoginOrNext(to, next)
     }
   }
+
+  // 无token且不需要鉴权的路由
+  return next()
 })
 
 export default router
-
