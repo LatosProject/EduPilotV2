@@ -16,6 +16,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: LoginPage
+  },
+  {
+    path: '/assignment/:id',
+    name: 'AssignmentDetail',
+    component: HomePage,
   }
   // 后续可加更多页面
 ]

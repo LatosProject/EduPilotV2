@@ -41,7 +41,7 @@
                     style="flex: 1; display: flex; justify-content: flex-end; align-items: flex-end; padding: 0 16px 16px 0;">
                     <mdui-button class="on-surface-variant" variant="outlined"
                         style="margin-right: 8px;">忽略</mdui-button>
-                    <mdui-button variant="filled">查看</mdui-button>
+                    <mdui-button variant="filled">提交</mdui-button>
                 </div>
             </div>
         </mdui-card>
@@ -61,7 +61,7 @@ const props = defineProps({
     display: flex;
     flex-direction: column;
     padding: 0;
-    margin-top: 16px;
+    /* margin-top: 16px; */
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.20);
     background-color: rgb(var(--mdui-color-surface));
 }
@@ -72,7 +72,7 @@ const props = defineProps({
     display: flex;
     flex-direction: column;
     padding: 0;
-    margin-top: 16px;
+    /* margin-top: 16px; */
     box-shadow: none;
     background-color: rgb(var(--mdui-color-on-primary));
 }
