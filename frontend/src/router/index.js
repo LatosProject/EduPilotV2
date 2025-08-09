@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '../pages/HomePage.vue'
 import LoginPage from '../pages/LoginPage.vue'
+import SettingsPage from '../pages/SettingsPage.vue'
 import { verifyToken, refreshToken } from '../api/auth'
 
 
@@ -20,7 +21,12 @@ const routes = [
   {
     path: '/assignment/:id',
     name: 'AssignmentDetail',
-    component: HomePage,
+    component: HomePage
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: SettingsPage
   }
   // 后续可加更多页面
 ]
